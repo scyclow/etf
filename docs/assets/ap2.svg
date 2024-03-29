@@ -1,0 +1,13 @@
+
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text {
+      font-family: monospace;
+      fill:  #0078bd;
+      font-size:  180px;
+    }
+  </style>
+  <rect x="0" y="0" width="500" height="500" fill="#383a3c" stroke="#0078bd" stroke-width="35px"></rect>
+
+  <text class="fillLight" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">AP2</text>
+</svg>
