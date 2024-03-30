@@ -5,58 +5,35 @@ const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
 async function main() {
   const signers = await ethers.getSigners()
 
-  admin = signers[0]
-  bidder1 = signers[1]
-  bidder2 = signers[2]
-
-  const SteviepAuctionFactory = await ethers.getContractFactory('SteviepAuctionV1', admin)
-  SteviepAuction = await SteviepAuctionFactory.deploy()
-  await SteviepAuction.deployed()
-
-  const ColdHardCashFactory = await ethers.getContractFactory('ColdHardCash', admin)
-  ColdHardCash = await ColdHardCashFactory.deploy()
-  await ColdHardCash.deployed()
-
-  const RewardMinterMockFactory = await ethers.getContractFactory('RewardMinterMock', admin)
-  RewardMinterMock = await RewardMinterMockFactory.deploy()
-  await RewardMinterMock.deployed()
-
-  const AllowListMockFactory = await ethers.getContractFactory('AllowListMock', admin)
-  AllowListMock = await AllowListMockFactory.deploy()
-  await AllowListMock.deployed()
-
-
-  const UniswapV2MockFactory = await ethers.getContractFactory('UniswapV2Mock', admin)
-  UniswapV2Mock = await UniswapV2MockFactory.deploy()
-  await UniswapV2Mock.deployed()
-
-  await ColdHardCash.connect(admin).setMinter(SteviepAuction.address)
+  minter = signers[0]
+  ap0 = signers[1]
+  ap1 = signers[2]
+  ap2 = signers[3]
+  ap3 = signers[4]
+  ap4 = signers[5]
+  ap5 = signers[6]
 
 
 
-  for (let i = 0; i < 16; i++) {
-    await SteviepAuction.connect(admin).create(
-      false,
-      300,
-      1000,
-      300,
-      '100000000000000000',
-      i,
-      admin.address,
-      false,
-      ColdHardCash.address,
-      RewardMinterMock.address,
-      AllowListMock.address,
-    )
-  }
-  await AllowListMock.connect(admin).setBalance(admin.address, 1)
+  const ETFFactory = await ethers.getContractFactory('ETF', minter)
+  ETF = await ETFFactory.deploy()
+  await ETF.deployed()
 
+  const AuthorizedParticipantFactory = await ethers.getContractFactory('AuthorizedParticipant', minter)
 
-  console.log(`SteviepAuction:`, SteviepAuction.address)
-  console.log(`ColdHardCash:`, ColdHardCash.address)
-  console.log(`UniswapV2Mock:`, UniswapV2Mock.address)
-  console.log(`AllowListMock:`, AllowListMock.address)
-  console.log('admin:', admin.address)
+  AuthorizedParticipant = await AuthorizedParticipantFactory.attach(
+    await ETF.authorizedParticipant()
+  )
+
+  await AuthorizedParticipant.connect(minter).mint(ap0.address, 0)
+  await AuthorizedParticipant.connect(minter).mint(ap1.address, 1)
+  await AuthorizedParticipant.connect(minter).mint(ap2.address, 2)
+  await AuthorizedParticipant.connect(minter).mint(ap3.address, 3)
+  await AuthorizedParticipant.connect(minter).mint(ap4.address, 4)
+  await AuthorizedParticipant.connect(minter).mint(ap4.address, 5)
+
+  console.log(`ETF:`, ETF.address)
+  console.log(`AuthorizedParticipant:`, AuthorizedParticipant.address)
 }
 
 

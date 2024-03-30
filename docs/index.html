@@ -3,271 +3,285 @@
 <head>
   <meta charset="utf-8">
   <title>ETF</title>
-  <link rel="shortcut icon" type="image/x-icon" href="./" id="favicon">
+  <link rel="shortcut icon" type="image/x-icon" href="./assets/etf.png" id="favicon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="description" content="">
-  <meta name="keywords" content="steviep, steve pikelny, pikelny, crypto, ethereum, etf, bitcoin, erc20">
+  <meta name="description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
+  <meta name="keywords" content="steviep, steve pikelny, pikelny, crypto, ethereum, etf, bitcoin, erc20, memecoin, shitcoin, exchange-traded fund">
 
-<!--   <meta name="twitter:image" content="https://steviep.xyz/">
-  <meta name="twitter:image:alt" content="">
+  <meta name="twitter:image" content="https://steviep.xyz/etf/assets/etf.png">
+  <meta name="twitter:image:alt" content="ETF">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@steviepxyz">
   <meta name="twitter:site" content="@steviepxyz">
-  <meta property="twitter:description" content="">
+  <meta property="twitter:description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
 
-  <meta name="og:image" property="og:image" content="https://steviep.xyz/">
-  <meta name="og:image:alt" content="">
+  <meta name="og:image" property="og:image" content="https://steviep.xyz/etf/assets/etf.png">
+  <meta name="og:image:alt" content="ETF">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://steviep.xyz/">
-  <meta property="og:title" content="">
-  <meta property="og:site_name" content="">
-  <meta property="og:description" content=""> -->
+  <meta property="og:url" content="https://steviep.xyz/etf">
+  <meta property="og:title" content="ETF">
+  <meta property="og:site_name" content="ETF">
+  <meta property="og:description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
 
 
   <style type="text/css">
 
+  @font-face {
+    font-family: 'Montserrat';
+    src: url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    src: url('./Montserrat/static/Montserrat-Refular.ttf');
+    src: url('./Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype-variations'),
+         url('./Montserrat/static/Montserrat-Refular.ttf') format('truetype');
+  }
 
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-@font-face {
-  font-family: 'Montserrat';
-  src: url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-  src: url('./Montserrat/static/Montserrat-Refular.ttf');
-  src: url('./Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype-variations'),
-       url('./Montserrat/static/Montserrat-Refular.ttf') format('truetype');
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
   :root {
     --bg-color: #fff;
     --font-color: #383a3c;
     --accent-color: #0078bd;
   }
 
-    * {
-      font-family: Montserrat, sans-serif;
-      padding: 0;
-      margin: 0;
+  * {
+    font-family: Montserrat, sans-serif;
+    padding: 0;
+    margin: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg-color);
+    color: var(--font-color);
+    animation: FadeIn 0.75s linear;
+  }
+
+  header, main, footer {
+    max-width: 780px;
+    margin: auto;
+    padding: 1.25rem;
+  }
+
+  footer {
+    font-style: italic;
+    font-size: 0.5em;
+  }
+
+  header > * {
+    display: flex;
+    align-items: center;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 3em;
+    border: 0.07em solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3em;
+    height: 3em;
+
+    /*color: var(--bg-color);*/
+    /*text-shadow: 0.07em 0.07em var(--font-color);*/
+  }
+
+  h2, h3 {
+    margin-top: 0.1em;
+    margin-bottom: 0.25em;
+  }
+
+  p {
+    text-align: justify;
+    margin-bottom: 1em;
+    line-height: 1.7;
+  }
+
+  hr {
+    font-size: 3em;
+    height: 0.07em;
+  }
+
+  a {
+    color: var(--font-color);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  dl {
+    /*display: flex;
+    justify-content: space-between;*/
+  }
+
+  dl > * {
+    width: 24%;
+    display: inline-block;
+
+  }
+  dd, dt {
+    text-align: center;
+  }
+
+  dt {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.5em;
+  }
+
+  dd {
+    font-family: monospace;
+    font-size: 1.25em;
+    margin-top: 0.25em;
+    margin-bottom: 1em;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  button {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    cursor: pointer;
+    padding: 0.5em 2em;
+    transition: 0.2s;
+    border: 1px solid;
+    font-weight: 500;
+  }
+
+  button:hover {
+    background: var(--font-color);
+    color: var(--bg-color);
+    cursor: pointer;
+  }
+
+  section {
+    margin-bottom: 2em;
+  }
+
+  img {
+    width: 240px;
+    display: inline-block;
+    /*border: 0.5px solid var(--font-color);*/
+  }
+
+
+  .cta {
+    height: 6em;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+  }
+
+
+  .headerPattern {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0.25em 0.5em;
+    font-size: 3em;
+    height: 3em;
+  }
+
+  .headerPattern * {
+    height: 3px;
+    background: var(--font-color);
+    animation: IntroGrow 1.5s ease-in-out;
+  }
+
+  .apGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+  }
+
+  .apItem {
+    margin-bottom: 1em;
+  }
+  .apOwner {
+    font-family: monospace;
+    color: var(--accent-color);
+    text-decoration: underline;
+  }
+  .apOwner:hover {
+    text-decoration: none;
+
+  }
+
+  #timeLeft {
+    margin-left: 0.5em;
+    font-family: monospace;
+    font-size: 1.25em;
+  }
+
+
+  @keyframes IntroGrow {
+    0%, 25% {
+      max-width: 0%;
     }
-
-    html {
-      scroll-behavior: smooth;
+    100% {
+      max-width: 100%;
     }
+  }
 
-    body {
-      background: var(--bg-color);
-      color: var(--font-color);
-      animation: FadeIn 0.75s linear;
+  @keyframes FadeIn {
+    0% {
+      opacity: 0;
     }
-
-    header, main {
-      max-width: 840px;
-      margin: auto;
-      padding: 1.25rem;
+    100% {
+      opacity: 1;
     }
+  }
 
-    header > * {
-      display: flex;
-      align-items: center;
+
+  @media(max-width: 820px) {
+    .apGrid {
+      grid-template-columns: 1fr 1fr;
     }
+  }
 
-    h1 {
-      text-align: center;
-      font-size: 3em;
-      border: 3px solid;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 3em;
-      height: 3em;
-
-      /*color: var(--bg-color);*/
-      /*text-shadow: 3px 3px var(--font-color);*/
-    }
-
-    h2, h3 {
-      margin-top: 0.1em;
-      margin-bottom: 0.25em;
-    }
-
-    p {
-      text-align: justify;
-      margin-bottom: 1em;
-      line-height: 1.5;
-    }
-
-    hr {
-      height: 3px;
-    }
-
-    a {
-      color: var(--font-color);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
+  @media(max-width: 600px) {
     dl {
-      /*display: flex;
-      justify-content: space-between;*/
-    }
-
-    dl > * {
-      width: 24%;
-      display: inline-block;
-
-    }
-    dd, dt {
-      text-align: center;
-    }
-
-    dt {
-      text-transform: uppercase;
-      font-weight: 700;
-      font-size: 0.5em;
+      display: inline-flex;
+      flex-direction: column;
+      padding: 0.5em;
+      box-sizing: border-box;
+      width: 49%;
     }
 
     dd {
-      font-family: monospace;
-      font-size: 1.25em;
-      margin-top: 0.25em;
-      margin-bottom: 1em;
+      font-size: 1em;
     }
 
-    table {
+    dl > * {
       width: 100%;
     }
+  }
 
-    button {
-      background: var(--accent-color);
-      color: var(--bg-color);
-      cursor: pointer;
-      padding: 0.5em 2em;
-      transition: 0.2s;
-      border: 1px solid;
-      font-weight: 500;
-    }
-
-    button:hover {
-      background: var(--font-color);
-      color: var(--bg-color);
-      cursor: pointer;
-    }
-
-    section {
-      margin-bottom: 2em;
-    }
-
-    img {
-      width: 240px;
-      display: inline-block;
-      /*border: 0.5px solid var(--font-color);*/
-    }
-
-
-    .cta {
-      height: 6em;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      flex-direction: column;
-    }
-
-
-    .headerPattern {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-sizing: border-box;
-      padding: 0.25em 0.5em;
-      font-size: 3em;
-      height: 3em;
-    }
-
-    .headerPattern * {
-      height: 3px;
-      background: var(--font-color);
-      animation: IntroGrow 1.5s ease-in-out;
-    }
-
+  @media(max-width: 540px) {
     .apGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      justify-items: center;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media(max-width: 500px) {
+    h1 {
+      font-size: 20vw;
+    }
+    header > * {
+      flex-direction: column;
     }
 
-    .apItem {
-      margin-bottom: 1em;
-    }
-
-    #timeLeft {
-      margin-left: 0.5em;
-      font-family: monospace;
-      font-size: 1.25em;
-    }
-
-
-    @keyframes IntroGrow {
-      0%, 25% {
-        max-width: 0%;
-      }
-      100% {
-        max-width: 100%;
-      }
-    }
-
-    @keyframes FadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-
-    @media(max-width: 820px) {
-      .apGrid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media(max-width: 600px) {
-      dl {
-        display: inline-flex;
-        flex-direction: column;
-        padding: 0.5em;
-        box-sizing: border-box;
-        width: 49%;
-      }
-
-      dd {
-        font-size: 1em;
-      }
-
-      dl > * {
-        width: 100%;
-      }
-    }
-
-    @media(max-width: 540px) {
-      .apGrid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media(max-width: 500px) {
-      h1 {
-        font-size: 20vw;
-      }
-      header > * {
-        flex-direction: column;
-      }
-
-    }
+  }
 
   </style>
 
@@ -314,109 +328,130 @@
 
   <main>
     <section id=facts>
-      <dl>
-        <div>
-          <dt>Ticker</dt>
-          <dd>$ETF</dd>
-        </div>
 
-        <div>
-          <dt>Net Asset Value</dt>
-          <dd>0.0001 ETH</dd>
-        </div>
+      <section>
+        <dl>
+          <div>
+            <dt>Ticker</dt>
+            <dd>$ETF</dd>
+          </div>
 
-        <div>
-          <dt>Authorized Participants</dt>
-          <dd>6</dd>
-        </div>
+          <div>
+            <dt>Net Asset Value</dt>
+            <dd>0.0001 ETH</dd>
+          </div>
 
-        <div>
-          <dt>Inception Date</dt>
-          <dd>-/-/--</dd>
-        </div>
-      </dl>
+          <div>
+            <dt>Authorized Participants</dt>
+            <dd>6</dd>
+          </div>
 
-      <dl>
-        <div>
-          <dt>Benchmark</dt>
-          <dd>Ethereum</dd>
-        </div>
+          <div>
+            <dt>Inception Date</dt>
+            <dd>-/-/--</dd>
+          </div>
+        </dl>
 
-        <div>
-          <dt>Sector</dt>
-          <dd>Cryptocurrency</dd>
-        </div>
+        <connect-wallet>
+          <div slot="notConnected" class="connectItem">
+            <dl>
+              <div>
+                <dt>Benchmark</dt>
+                <dd>Ethereum</dd>
+              </div>
 
-        <div>
-          <dt>Gross Expense Ratio</dt>
-          <dd>0.00%</dd>
-        </div>
+              <div>
+                <dt>Sector</dt>
+                <dd>Cryptocurrency</dd>
+              </div>
 
-        <div>
-          <dt>30-Day SEC Yield</dt>
-          <dd>0.00%</dd>
-        </div>
-      </dl>
+              <div>
+                <dt>Gross Expense Ratio</dt>
+                <dd>0.00%</dd>
+              </div>
 
+              <div>
+                <dt>30-Day SEC Yield</dt>
+                <dd>0.00%</dd>
+              </div>
+            </dl>
 
-      <connect-wallet>
-        <div slot="notConnected" class="connectItem">
+            <em style="text-align:center; display: block; margin-bottom: 0.25em">Connect wallet for more info</em>
+          </div>
 
-          <em style="text-align:center; display: block; margin-bottom: 0.25em">Connect wallet for more info</em>
+          <div slot="connected">
+            <dl>
+              <div>
+                <dt>Premium/Discount (bps)</dt>
+                <dd>--</dd>
+              </div>
 
-<!--           <connect-button>
-            <button id="connectButton" slot="button">Connect</button>
-            <div slot="loading">Loading...</div>
-          </connect-button> -->
-        </div>
+              <div>
+                <dt>Market Price</dt>
+                <dd>-</dd>
+              </div>
 
-        <div slot="connected">
-          <dl>
-            <div>
-              <dt>Premium/Discount (bps)</dt>
-              <dd>--</dd>
+              <div>
+                <dt>Shares Outstanding</dt>
+                <dd id="sharesOutstanding">-</dd>
+              </div>
+
+              <div>
+                <dt>Assets Under Management (AUM)</dt>
+                <dd id="aum">-</dd>
+              </div>
+            </dl>
+
+            <dl>
+              <div>
+                <dt>Benchmark</dt>
+                <dd>Ethereum</dd>
+              </div>
+
+              <div>
+                <dt>Sector</dt>
+                <dd>Cryptocurrency</dd>
+              </div>
+
+              <div>
+                <dt>Gross Expense Ratio</dt>
+                <dd>0.00%</dd>
+              </div>
+
+              <div>
+                <dt>30-Day SEC Yield</dt>
+                <dd>0.00%</dd>
+              </div>
+            </dl>
+          </div>
+        </connect-wallet>
+      </section>
+
+      <section>
+        <div style="margin-top: 1em; display: flex; justify-content: space-around;">
+          <div style="display: inline-block;">
+            <h2>Sector Breakdown</h2>
+            <div style="width: 200px; margin: 0.75em auto; ">
+              <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="250" cy="250" r="250" fill="var(--accent-color)"></circle>
+                <text font-size="30px" x="50%" y="40%" dominant-baseline="middle" text-anchor="middle" fill="var(--bg-color)">Cryptocurrency: 100%</text>
+                <line stroke="var(--bg-color)" x1="250" y1="250" x2="500" y2="250"></line>
+              </svg>
             </div>
+          </div>
 
-            <div>
-              <dt>Market Price</dt>
-              <dd>-</dd>
+          <div style="display: inline-block;">
+            <h2>Top 10 Holdings</h2>
+            <div style="width: 200px; margin: 0.75em auto;">
+              <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="250" cy="250" r="250" fill="var(--accent-color)"></circle>
+                <text font-size="30px" x="50%" y="40%" dominant-baseline="middle" text-anchor="middle" fill="var(--bg-color)">Ether: 100%</text>
+                <line stroke="var(--bg-color)" x1="250" y1="250" x2="500" y2="250"></line>
+              </svg>
             </div>
-
-            <div>
-              <dt>Shares Outstanding</dt>
-              <dd>-</dd>
-            </div>
-
-            <div>
-              <dt>Assets Under Management (AUM)</dt>
-              <dd>-</dd>
-            </div>
-          </dl>
-        </div>
-      </connect-wallet>
-      <div style="margin-top: 1em; display: flex; justify-content: space-around;">
-        <div style="display: inline-block;">
-          <h2>Sector Breakdown</h2>
-          <div style="width: 200px; margin: 0.75em auto; ">
-            <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="250" cy="250" r="250" fill="var(--accent-color)"></circle>
-              <text font-size="30px" x="50%" y="40%" dominant-baseline="middle" text-anchor="middle" fill="var(--bg-color)">Cryptocurrency: 100%</text>
-              <line stroke="var(--bg-color)" x1="250" y1="250" x2="500" y2="250"></line>
-            </svg>
           </div>
         </div>
-
-        <div style="display: inline-block;">
-          <h2>Top 10 Holdings</h2>
-          <div style="width: 200px; margin: 0.75em auto;">
-            <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="250" cy="250" r="250" fill="var(--accent-color)"></circle>
-              <text font-size="30px" x="50%" y="40%" dominant-baseline="middle" text-anchor="middle" fill="var(--bg-color)">Ether: 100%</text>
-              <line stroke="var(--bg-color)" x1="250" y1="250" x2="500" y2="250"></line>
-            </svg>
-          </div>
-        </div>
-      </div>
+      </section>
 
       <div style="margin-top: 1em">
         <h3>Overview</h3>
@@ -441,15 +476,15 @@
             <div slot="connected" style="margin-top: 0.5em">
               <div>
                 <dt>Owned By</dt>
-                <dd>-</dd>
+                <dd id="owner-0">-</dd>
               </div>
               <div>
                 <dt>Shares Created</dt>
-                <dd>-</dd>
+                <dd id="created-0">-</dd>
               </div>
               <div>
                 <dt>Shares Redeemed</dt>
-                <dd>-</dd>
+                <dd id="redeemed-0">-</dd>
               </div>
 
             </div>
@@ -461,15 +496,15 @@
             <div slot="connected" style="margin-top: 0.5em">
               <div>
                 <dt>Owned By</dt>
-                <dd>-</dd>
+                <dd id="owner-1">-</dd>
               </div>
               <div>
                 <dt>Shares Created</dt>
-                <dd>-</dd>
+                <dd id="created-1">-</dd>
               </div>
               <div>
                 <dt>Shares Redeemed</dt>
-                <dd>-</dd>
+                <dd id="redeemed-1">-</dd>
               </div>
 
             </div>
@@ -481,15 +516,15 @@
             <div slot="connected" style="margin-top: 0.5em">
               <div>
                 <dt>Owned By</dt>
-                <dd>-</dd>
+                <dd id="owner-2">-</dd>
               </div>
               <div>
                 <dt>Shares Created</dt>
-                <dd>-</dd>
+                <dd id="created-2">-</dd>
               </div>
               <div>
                 <dt>Shares Redeemed</dt>
-                <dd>-</dd>
+                <dd id="redeemed-2">-</dd>
               </div>
 
             </div>
@@ -501,15 +536,15 @@
             <div slot="connected" style="margin-top: 0.5em">
               <div>
                 <dt>Owned By</dt>
-                <dd>-</dd>
+                <dd id="owner-3">-</dd>
               </div>
               <div>
                 <dt>Shares Created</dt>
-                <dd>-</dd>
+                <dd id="created-3">-</dd>
               </div>
               <div>
                 <dt>Shares Redeemed</dt>
-                <dd>-</dd>
+                <dd id="redeemed-3">-</dd>
               </div>
 
             </div>
@@ -521,15 +556,15 @@
             <div slot="connected" style="margin-top: 0.5em">
               <div>
                 <dt>Owned By</dt>
-                <dd>-</dd>
+                <dd id="owner-4">-</dd>
               </div>
               <div>
                 <dt>Shares Created</dt>
-                <dd>-</dd>
+                <dd id="created-4">-</dd>
               </div>
               <div>
                 <dt>Shares Redeemed</dt>
-                <dd>-</dd>
+                <dd id="redeemed-4">-</dd>
               </div>
 
             </div>
@@ -541,15 +576,15 @@
             <div slot="connected" style="margin-top: 0.5em">
               <div>
                 <dt>Owned By</dt>
-                <dd>-</dd>
+                <dd id="owner-5">-</dd>
               </div>
               <div>
                 <dt>Shares Created</dt>
-                <dd>-</dd>
+                <dd id="created-5">-</dd>
               </div>
               <div>
                 <dt>Shares Redeemed</dt>
-                <dd>-</dd>
+                <dd id="redeemed-5">-</dd>
               </div>
 
             </div>
@@ -557,13 +592,21 @@
         </div>
       </div>
     </section>
-
-
-
-
-
-
   </main>
+
+  <footer>
+    <h4>Risk Disclosure</h4>
+
+    <p>ETF is not an investment company registered under the Investment Company Act of 1940, and therefore is not subject to the same regulatory requirements as mutual funds, ETFs, or other exchange-traded products registered under the Investment Company Act of 1940. Before making a financial decision, you should carefully consider the risk factors associated with owning cryptocurrency, and consult your financial advisor. Past performance does not guarantee future results.</p>
+
+    <p>Furthermore, purchasing shares of ETF does not constitute an investment contract, and shares of ETF do not constitute financial securities. Owners of ETF have no reasonable expectaiton of profit, as Authorized Participants are expected to arbitrage any differences between ETF market price and net asset value. Additionally, Authorized Participant NFTs do not constitute financial securities, as any profits derived from ownership of said tokens would be due soley to the efforts of the token owner, rather than the entrepreneurial efforts of others.</p>
+
+    <p>All smart contracts developed by Steve Pikelny, including the ETF and Authorized Participant contracts, are provided "as is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. The developer makes no warranty that the Software will be error-free, uninterrupted, or free of defects. The developer shall not be responsible for any financial loss incurred by the user as a result of using the Software. This includes but is not limited to losses resulting from investment decisions, trading activities, software bugs, or any other financial transactions conducted using the Software.</p>
+
+    <p>Investing in digital assets, such as Ether and elaborate DeFi-inspired memecoins, involves significant risk due to their extreme price volatility and the potential for loss, theft, or compromised private keys. The value of shares is closely tied to acceptance, industry developments, and governance changes, making them highly susceptible to market sentimant. Digital assets represent a new and rapidly evolving industry, and the value of Shares depends on the acceptance of Ethereum. Changes in the governance of a digital asset network may not receive sufficient support from users or stakers, which may negatively affect that digital asset network's ability to grow and respond to challenges. Infesting in ETF comest with risks that could impact ETF's share value, including large-scale sales by major holders, security threats like breaching or hacking, negative sentiment among speculators, and competition from central bank digital currencies and financial initiatives using blockchain technology. A disruption of the internet or a digital asset network, such as the Ethereum network, would affect the ability to transfer digital assets, including Ether and ETF, and would consequently impact their value. There can be no assurance that the smart contracts holding ETF's assets are free of defects, will actually work as designed, or prove to be successful in safeguarding ETFs assets against all possible sources of theft, loss, or damage.</p>
+
+    <div style="text-align:center; font-size: 2em; font-style: normal; margin: 2em;"><a href="https://steviep.xyz" target="_blank" style="color: var(--accent-color); text-decoration: underline;">steviep.xyz</a> (c) 2024</div>
+</footer>
 </body>
 
 
@@ -571,46 +614,96 @@
 <script type="module">
 
   import {$} from './$.js'
-  import {provider} from './eth.js'
+  import {provider, bnToN} from './eth.js'
+
+
+  provider.setContractInfo({
+    ETF: {
+      addr: {
+        local: '0x31403b1e52051883f2Ce1B1b4C89f36034e1221D'
+      },
+      abi: [
+        'function balanceOf(address owner) external view returns (uint256 balance)',
+        'function totalSupply() external view returns (uint256)',
+        'function transfer(address, uint256) external',
+        'event Transfer(address indexed from, address indexed to, uint256 value)'
+      ],
+    },
+    AP: {
+      addr: {
+        local: '0x3791F302f4c9A3fb18d8AD1Fc19D2D4ba6A0d173'
+      },
+      abi: [
+        'function ownerOf(uint256 tokenId) external view returns (address)',
+        'function created(uint256 tokenId) external view returns (uint256)',
+        'function redeemed(uint256 tokenId) external view returns (uint256)',
+      ]
+    }
+  })
+
+
+
+  let ETF, AP
+  provider.onConnect(async (addr) => {
+    ({ ETF, AP } = await provider.getContracts())
+
+    $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
+    $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
+
+    times(6, async i => {
+      const ownerAddr = await AP.ownerOf(i)
+
+      $.id(`owner-${i}`).innerHTML = `<a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a>`
+      $.id(`created-${i}`).innerHTML = fromWei(await AP.created(i)).toFixed(4)
+      $.id(`redeemed-${i}`).innerHTML = fromWei(await AP.redeemed(i)).toFixed(4)
+    })
+
+
+  })
+
+
+
+
+
+
 
 
   const $timeLeft = $.id('timeLeft')
   const $marketChange = $.id('marketChange')
 
-function getNextTimestamp() {
-  const currentTimestamp = Date.now();
-  const currentDate = new Date(currentTimestamp);
-  const currentDay = currentDate.getUTCDay();
-  const currentHour = currentDate.getUTCHours();
-  const currentMinutes = currentDate.getUTCMinutes();
+  function getNextTimestamp() {
+    const currentTimestamp = Date.now();
+    const currentDate = new Date(currentTimestamp);
+    const currentDay = currentDate.getUTCDay();
+    const currentHour = currentDate.getUTCHours();
+    const currentMinutes = currentDate.getUTCMinutes();
 
-  // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 8:30 PM UTC
-  if (currentDay >= 0 && currentDay <= 4 && (currentHour > 20 || (currentHour === 20 && currentMinutes >= 30))) {
-    // Return UTC timestamp for 1 PM the next day
-    const nextDayTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Add 1 day
-    const nextDay = new Date(nextDayTimestamp);
-    nextDay.setUTCHours(13, 0, 0, 0); // Set time to 1 PM UTC
-    return nextDay.getTime();
+    // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 8:30 PM UTC
+    if (currentDay >= 0 && currentDay <= 4 && (currentHour > 20 || (currentHour === 20 && currentMinutes >= 30))) {
+      // Return UTC timestamp for 1 PM the next day
+      const nextDayTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Add 1 day
+      const nextDay = new Date(nextDayTimestamp);
+      nextDay.setUTCHours(13, 0, 0, 0); // Set time to 1 PM UTC
+      return nextDay.getTime();
+    }
+
+    // Check if it's Friday after 8:30 PM UTC, Saturday, or Sunday
+    if (
+      (currentDay === 5 && (currentHour > 20 || (currentHour === 20 && currentMinutes >= 30)))
+      || currentDay === 6 || currentDay === 0)
+    {
+      // Return UTC timestamp for the coming Monday at 1 PM
+      const nextMondayTimestamp = currentTimestamp + ((8 - currentDay) % 7) * 24 * 60 * 60 * 1000; // Add days until Monday
+      const nextMonday = new Date(nextMondayTimestamp);
+      nextMonday.setUTCHours(13, 0, 0, 0); // Set time to 1 PM UTC
+      return nextMonday.getTime();
+    }
+
+    // Return UTC timestamp for the current day at 1 PM
+    currentDate.setUTCHours(20, 30, 0, 0); // Set time to 1 PM UTC
+    return currentDate.getTime();
   }
 
-  // Check if it's Friday after 8:30 PM UTC, Saturday, or Sunday
-  if (
-    (currentDay === 5 && (currentHour > 20 || (currentHour === 20 && currentMinutes >= 30)))
-    || currentDay === 6 || currentDay === 0)
-  {
-    // Return UTC timestamp for the coming Monday at 1 PM
-    const nextMondayTimestamp = currentTimestamp + ((8 - currentDay + 1) % 7) * 24 * 60 * 60 * 1000; // Add days until Monday
-    const nextMonday = new Date(nextMondayTimestamp);
-    nextMonday.setUTCHours(13, 0, 0, 0); // Set time to 1 PM UTC
-    return nextMonday.getTime();
-  }
-
-  // Return UTC timestamp for the current day at 1 PM
-  currentDate.setUTCHours(20, 30, 0, 0); // Set time to 1 PM UTC
-  return currentDate.getTime();
-}
-
-// Test the function
 
   function isMarketOpen() {
     const currentTimestamp = Date.now();
@@ -649,6 +742,7 @@ function getNextTimestamp() {
     }
     return stopInterval
   }
+
 
   function triggerTimer(timeLeft, $elem1, $elem2) {
     const with0 = x => x < 10 ? '0' + Math.floor(x) : Math.floor(x)
