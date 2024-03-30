@@ -13,21 +13,24 @@ $ETF is not an exchange-traded product, nor is it another any other form of 1940
 
 TODO
   - expense ratio once per Q
-  - update tests to 6 APs
 */
 
 
 contract ETF is ERC20 {
   uint256 public constant TOKENS_PER_ETH = 10000;
-  uint256 public constant MONDAY_AM_TIMESTAMP = 1704722400; // Mon Jan 08 2024 09:00:00
-  uint256 public constant MARKET_OPEN_DURATION = 7 hours + 30 minutes;
+  uint256 public constant MONDAY_AM_TIMESTAMP = 1704724200; // Mon Jan 08 2024 09:30:00
+  uint256 public constant MARKET_OPEN_DURATION = 6 hours + 30 minutes;
 
   AuthorizedParticipant public authorizedParticipant;
-
 
   constructor() ERC20('ETF', 'ETF') {
     authorizedParticipant = new AuthorizedParticipant(msg.sender);
   }
+  mapping(uint256 => uint256) public created;
+  mapping(uint256 => uint256) public redeemed;
+
+  event Creation(uint256 _tokenId, uint256 _amount);
+  event Redemption(uint256 _tokenId, uint256 _amount);
 
   function nav() public view returns (uint256) {
     return (address(this).balance) / (totalSupply() / 1 ether);
@@ -46,21 +49,29 @@ contract ETF is ERC20 {
   }
 
 
-  function create(address recipient) external payable {
-    require(msg.sender == address(authorizedParticipant), 'Only Authorized Participants can create tokens');
+  function create(uint256 tokenId, address recipient) external payable {
+    require(msg.sender == authorizedParticipant.ownerOf(tokenId), 'Only Authorized Participants can create tokens');
     uint256 amountToCreate = msg.value * TOKENS_PER_ETH;
     _mint(recipient, amountToCreate);
+
+    created[tokenId] += amountToCreate;
+    authorizedParticipant.metadataUpdate(tokenId);
+    emit Creation(tokenId, amountToCreate);
   }
 
-  function redeem(address recipient, address sender, uint256 amountToBurn) external {
-    require(msg.sender == address(authorizedParticipant), 'Only Authorized Participants can redeem tokens');
-    _burn(sender, amountToBurn);
-    bool sent = payable(recipient).send(amountToBurn / TOKENS_PER_ETH);
+  function redeem(uint256 tokenId,  address recipient, uint256 redeemAmount) external {
+    require(msg.sender == authorizedParticipant.ownerOf(tokenId), 'Only Authorized Participants can redeem tokens');
+    _burn(msg.sender, redeemAmount);
+    bool sent = payable(recipient).send(redeemAmount / TOKENS_PER_ETH);
     require(sent);
+
+    redeemed[tokenId] += redeemAmount;
+    authorizedParticipant.metadataUpdate(tokenId);
+    emit Redemption(tokenId, redeemAmount);
   }
 
   function _beforeTokenTransfer(address, address, uint256) internal virtual override {
-    require(marketIsOpen(), 'Can only transfer during market trading hours (9am-4:30pm EST, M-F)');
+    require(marketIsOpen(), 'Can only transfer during market trading hours (9:30am-4:00pm EST, M-F)');
   }
 }
 
@@ -72,11 +83,6 @@ contract AuthorizedParticipant is ERC721, Ownable {
   ETF public etf;
   TokenURI public tokenURIContract;
 
-  mapping(uint256 => uint256) public created;
-  mapping(uint256 => uint256) public redeemed;
-
-  event Creation(uint256 _tokenId, uint256 _amount);
-  event Redemption(uint256 _tokenId, uint256 _amount);
 
   event MetadataUpdate(uint256 _tokenId);
   event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId);
@@ -85,7 +91,7 @@ contract AuthorizedParticipant is ERC721, Ownable {
     etf = ETF(msg.sender);
     minter = _owner;
     transferOwnership(_owner);
-    tokenURIContract = new TokenURI();
+    tokenURIContract = new TokenURI(msg.sender);
   }
 
 
@@ -104,31 +110,14 @@ contract AuthorizedParticipant is ERC721, Ownable {
     minter = newMinter;
   }
 
-
-  function create(uint256 tokenId, address recipient) external payable {
-    require(msg.sender == ownerOf(tokenId), 'Only Authorized Participants can create tokens');
-    etf.create{value: msg.value}(recipient);
-    uint256 amount = msg.value * etf.TOKENS_PER_ETH();
-    created[tokenId] += amount;
-
-    emit Creation(tokenId, amount);
-    emit MetadataUpdate(tokenId);
-  }
-
-  function redeem(uint256 tokenId,  address recipient, uint256 redeemAmount) external {
-    require(msg.sender == ownerOf(tokenId), 'Only Authorized Participants can redeem tokens');
-    etf.redeem(recipient, msg.sender, redeemAmount);
-    redeemed[tokenId] += redeemAmount;
-
-    emit Redemption(tokenId, redeemAmount);
+  function metadataUpdate(uint256 tokenId) external {
+    require(msg.sender == address(etf));
     emit MetadataUpdate(tokenId);
   }
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     return TokenURI(tokenURIContract).tokenURI(tokenId);
   }
-
-
 
   function setURIContract(address _uriContract) external onlyOwner {
     tokenURIContract = TokenURI(_uriContract);
@@ -141,15 +130,14 @@ contract AuthorizedParticipant is ERC721, Ownable {
 contract TokenURI {
   using Strings for uint256;
 
-  AuthorizedParticipant public baseContract;
+  ETF public etf;
 
-  string public externalUrl = '';
-  string public description = "";
+  string public externalUrl = "https://steviep.xyz/etf";
+  string public description = "ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.";
 
 
-
-  constructor() {
-    baseContract = AuthorizedParticipant(msg.sender);
+  constructor(address _etf) {
+    etf = ETF(_etf);
   }
 
   function tokenURI(uint256 tokenId) public view returns (string memory) {
@@ -158,8 +146,8 @@ contract TokenURI {
       Base64.encode(rawSVG(tokenId))
     );
 
-    uint256 tokensCreated = (baseContract.created(tokenId) / 1 ether);
-    uint256 tokensRedeemed = (baseContract.redeemed(tokenId) / 1 ether);
+    uint256 tokensCreated = (etf.created(tokenId) / 1 ether);
+    uint256 tokensRedeemed = (etf.redeemed(tokenId) / 1 ether);
 
     string memory attrs = string.concat(
       '[',
@@ -172,7 +160,7 @@ contract TokenURI {
 
     bytes memory json = abi.encodePacked(
       'data:application/json;utf8,',
-      '{"name": " Authorized Participant #', tokenId.toString(), '",',
+      '{"name": " Authorized Participant ', tokenId.toString(), '",',
       '"description": "', description, '",',
       '"image": "', encodedSVG, '",',
       '"attributes": ', attrs,',',
@@ -183,23 +171,23 @@ contract TokenURI {
   }
 
   function rawSVG(uint256 tokenId) public pure returns (bytes memory) {
-    string[3][6] memory params = [
-      ['0', '383a3c', 'fff'],
-      ['1', '0078bd', 'fff'],
-      ['2', '0078bd', '383a3c'],
-      ['3', 'fff', '383a3c'],
-      ['4', '383a3c', '0078bd'],
-      ['5', 'fff', '0078bd']
+    string[2][6] memory params = [
+      ['383a3c', 'fff'],
+      ['0078bd', 'fff'],
+      ['0078bd', '383a3c'],
+      ['fff', '383a3c'],
+      ['383a3c', '0078bd'],
+      ['fff', '0078bd']
     ];
 
     return abi.encodePacked(
       '<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">'
         '<style>'
-          'text{font-family:monospace;fill:#',params[tokenId][1],';font-size:180px}'
-          'rect{fill:#',params[tokenId][2],';stroke:#',params[tokenId][1],';stroke-width:35px}'
+          'text{font-family:monospace;fill:#',params[tokenId][0],';font-size:180px}'
+          'rect{fill:#',params[tokenId][1],';stroke:#',params[tokenId][0],';stroke-width:35px}'
         '</style>'
         '<rect x="0" y="0" width="500" height="500"></rect>'
-        '<text class="fillLight" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">AP',params[tokenId][0],'</text>'
+        '<text class="fillLight" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">AP',tokenId.toString(),'</text>'
       '</svg>'
     );
   }

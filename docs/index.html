@@ -25,151 +25,11 @@
   <meta property="og:description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
 
 
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+
   <style type="text/css">
 
-  @font-face {
-    font-family: 'Montserrat';
-    src: url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-    src: url('./Montserrat/static/Montserrat-Refular.ttf');
-    src: url('./Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype-variations'),
-         url('./Montserrat/static/Montserrat-Refular.ttf') format('truetype');
-  }
 
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
-  :root {
-    --bg-color: #fff;
-    --font-color: #383a3c;
-    --accent-color: #0078bd;
-  }
-
-  * {
-    font-family: Montserrat, sans-serif;
-    padding: 0;
-    margin: 0;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    background: var(--bg-color);
-    color: var(--font-color);
-    animation: FadeIn 0.75s linear;
-  }
-
-  header, main, footer {
-    max-width: 780px;
-    margin: auto;
-    padding: 1.25rem;
-  }
-
-  footer {
-    font-style: italic;
-    font-size: 0.5em;
-  }
-
-  header > * {
-    display: flex;
-    align-items: center;
-  }
-
-  h1 {
-    text-align: center;
-    font-size: 3em;
-    border: 0.07em solid;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3em;
-    height: 3em;
-
-    /*color: var(--bg-color);*/
-    /*text-shadow: 0.07em 0.07em var(--font-color);*/
-  }
-
-  h2, h3 {
-    margin-top: 0.1em;
-    margin-bottom: 0.25em;
-  }
-
-  p {
-    text-align: justify;
-    margin-bottom: 1em;
-    line-height: 1.7;
-  }
-
-  hr {
-    font-size: 3em;
-    height: 0.07em;
-  }
-
-  a {
-    color: var(--font-color);
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  dl {
-    /*display: flex;
-    justify-content: space-between;*/
-  }
-
-  dl > * {
-    width: 24%;
-    display: inline-block;
-
-  }
-  dd, dt {
-    text-align: center;
-  }
-
-  dt {
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.5em;
-  }
-
-  dd {
-    font-family: monospace;
-    font-size: 1.25em;
-    margin-top: 0.25em;
-    margin-bottom: 1em;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  button {
-    background: var(--accent-color);
-    color: var(--bg-color);
-    cursor: pointer;
-    padding: 0.5em 2em;
-    transition: 0.2s;
-    border: 1px solid;
-    font-weight: 500;
-  }
-
-  button:hover {
-    background: var(--font-color);
-    color: var(--bg-color);
-    cursor: pointer;
-  }
-
-  section {
-    margin-bottom: 2em;
-  }
-
-  img {
-    width: 240px;
-    display: inline-block;
-    /*border: 0.5px solid var(--font-color);*/
-  }
 
 
   .cta {
@@ -181,22 +41,6 @@
   }
 
 
-  .headerPattern {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding: 0.25em 0.5em;
-    font-size: 3em;
-    height: 3em;
-  }
-
-  .headerPattern * {
-    height: 3px;
-    background: var(--font-color);
-    animation: IntroGrow 1.5s ease-in-out;
-  }
 
   .apGrid {
     display: grid;
@@ -224,23 +68,6 @@
   }
 
 
-  @keyframes IntroGrow {
-    0%, 25% {
-      max-width: 0%;
-    }
-    100% {
-      max-width: 100%;
-    }
-  }
-
-  @keyframes FadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
 
 
   @media(max-width: 820px) {
@@ -249,23 +76,6 @@
     }
   }
 
-  @media(max-width: 600px) {
-    dl {
-      display: inline-flex;
-      flex-direction: column;
-      padding: 0.5em;
-      box-sizing: border-box;
-      width: 49%;
-    }
-
-    dd {
-      font-size: 1em;
-    }
-
-    dl > * {
-      width: 100%;
-    }
-  }
 
   @media(max-width: 540px) {
     .apGrid {
@@ -273,15 +83,7 @@
     }
   }
 
-  @media(max-width: 500px) {
-    h1 {
-      font-size: 20vw;
-    }
-    header > * {
-      flex-direction: column;
-    }
 
-  }
 
   </style>
 
@@ -318,7 +120,7 @@
         </connect-wallet>
       </div>
     </div>
-    <div style="display: block; text-align: center; margin-top: 1em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:00AM-4:30PM [EST]</div>
+    <div style="display: block; text-align: center; margin-top: 1em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:30AM-4:00PM [EST]</div>
 
 
     <div style="display: flex; justify-content: center; margin-top: 0.5em;">
@@ -457,7 +259,7 @@
         <h3>Overview</h3>
         <p>ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.</p>
 
-        <p>All shares are standard ERC-20 tokens that may only be traded during market trading hours of Monday through Friday, 9:00am to 4:30pm Eastern Standard Time. Market holidays are not recognized. Shares of ETF may only be created and redeemed by the owners of Authorized Participants (APs) Non Fungible Tokens (NFTs).</p>
+        <p>All shares are standard ERC-20 tokens that may only be traded during market trading hours of Monday through Friday, 9:30am to 4:00pm Eastern Standard Time. Market holidays are not recognized. Shares of ETF may only be created and redeemed by the owners of Authorized Participants (APs) Non Fungible Tokens (NFTs).</p>
 
         <p>ETF is not an investment company registered under the Investment Company Act of 1940, and therefore is not subject to the same regulatory requirements as mutual funds or ETFs registered under the Investment Company Act of 1940. ETF is not a commodity pool for purposes of the Commodity Exchange Act. Before making an investment decision, you should carefully consider the risk factors associated with owning cryptocurrency, and consult your financial advisor. Past performance does not guarantee future results.</p>
       </div>
@@ -624,6 +426,8 @@
       },
       abi: [
         'function balanceOf(address owner) external view returns (uint256 balance)',
+        'function created(uint256 tokenId) external view returns (uint256)',
+        'function redeemed(uint256 tokenId) external view returns (uint256)',
         'function totalSupply() external view returns (uint256)',
         'function transfer(address, uint256) external',
         'event Transfer(address indexed from, address indexed to, uint256 value)'
@@ -635,8 +439,6 @@
       },
       abi: [
         'function ownerOf(uint256 tokenId) external view returns (address)',
-        'function created(uint256 tokenId) external view returns (uint256)',
-        'function redeemed(uint256 tokenId) external view returns (uint256)',
       ]
     }
   })
@@ -657,8 +459,8 @@
         const ownerAddr = await AP.ownerOf(i)
 
         $.id(`owner-${i}`).innerHTML = `<a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a>`
-        $.id(`created-${i}`).innerHTML = fromWei(await AP.created(i)).toFixed(4)
-        $.id(`redeemed-${i}`).innerHTML = fromWei(await AP.redeemed(i)).toFixed(4)
+        $.id(`created-${i}`).innerHTML = fromWei(await ETF.created(i)).toFixed(4)
+        $.id(`redeemed-${i}`).innerHTML = fromWei(await ETF.redeemed(i)).toFixed(4)
       })
     } catch (e) {}
 
@@ -682,29 +484,28 @@
     const currentHour = currentDate.getUTCHours();
     const currentMinutes = currentDate.getUTCMinutes();
 
-    // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 8:30 PM UTC
-    if (currentDay >= 0 && currentDay <= 4 && (currentHour > 20 || (currentHour === 20 && currentMinutes >= 30))) {
+    // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 8:00 PM UTC
+    if (currentDay >= 0 && currentDay <= 4 && currentHour >= 20) {
       // Return UTC timestamp for 1 PM the next day
       const nextDayTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Add 1 day
       const nextDay = new Date(nextDayTimestamp);
-      nextDay.setUTCHours(13, 0, 0, 0); // Set time to 1 PM UTC
+      nextDay.setUTCHours(13, 30, 0, 0); // Set time to 1:30 PM UTC
       return nextDay.getTime();
     }
 
-    // Check if it's Friday after 8:30 PM UTC, Saturday, or Sunday
+    // Check if it's Friday after 8:00 PM UTC, Saturday, or Sunday
     if (
-      (currentDay === 5 && (currentHour > 20 || (currentHour === 20 && currentMinutes >= 30)))
+      (currentDay === 5 && currentHour > 20)
       || currentDay === 6 || currentDay === 0)
     {
-      // Return UTC timestamp for the coming Monday at 1 PM
+      // Return UTC timestamp for the coming Monday at 1:30 PM
       const nextMondayTimestamp = currentTimestamp + ((8 - currentDay) % 7) * 24 * 60 * 60 * 1000; // Add days until Monday
       const nextMonday = new Date(nextMondayTimestamp);
-      nextMonday.setUTCHours(13, 0, 0, 0); // Set time to 1 PM UTC
+      nextMonday.setUTCHours(13, 30, 0, 0); // Set time to 1:30 PM UTC
       return nextMonday.getTime();
     }
 
-    // Return UTC timestamp for the current day at 1 PM
-    currentDate.setUTCHours(20, 30, 0, 0); // Set time to 1 PM UTC
+    currentDate.setUTCHours(20, 0, 0, 0);
     return currentDate.getTime();
   }
 
@@ -716,7 +517,7 @@
     const currentHour = currentDate.getUTCHours();
     const currentMinutes = currentDate.getUTCMinutes();
 
-    return currentDay > 0 && currentDay < 6 && currentHour > 13 && (currentHour < 20 || currentHour == 20 && currentMinutes < 30)
+    return currentDay > 0 && currentDay < 6 && (currentHour > 13 || currentHour === 13 && currentMinutes >= 30) && currentHour < 20
   }
 
 
