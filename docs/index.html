@@ -348,7 +348,7 @@
 
           <div>
             <dt>Inception Date</dt>
-            <dd>-/-/--</dd>
+            <dd>TBD</dd>
           </div>
         </dl>
 
@@ -383,22 +383,22 @@
             <dl>
               <div>
                 <dt>Premium/Discount (bps)</dt>
-                <dd>--</dd>
+                <dd>N/A</dd>
               </div>
 
               <div>
                 <dt>Market Price</dt>
-                <dd>-</dd>
+                <dd>N/A</dd>
               </div>
 
               <div>
                 <dt>Shares Outstanding</dt>
-                <dd id="sharesOutstanding">-</dd>
+                <dd id="sharesOutstanding">0.0000</dd>
               </div>
 
               <div>
                 <dt>Assets Under Management (AUM)</dt>
-                <dd id="aum">-</dd>
+                <dd id="aum">0.0000</dd>
               </div>
             </dl>
 
@@ -645,18 +645,22 @@
 
   let ETF, AP
   provider.onConnect(async (addr) => {
-    ({ ETF, AP } = await provider.getContracts())
 
-    $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
-    $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
+    try {
 
-    times(6, async i => {
-      const ownerAddr = await AP.ownerOf(i)
+      ({ ETF, AP } = await provider.getContracts())
 
-      $.id(`owner-${i}`).innerHTML = `<a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a>`
-      $.id(`created-${i}`).innerHTML = fromWei(await AP.created(i)).toFixed(4)
-      $.id(`redeemed-${i}`).innerHTML = fromWei(await AP.redeemed(i)).toFixed(4)
-    })
+      $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
+      $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
+
+      times(6, async i => {
+        const ownerAddr = await AP.ownerOf(i)
+
+        $.id(`owner-${i}`).innerHTML = `<a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a>`
+        $.id(`created-${i}`).innerHTML = fromWei(await AP.created(i)).toFixed(4)
+        $.id(`redeemed-${i}`).innerHTML = fromWei(await AP.redeemed(i)).toFixed(4)
+      })
+    } catch (e) {}
 
 
   })
