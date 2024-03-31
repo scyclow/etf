@@ -1,3 +1,19 @@
+<!--
+
+TODO
+  - popup at beginning of site
+  - Are you
+    - An Individual Investor
+    - An Authorized Participant
+
+
+
+
+
+ -->
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -268,131 +284,64 @@
 
     <section id="ap">
       <h2>Authorized Participants (AP)</h2>
-      <p>Authorized Partitipants have the sole right (but not the obligation) to create and redeem shares of ETF. APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
+      <p>Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF. APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
 
 
       <div class="apGrid">
         <div id="ap0" class="apItem">
-          <img src="./assets/ap0.svg">
+          <a href="./ap/0"><img src="./assets/ap0.svg"></a>
           <connect-wallet>
             <div slot="connected" style="margin-top: 0.5em">
-              <div>
-                <dt>Owned By</dt>
-                <dd id="owner-0">-</dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd id="created-0">-</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd id="redeemed-0">-</dd>
-              </div>
-
+              <div id="ap0-display"></div>
             </div>
           </connect-wallet>
         </div>
         <div id="ap1" class="apItem">
-          <img src="./assets/ap1.svg">
+          <a href="./ap/1"><img src="./assets/ap1.svg"></a>
           <connect-wallet>
             <div slot="connected" style="margin-top: 0.5em">
-              <div>
-                <dt>Owned By</dt>
-                <dd id="owner-1">-</dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd id="created-1">-</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd id="redeemed-1">-</dd>
-              </div>
-
+              <div id="ap1-display"></div>
             </div>
           </connect-wallet>
         </div>
         <div id="ap2" class="apItem">
-          <img src="./assets/ap2.svg">
+          <a href="./ap/2"><img src="./assets/ap2.svg"></a>
           <connect-wallet>
             <div slot="connected" style="margin-top: 0.5em">
-              <div>
-                <dt>Owned By</dt>
-                <dd id="owner-2">-</dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd id="created-2">-</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd id="redeemed-2">-</dd>
-              </div>
-
+              <div id="ap2-display"></div>
             </div>
           </connect-wallet>
         </div>
         <div id="ap3" class="apItem">
-          <img src="./assets/ap3.svg">
+          <a href="./ap/3"><img src="./assets/ap3.svg"></a>
           <connect-wallet>
             <div slot="connected" style="margin-top: 0.5em">
-              <div>
-                <dt>Owned By</dt>
-                <dd id="owner-3">-</dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd id="created-3">-</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd id="redeemed-3">-</dd>
-              </div>
-
+              <div id="ap3-display"></div>
             </div>
           </connect-wallet>
         </div>
         <div id="ap4" class="apItem">
-          <img src="./assets/ap4.svg">
+          <a href="./ap/4"><img src="./assets/ap4.svg"></a>
           <connect-wallet>
             <div slot="connected" style="margin-top: 0.5em">
-              <div>
-                <dt>Owned By</dt>
-                <dd id="owner-4">-</dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd id="created-4">-</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd id="redeemed-4">-</dd>
-              </div>
-
+              <div id="ap4-display"></div>
             </div>
           </connect-wallet>
         </div>
         <div id="ap5" class="apItem">
-          <img src="./assets/ap5.svg">
+          <a href="./ap/5"><img src="./assets/ap5.svg"></a>
           <connect-wallet>
             <div slot="connected" style="margin-top: 0.5em">
-              <div>
-                <dt>Owned By</dt>
-                <dd id="owner-5">-</dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd id="created-5">-</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd id="redeemed-5">-</dd>
-              </div>
-
+              <div id="ap5-display"></div>
             </div>
           </connect-wallet>
         </div>
       </div>
+    </section>
+
+    <section>
+      <h3><a href="https://etherscan" style="color:var(--accent-color); text-decoration: underline;">ETF Contract</a></h3>
+      <h3><a href="https://etherscan" style="color:var(--accent-color); text-decoration: underline;">Authorized Participant Contract</a></h3>
     </section>
   </main>
 
@@ -412,45 +361,32 @@
 </body>
 
 
-
+<script src="./contracts.js"></script>
 <script type="module">
 
   import {$} from './$.js'
-  import {provider, bnToN} from './eth.js'
+  import {provider, bnToN, ZERO_ADDR} from './eth.js'
 
 
-  provider.setContractInfo({
-    ETF: {
-      addr: {
-        local: '0x31403b1e52051883f2Ce1B1b4C89f36034e1221D'
-      },
-      abi: [
-        'function balanceOf(address owner) external view returns (uint256 balance)',
-        'function created(uint256 tokenId) external view returns (uint256)',
-        'function redeemed(uint256 tokenId) external view returns (uint256)',
-        'function totalSupply() external view returns (uint256)',
-        'function transfer(address, uint256) external',
-        'event Transfer(address indexed from, address indexed to, uint256 value)'
-      ],
-    },
-    AP: {
-      addr: {
-        local: '0x3791F302f4c9A3fb18d8AD1Fc19D2D4ba6A0d173'
-      },
-      abi: [
-        'function ownerOf(uint256 tokenId) external view returns (address)',
-      ]
-    }
-  })
+  provider.setContractInfo(CONTRACTS)
 
 
+  const apToAuctionId = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+  }
 
-  let ETF, AP
+  let ETF, AP, AUCTION
   provider.onConnect(async (addr) => {
 
     try {
 
-      ({ ETF, AP } = await provider.getContracts())
+      ({ ETF, AP, AUCTION } = await provider.getContracts())
+      console.log(AUCTION)
 
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
       $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
@@ -458,11 +394,63 @@
       times(6, async i => {
         const ownerAddr = await AP.ownerOf(i)
 
-        $.id(`owner-${i}`).innerHTML = `<a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a>`
-        $.id(`created-${i}`).innerHTML = fromWei(await ETF.created(i)).toFixed(4)
-        $.id(`redeemed-${i}`).innerHTML = fromWei(await ETF.redeemed(i)).toFixed(4)
+        if (ownerAddr === AUCTION.address) {
+          const [
+            highestBid,
+            auction,
+            auctionEndTime,
+            isActive
+          ] = await Promise.all([
+            AUCTION.auctionIdToHighestBid(apToAuctionId[i]),
+            AUCTION.auctionIdToAuction(apToAuctionId[i]),
+            AUCTION.auctionEndTime(apToAuctionId[i]),
+            AUCTION.isActive(apToAuctionId[i]),
+          ])
+
+          const bidderDisplay = highestBid.bidder === ZERO_ADDR
+            ? '-'
+            : `<a href="https://etherscan.io/address/${highestBid.bidder}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(highestBid.bidder)}</a></dd>`
+
+          $.id(`ap${i}-display`).innerHTML = `
+            <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">Make Bid →</a></div>
+            <div>
+              <dt>Highest Bidder</dt>
+              <dd>${bidderDisplay}</dd>
+            </div>
+            <div>
+              <dt>Highest Bid</dt>
+              <dd>${fromWei(highestBid.amount)} ETH</dd>
+            </div>
+            <div>
+              <dt>Time Left</dt>
+              <dd id="ap${i}-timer">-</dd>
+            </div>
+          `
+
+          if (isActive && bnToN(highestBid.timestamp)) triggerTimer(bnToN(auctionEndTime) * 1000 - Date.now(), $.id(`ap${i}-timer`))
+
+        } else {
+          $.id(`ap${i}-display`).innerHTML = `
+
+            <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">More Info →</a></div>
+            <div>
+              <dt>Owned By</dt>
+              <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
+            </div>
+            <div>
+              <dt>Shares Created</dt>
+              <dd>${fromWei(await ETF.created(i)).toFixed(4)}</dd>
+            </div>
+            <div>
+              <dt>Shares Redeemed</dt>
+              <dd>${fromWei(await ETF.redeemed(i)).toFixed(4)}</dd>
+            </div>
+          `
+        }
       })
-    } catch (e) {}
+    } catch (e) {
+      console.error(e)
+    }
 
 
   })
@@ -549,7 +537,7 @@
   }
 
 
-  function triggerTimer(timeLeft, $elem1, $elem2) {
+  function triggerTimer(timeLeft, $elem1, cb) {
     const with0 = x => x < 10 ? '0' + Math.floor(x) : Math.floor(x)
     let timeLeftCounter = timeLeft
     return setRunInterval(() => {
@@ -565,16 +553,18 @@
         timeLeftCounter = getNextTimestamp() - Date.now()
       }
 
-      if (isMarketOpen()) {
-        $elem2.innerHTML = 'Market Closes in:'
-      } else {
-        $elem2.innerHTML = 'Market Opens in:'
+      if (cb) cb()
 
-      }
     }, 1000)
   }
 
-  triggerTimer(getNextTimestamp() - Date.now(), $timeLeft, $marketChange)
+  triggerTimer(getNextTimestamp() - Date.now(), $timeLeft, () => {
+    if (isMarketOpen()) {
+       $marketChange.innerHTML = 'Market Closes in:'
+    } else {
+       $marketChange.innerHTML = 'Market Opens in:'
+    }
+  })
 
 </script>
 </html>

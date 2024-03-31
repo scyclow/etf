@@ -1,0 +1,315 @@
+
+h1 {
+  font-size: 2em;
+}
+
+.headerPattern {
+  height: 2em;
+}
+
+label, label input {
+  cursor: pointer;
+}
+
+aside {
+  font-size: 10px;
+  display: block;
+  margin: 0.8em auto;
+  max-width: 450px;
+}
+.center {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.error {
+  color: #f00;
+  text-align: center;
+  margin: 0.25em 0;
+}
+
+
+.address {
+  font-family: monospace;
+  font-weight: bold;
+}
+
+#connectWalletSection {
+  display: flex;
+  justify-content: center;
+}
+
+#lastUpdated, #connectedAs1, #connectedAs2, #connectedAs2 a, #connectedBalance, #connectedNetwork {
+  font-family: monospace;
+}
+
+#connectedAs1 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+#newBidAmount, .shareCreationRedemption {
+  max-width: 130px;
+  border:  1px solid var(--font-color);
+  margin-right: 1em;
+}
+
+#newBidAmount, #submitBid {
+  font-size: 1.5em;
+  padding: 0.25em;
+  text-align: center;
+}
+
+#submitSettlement {
+  font-size: 1.5em;
+  padding: 0.5em 1.5em;
+  text-align: center;
+}
+
+.shareCreationRedemption {
+  font-size: 1em;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+#submitBid {
+  width: 100px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: no-drop;
+}
+
+button:disabled:hover {
+  background: var(--font-color);
+  color: var(--bg-color);
+}
+
+#bidderSecondaryInfo {
+  text-align: center;
+  margin-top: 0.5em;
+}
+
+#connectWalletSection button {
+  font-size: 1.5em;
+  padding: 0.5em 1.5em;
+}
+
+
+button {
+  cursor: pointer;
+/*  background: var(--font-color);
+  color: var(--bg-color);
+  border: 1px solid;*/
+  transition: 150ms;
+}
+
+/*button:hover {
+  background: var(--bg-color);
+  color: var(--font-color);
+}*/
+
+#settlementSectionContent {
+  display: flex;
+  justify-content: center;
+}
+
+
+#bidSectionContent {
+  display: flex;
+  justify-content: center;
+}
+
+#bidSectionLoadingMessage {
+  text-align: center;
+}
+
+#activeBidSection {
+  display: flex;
+  justify-content: space-between;
+}
+
+#highestBidder, #highestBidder a {
+  font-family: monospace;
+}
+
+
+#timeLeft {
+  font-size: 3em;
+  width: 5.25em;
+}
+
+#highestBidAmount {
+  font-size: 2em;
+}
+
+#highestBidder {
+  font-size: 1em;
+}
+
+.imgContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3em;
+}
+.imgContainer img {
+  max-height: 75vh;
+  width: 400px;
+  max-width: 100%;
+
+}
+
+.label {
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+
+.bidUSD {
+  font-size: 0.75em;
+  display: inline-block;
+}
+
+ul#previousBidList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#answerContent li {
+  margin-left: 1em;
+  margin-bottom: 0.25em;
+  text-align: left;
+  font-size: 0.85em;
+}
+
+.bidHistoryItem {
+  margin: 1em 0;
+  border-bottom: 1px dashed;
+  padding-bottom: 0.5em;
+}
+.bidHistoryItem * {
+  font-family: monospace;
+}
+
+#timeDiff {
+  font-size: 0.85em;
+  max-width: 225px;
+}
+
+.bidHistoryRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+@media (max-width: 635px) {
+  #activeBidSection {
+    flex-direction: column-reverse;
+    max-width: 320px;
+    margin: auto;
+  }
+  #activeBidSection > * {
+    margin: 1em 0;
+    max-width: 320px;
+  }
+
+  .bidSection {
+    margin: 1.5em auto;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
+@media (max-width: 370px) {
+  #connectedAs2, .address {
+    font-size: 0.85em;
+  }
+
+  #timeLeft {
+    font-size: 2em;
+  }
+
+  #highestBidAmount {
+    font-size: 1.5em;
+  }
+
+  #highestBidder {
+    font-size: 0.75em;
+  }
+
+  .bidHistoryRow {
+    flex-direction: column;
+  }
+}
+
+
+#question {
+  color: var(--accent-color);
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+}
+
+#answer {
+  padding: 0.5em;
+  border: 1px dashed;
+}
+
+#answerX {
+  font-family: monospace;
+  cursor: pointer;
+}
+
+
+header h2 {
+  margin-bottom: 0;
+}
+header a {
+  color: var(--font-color);
+  text-decoration: none;
+  padding: 1em;
+}
+
+
+p {
+  margin-bottom: 0.5em;
+  text-align: justify;
+}
+
+code {
+  font-family: monospace;
+  text-align: center;
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+.calculation code {
+  text-align: left;
+  margin-left: 1em;
+}
+
+.calculation {
+  margin: auto;
+  max-width: 480px;
+}
+
+
+@media (max-width: 500px) {
+  header > * {
+    flex-direction: row;
+  }
+
+  .imgContainer {
+    margin-top: 2em;
+  }
+}

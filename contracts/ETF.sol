@@ -2,7 +2,6 @@
 // // SPDX-License-Identifier: MIT
 
 import "./Dependencies.sol";
-import "hardhat/console.sol";
 
 pragma solidity ^0.8.23;
 
@@ -13,6 +12,45 @@ $ETF is not an exchange-traded product, nor is it another any other form of 1940
 
 TODO
   - expense ratio once per Q
+
+
+
+
+  - KYC
+    - costs 0.01
+      - first name
+      - last name
+      - SSN
+    - id: address
+    - can buy up to 1 ETH
+
+
+  - deposit AP0 into SALE (S___ A____ Liquidity Event) contract
+    - any KYC holder can use AP0 for one market day
+
+
+  - wait one week until AP auction
+  OR
+  - same day AP auction
+
+
+
+  - Expense Ratio
+    - 0.03
+
+    1.000000 eth
+    0.0003
+    - note that this is well below the industry standard
+
+
+
+  - allow voting
+    - 5/6 -> revoke 6th AP
+    - each AP must chose 2 market holidays every 365 days
+      - cannot choose overlapping days
+      - max of 10 market holidays
+
+
 */
 
 
@@ -78,7 +116,7 @@ contract ETF is ERC20 {
 
 contract AuthorizedParticipant is ERC721, Ownable {
   uint256 public constant totalSupply = 6;
-  address public minter;
+  // address public minter;
 
   ETF public etf;
   TokenURI public tokenURIContract;
@@ -89,9 +127,13 @@ contract AuthorizedParticipant is ERC721, Ownable {
 
   constructor(address _owner) ERC721('AuthorizedParticipant', 'AP') {
     etf = ETF(msg.sender);
-    minter = _owner;
+    // minter = _owner;
     transferOwnership(_owner);
     tokenURIContract = new TokenURI(msg.sender);
+
+    for (uint i; i < totalSupply; i++) {
+      _mint(_owner, i);
+    }
   }
 
 
@@ -99,16 +141,16 @@ contract AuthorizedParticipant is ERC721, Ownable {
     return _exists(tokenId);
   }
 
-  function mint(address recipient, uint256 tokenId) public {
-    require(minter == msg.sender, 'Caller is not the minting address');
-    require(tokenId < totalSupply, 'Token ID out of bounds');
+  // function mint(address recipient, uint256 tokenId) public {
+  //   require(minter == msg.sender, 'Caller is not the minting address');
+  //   require(tokenId < totalSupply, 'Token ID out of bounds');
 
-    _mint(recipient, tokenId);
-  }
+  //   _mint(recipient, tokenId);
+  // }
 
-  function setMinter(address newMinter) external onlyOwner {
-    minter = newMinter;
-  }
+  // function setMinter(address newMinter) external onlyOwner {
+  //   minter = newMinter;
+  // }
 
   function metadataUpdate(uint256 tokenId) external {
     require(msg.sender == address(etf));
@@ -133,7 +175,7 @@ contract TokenURI {
   ETF public etf;
 
   string public externalUrl = "https://steviep.xyz/etf";
-  string public description = "ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.";
+  string public description = "ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF. ";
 
 
   constructor(address _etf) {

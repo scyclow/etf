@@ -79,24 +79,14 @@ describe('ETF', () => {
 
 
 
-  it('minting AP', async () => {
+  it('init', async () => {
 
-    await expectRevert(
-      AuthorizedParticipant.connect(ap0).mint(ap0.address, 0),
-      'Caller is not the minting address'
-    )
-
-    await expectRevert(
-      AuthorizedParticipant.connect(minter).mint(ap0.address, 6),
-      'Token ID out of bounds'
-    )
-
-    await AuthorizedParticipant.connect(minter).mint(ap0.address, 0)
-    await AuthorizedParticipant.connect(minter).mint(ap1.address, 1)
-    await AuthorizedParticipant.connect(minter).mint(ap2.address, 2)
-    await AuthorizedParticipant.connect(minter).mint(ap3.address, 3)
-    await AuthorizedParticipant.connect(minter).mint(ap4.address, 4)
-    await AuthorizedParticipant.connect(minter).mint(ap4.address, 5)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap0.address, 0)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap1.address, 1)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap2.address, 2)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap3.address, 3)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap4.address, 4)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap4.address, 5)
 
 
     expect(await AuthorizedParticipant.connect(minter).totalSupply()).to.equal(6)
@@ -115,8 +105,8 @@ describe('ETF', () => {
   })
 
   it('only APs should be able to create tokens', async () => {
-    await AuthorizedParticipant.connect(minter).mint(ap0.address, 0)
-    await AuthorizedParticipant.connect(minter).mint(ap1.address, 1)
+    await AuthorizedParticipant.connect(minter)[safeTransferFrom](minter.address, ap0.address, 0)
+    await AuthorizedParticipant.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
 
 
     await expectRevert(
@@ -187,10 +177,10 @@ describe('ETF', () => {
 
   })
 
-  it.only('should not trade outside market hours', async () => {
+  it('should not trade outside market hours', async () => {
     const errorMsg = 'Can only transfer during market trading hours (9:30am-4:00pm EST, M-F)'
 
-    await AuthorizedParticipant.connect(minter).mint(ap0.address, 0)
+    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap0.address, 0)
     await ETF.connect(ap0).create(0, ap0.address, txValue('1'))
 
 
