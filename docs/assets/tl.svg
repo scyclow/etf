@@ -1,31 +1,5 @@
-
-
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title></title>
-
-  <style type="text/css">
-    body {
-      background: #888;
-    }
-  </style>
-</head>
-<body>
-
-
-
-<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"><
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
   <circle cx="250" cy="250" r="250" fill="#0078bd"></circle>
   <circle cx="250" cy="250" r="230" fill="#383a3c"></circle>
   <text x="250" y="270" dominant-baseline="middle" text-anchor="middle" fill="#fff" font-size="250" font-family="sans-serif">TL</text>
 </svg>
-
-
-
-
-
-
-</body>
-</html>

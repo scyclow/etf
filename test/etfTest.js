@@ -40,8 +40,8 @@ const contractBalance = contract => contract.provider.getBalance(contract.addres
 
 
 
-let ETF, AuthorizedParticipant
-let minter, ap0, ap1, ap2, ap3, ap4, ap5, ethDaddy
+let ETF, AuthorizedParticipants
+let minter, ap1, ap2, ap3, ap4, ap5, ap6, timeLord, rando, ethDaddy
 
 describe('ETF', () => {
   beforeEach(async () => {
@@ -50,13 +50,14 @@ describe('ETF', () => {
     const signers = await ethers.getSigners()
 
     minter = signers[0]
-    ap0 = signers[1]
-    ap1 = signers[2]
-    ap2 = signers[3]
-    ap3 = signers[4]
-    ap4 = signers[5]
-    ap5 = signers[6]
-    rando = signers[7]
+    ap1 = signers[1]
+    ap2 = signers[2]
+    ap3 = signers[3]
+    ap4 = signers[4]
+    ap5 = signers[5]
+    ap6 = signers[6]
+    timeLord = signers[7]
+    rando = signers[8]
 
     ethDaddy = await ethers.getImpersonatedSigner('0x47144372eb383466D18FC91DB9Cd0396Aa6c87A4')
 
@@ -66,10 +67,10 @@ describe('ETF', () => {
     ETF = await ETFFactory.deploy()
     await ETF.deployed()
 
-    const AuthorizedParticipantFactory = await ethers.getContractFactory('AuthorizedParticipant', minter)
+    const AuthorizedParticipantFactory = await ethers.getContractFactory('AuthorizedParticipants', minter)
 
-    AuthorizedParticipant = await AuthorizedParticipantFactory.attach(
-      await ETF.authorizedParticipant()
+    AuthorizedParticipants = await AuthorizedParticipantFactory.attach(
+      await ETF.authorizedParticipants()
     )
 
 
@@ -81,107 +82,123 @@ describe('ETF', () => {
 
   it('init', async () => {
 
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap0.address, 0)
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap1.address, 1)
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap2.address, 2)
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap3.address, 3)
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap4.address, 4)
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap4.address, 5)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap2.address, 2)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap3.address, 3)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap4.address, 4)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap5.address, 5)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap6.address, 6)
 
 
-    expect(await AuthorizedParticipant.connect(minter).totalSupply()).to.equal(6)
-    expect(await AuthorizedParticipant.connect(minter).exists(0)).to.equal(true)
-    expect(await AuthorizedParticipant.connect(minter).exists(1)).to.equal(true)
-    expect(await AuthorizedParticipant.connect(minter).exists(2)).to.equal(true)
-    expect(await AuthorizedParticipant.connect(minter).exists(3)).to.equal(true)
-    expect(await AuthorizedParticipant.connect(minter).exists(4)).to.equal(true)
-    expect(await AuthorizedParticipant.connect(minter).exists(5)).to.equal(true)
-    expect(await AuthorizedParticipant.connect(minter).exists(6)).to.equal(false)
+    expect(await AuthorizedParticipants.connect(minter).totalSupply()).to.equal(7)
+    expect(await AuthorizedParticipants.connect(minter).exists(0)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(1)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(2)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(3)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(4)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(5)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(6)).to.equal(true)
+    expect(await AuthorizedParticipants.connect(minter).exists(7)).to.equal(false)
 
 
-    for (let i = 0; i < 6; i++) {
-      console.log(getSVG(await AuthorizedParticipant.tokenURI(i)))
+    for (let i = 0; i < 7; i++) {
+      console.log(getSVG(await AuthorizedParticipants.tokenURI(i)))
     }
   })
 
   it('only APs should be able to create tokens', async () => {
-    await AuthorizedParticipant.connect(minter)[safeTransferFrom](minter.address, ap0.address, 0)
-    await AuthorizedParticipant.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap2.address, 2)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
 
 
     await expectRevert(
-      ETF.connect(minter).create(0, minter.address, txValue('1')),
+      ETF.connect(minter).create(1, minter.address, txValue('1')),
       'Only Authorized Participants can create tokens'
     )
 
     await expectRevert(
-      ETF.connect(ap0).create(1, minter.address, txValue('1')),
+      ETF.connect(timeLord).create(0, minter.address, txValue('1')),
+      'Time Lord cannot create tokens'
+    )
+
+    await expectRevert(
+      ETF.connect(ap2).create(1, minter.address, txValue('1')),
       'Only Authorized Participants can create tokens'
     )
 
 
-    const startingEthBalance = await getBalance(ap0)
+    const startingEthBalance = await getBalance(ap1)
 
-    await ETF.connect(ap0).create(0, ap0.address, txValue('1'))
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
 
-    const endingEthBalance = await getBalance(ap0)
+    const endingEthBalance = await getBalance(ap1)
     expect(startingEthBalance -  endingEthBalance).to.be.closeTo(1, 0.005)
 
 
-    expect(ethVal(await ETF.balanceOf(ap0.address))).to.equal(10000)
+    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(10000)
     expect(ethVal(await ETF.balanceOf(rando.address))).to.equal(0)
-    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(0)
+    expect(ethVal(await ETF.balanceOf(ap2.address))).to.equal(0)
     expect(ethVal(await ETF.totalSupply())).to.equal(10000)
 
-    await ETF.connect(ap0).create(0, rando.address, txValue('0.5'))
+    await ETF.connect(ap1).create(1, rando.address, txValue('0.5'))
 
-    expect(ethVal(await ETF.balanceOf(ap0.address))).to.equal(10000)
+    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(10000)
     expect(ethVal(await ETF.balanceOf(rando.address))).to.equal(5000)
-    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(0)
+    expect(ethVal(await ETF.balanceOf(ap2.address))).to.equal(0)
     expect(ethVal(await ETF.totalSupply())).to.equal(15000)
 
-    await ETF.connect(ap0).create(0, ap0.address, txValue('1'))
-    expect(ethVal(await ETF.balanceOf(ap0.address))).to.equal(20000)
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
+    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(20000)
 
-    expect(ethVal(await ETF.connect(ap0).created(0))).to.equal(25000)
+    expect(ethVal(await ETF.connect(ap1).created(1))).to.equal(25000)
   })
 
   it('only APs should be able to redeem tokens', async () => {
-    await AuthorizedParticipant.connect(minter).mint(ap0.address, 0)
-    await ETF.connect(ap0).create(0, ap0.address, txValue('1'))
-    await ETF.connect(ap0).transfer(rando.address, toETH(1000))
-    expect(ethVal(await ETF.balanceOf(ap0.address))).to.equal(9000)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
+
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
+    await ETF.connect(ap1).transfer(rando.address, toETH(1000))
+    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(9000)
     expect(ethVal(await ETF.balanceOf(rando.address))).to.equal(1000)
 
-    const startingBalance = await getBalance(ap0)
-    await ETF.connect(ap0).redeem(0, ap0.address, toETH(7000))
-    const endingBalance = await getBalance(ap0)
+    const startingBalance = await getBalance(ap1)
+    await ETF.connect(ap1).redeem(1, ap1.address, toETH(7000))
+    const endingBalance = await getBalance(ap1)
 
-    expect(ethVal(await ETF.balanceOf(ap0.address))).to.equal(2000)
+    expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(2000)
     expect(endingBalance - startingBalance).to.be.closeTo(0.7, 0.005)
 
     await expectRevert(
-      ETF.connect(rando).redeem(0, rando.address, toETH(2000)),
+      ETF.connect(rando).redeem(1, rando.address, toETH(2000)),
       'Only Authorized Participants can redeem tokens'
+    )
+    await ETF.connect(rando).transfer(timeLord.address, toETH(1000))
+
+    await expectRevert(
+      ETF.connect(timeLord).redeem(0, timeLord.address, toETH(2000)),
+      'Time Lord cannot redeem tokens'
     )
 
 
     const startingRandoBalance = await getBalance(rando)
-    await ETF.connect(ap0).redeem(0, rando.address, toETH(2000))
+    await ETF.connect(ap1).redeem(1, rando.address, toETH(2000))
     const endingRandoBalance = await getBalance(rando)
     expect(endingRandoBalance - startingRandoBalance).to.be.closeTo(0.2, 0.005)
 
 
-    expect(ethVal(await ETF.connect(ap0).created(0))).to.equal(10000)
-    expect(ethVal(await ETF.connect(ap0).redeemed(0))).to.equal(9000)
+    expect(ethVal(await ETF.connect(ap1).created(1))).to.equal(10000)
+    expect(ethVal(await ETF.connect(ap1).redeemed(1))).to.equal(9000)
 
   })
 
   it('should not trade outside market hours', async () => {
     const errorMsg = 'Can only transfer during market trading hours (9:30am-4:00pm EST, M-F)'
 
-    await AuthorizedParticipant.connect(minter).[safeTransferFrom](minter.address, ap0.address, 0)
-    await ETF.connect(ap0).create(0, ap0.address, txValue('1'))
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
 
 
     await time.increaseTo(2020429740) // Mon Jan 09 2034 09:29:00 GMT-0500 (Eastern Standard Time)
@@ -193,18 +210,18 @@ describe('ETF', () => {
 
       expect(await ETF.marketIsOpen()).to.equal(false)
       await expectRevert(
-        ETF.connect(ap0).transfer(rando.address, toETH(1)),
+        ETF.connect(ap1).transfer(rando.address, toETH(1)),
         errorMsg
       )
       await time.increase(time.duration.minutes(2))
 
       if (marketDay) {
         expect(await ETF.marketIsOpen()).to.equal(true)
-        await ETF.connect(ap0).transfer(rando.address, toETH(1))
+        await ETF.connect(ap1).transfer(rando.address, toETH(1))
       } else {
         expect(await ETF.marketIsOpen()).to.equal(false)
         await expectRevert(
-          ETF.connect(ap0).transfer(rando.address, toETH(1)),
+          ETF.connect(ap1).transfer(rando.address, toETH(1)),
           errorMsg
         )
       }
@@ -214,11 +231,11 @@ describe('ETF', () => {
 
       if (marketDay) {
         expect(await ETF.marketIsOpen()).to.equal(true)
-        await ETF.connect(ap0).transfer(rando.address, toETH(1))
+        await ETF.connect(ap1).transfer(rando.address, toETH(1))
       } else {
         expect(await ETF.marketIsOpen()).to.equal(false)
         await expectRevert(
-          ETF.connect(ap0).transfer(rando.address, toETH(1)),
+          ETF.connect(ap1).transfer(rando.address, toETH(1)),
           errorMsg
         )
       }
@@ -227,13 +244,30 @@ describe('ETF', () => {
 
       expect(await ETF.marketIsOpen()).to.equal(false)
       await expectRevert(
-        ETF.connect(ap0).transfer(rando.address, toETH(1)),
+        ETF.connect(ap1).transfer(rando.address, toETH(1)),
         errorMsg
       )
 
       await time.increase(time.duration.hours(17))
       await time.increase(time.duration.minutes(28))
     }
+  })
+
+
+  it('should only let TLs set market holidays')
+  it('market holidays should work')
+  it('should only let TLs set DST')
+  it('DST should work')
+
+  it('KYC should work', async () => {
+    const KYCFactory = await ethers.getContractFactory('KYC', minter)
+    KYC = await KYCFactory.deploy(ETF.address, AuthorizedParticipants.address)
+    await KYC.deployed()
+
+    await KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01'))
+
+    const kycId = await KYC.connect(ap1).getId('joe', 'schmoe')
+    console.log(kycId, getSVG(await KYC.connect(ap1).tokenURI(kycId)))
   })
 
 })

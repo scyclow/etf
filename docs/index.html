@@ -288,14 +288,6 @@ TODO
 
 
       <div class="apGrid">
-        <div id="ap0" class="apItem">
-          <a href="./ap/0"><img src="./assets/ap0.svg"></a>
-          <connect-wallet>
-            <div slot="connected" style="margin-top: 0.5em">
-              <div id="ap0-display"></div>
-            </div>
-          </connect-wallet>
-        </div>
         <div id="ap1" class="apItem">
           <a href="./ap/1"><img src="./assets/ap1.svg"></a>
           <connect-wallet>
@@ -336,6 +328,15 @@ TODO
             </div>
           </connect-wallet>
         </div>
+        <div id="ap6" class="apItem">
+          <a href="./ap/6"><img src="./assets/ap6.svg"></a>
+          <connect-wallet>
+            <div slot="connected" style="margin-top: 0.5em">
+              <div id="ap6-display"></div>
+            </div>
+          </connect-wallet>
+        </div>
+        <a href="./ap/5"><img src="./assets/tl.svg"></a>
       </div>
     </section>
 
@@ -391,7 +392,8 @@ TODO
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
       $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
 
-      times(6, async i => {
+      times(6, async _i => {
+        const i = _i + 1
         const ownerAddr = await AP.ownerOf(i)
 
         if (ownerAddr === AUCTION.address) {
@@ -472,28 +474,34 @@ TODO
     const currentHour = currentDate.getUTCHours();
     const currentMinutes = currentDate.getUTCMinutes();
 
-    // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 8:00 PM UTC
-    if (currentDay >= 0 && currentDay <= 4 && currentHour >= 20) {
-      // Return UTC timestamp for 1 PM the next day
+    // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 9:00 PM UTC
+    if (currentDay >= 0 && currentDay <= 4 && currentHour >= 21) {
+      // Return UTC timestamp for 2 PM the next day
       const nextDayTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Add 1 day
       const nextDay = new Date(nextDayTimestamp);
-      nextDay.setUTCHours(13, 30, 0, 0); // Set time to 1:30 PM UTC
+      nextDay.setUTCHours(14, 30, 0, 0); // Set time to 2:30 PM UTC
       return nextDay.getTime();
     }
 
-    // Check if it's Friday after 8:00 PM UTC, Saturday, or Sunday
+    // Check if it's Friday after 9:00 PM UTC, Saturday, or Sunday
     if (
-      (currentDay === 5 && currentHour > 20)
+      (currentDay === 5 && currentHour > 21)
       || currentDay === 6 || currentDay === 0)
     {
       // Return UTC timestamp for the coming Monday at 1:30 PM
       const nextMondayTimestamp = currentTimestamp + ((8 - currentDay) % 7) * 24 * 60 * 60 * 1000; // Add days until Monday
       const nextMonday = new Date(nextMondayTimestamp);
-      nextMonday.setUTCHours(13, 30, 0, 0); // Set time to 1:30 PM UTC
+      nextMonday.setUTCHours(14, 30, 0, 0); // Set time to 2:30 PM UTC
       return nextMonday.getTime();
     }
 
-    currentDate.setUTCHours(20, 0, 0, 0);
+
+    if (currentDay > 0 && currentDay < 6 && (currentHour < 14 || (currentHour === 14 && currentMinutes < 30))) {
+      currentDate.setUTCHours(14, 30, 0, 0);
+      return currentDate.getTime();
+    }
+
+    currentDate.setUTCHours(21, 0, 0, 0);
     return currentDate.getTime();
   }
 
@@ -537,6 +545,7 @@ TODO
   }
 
 
+
   function triggerTimer(timeLeft, $elem1, cb) {
     const with0 = x => x < 10 ? '0' + Math.floor(x) : Math.floor(x)
     let timeLeftCounter = timeLeft
@@ -545,7 +554,8 @@ TODO
       const days = timeLeftCounter / (24*60*60*1000)
       const hours = 24 * (days%1)
       const minutes = 60 * (hours%1)
-      const seconds = Math.round(60 * (minutes%1))
+      const seconds = Math.floor(60 * (minutes%1))
+
 
       $elem1.innerHTML = `${Math.floor(days)}:${with0(hours)}:${with0(minutes)}:${with0(seconds)}`
 

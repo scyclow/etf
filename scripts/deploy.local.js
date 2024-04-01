@@ -8,6 +8,10 @@ const ARBITRARY_MARKET_OPEN_TIME = 1894118400
 const toETH = amt => ethers.utils.parseEther(String(amt))
 const txValue = amt => ({ value: toETH(amt) })
 
+const utf8Clean = raw => raw.replace(/data.*utf8,/, '')
+const getJsonURI = rawURI => JSON.parse(utf8Clean(rawURI))
+
+
 async function main() {
 
   await time.increaseTo(ARBITRARY_MARKET_OPEN_TIME)
@@ -28,17 +32,23 @@ async function main() {
   ETF = await ETFFactory.deploy()
   await ETF.deployed()
 
-  const AuthorizedParticipantFactory = await ethers.getContractFactory('AuthorizedParticipant', minter)
+  const AuthorizedParticipantFactory = await ethers.getContractFactory('AuthorizedParticipants', minter)
 
-  AuthorizedParticipant = await AuthorizedParticipantFactory.attach(
-    await ETF.authorizedParticipant()
+  AuthorizedParticipants = await AuthorizedParticipantFactory.attach(
+    await ETF.authorizedParticipants()
   )
 
   const KYCFactory = await ethers.getContractFactory('KYC', minter)
-  KYC = await KYCFactory.deploy(ETF.address, AuthorizedParticipant.address)
+  KYC = await KYCFactory.deploy(ETF.address, AuthorizedParticipants.address)
   await KYC.deployed()
 
   await KYC.connect(ap0).mint('joe', 'schmoe', txValue('0.01'))
+
+  const kycId = await KYC.connect(ap0).getId(ap0.address)
+
+  console.log(kycId)
+
+  console.log(getJsonURI(await KYC.connect(ap0).tokenURI(kycId)))
 
 
 
@@ -53,14 +63,14 @@ async function main() {
 
 
 
-  // await AuthorizedParticipant.connect(minter).mint(minter.address, 0)
-  // await AuthorizedParticipant.connect(minter).mint(minter.address, 1)
-  // await AuthorizedParticipant.connect(minter).mint(minter.address, 2)
-  // await AuthorizedParticipant.connect(minter).mint(minter.address, 3)
-  // await AuthorizedParticipant.connect(minter).mint(minter.address, 4)
-  // await AuthorizedParticipant.connect(minter).mint(minter.address, 5)
+  // await AuthorizedParticipants.connect(minter).mint(minter.address, 0)
+  // await AuthorizedParticipants.connect(minter).mint(minter.address, 1)
+  // await AuthorizedParticipants.connect(minter).mint(minter.address, 2)
+  // await AuthorizedParticipants.connect(minter).mint(minter.address, 3)
+  // await AuthorizedParticipants.connect(minter).mint(minter.address, 4)
+  // await AuthorizedParticipants.connect(minter).mint(minter.address, 5)
 
-  await AuthorizedParticipant.connect(minter).setApprovalForAll(SteviepAuction.address, true)
+  await AuthorizedParticipants.connect(minter).setApprovalForAll(SteviepAuction.address, true)
 
 
 
@@ -77,7 +87,7 @@ async function main() {
       i, // tokenId
       minter.address, // beneficiary
       false, // transfer from minter to winner
-      AuthorizedParticipant.address,
+      AuthorizedParticipants.address,
       RewardMock.address, // reward
       KYC.address, // allow list
     )
@@ -86,7 +96,7 @@ async function main() {
 
 
   console.log(`ETF:`, ETF.address)
-  console.log(`AuthorizedParticipant:`, AuthorizedParticipant.address)
+  console.log(`AuthorizedParticipants:`, AuthorizedParticipants.address)
   console.log(`KYC:`, KYC.address)
   console.log(`SteviepAuction:`, SteviepAuction.address)
   console.log(`AP0:`, ap0.address)

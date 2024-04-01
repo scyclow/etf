@@ -3,11 +3,11 @@
   <style>
     text {
       font-family: monospace;
-      fill: #fff;
+      fill:  #fff;
       font-size:  180px;
     }
   </style>
-  <rect x="0" y="0" width="500" height="500" fill="#0078bd" stroke="#fff" stroke-width="35px"></rect>
+  <rect x="0" y="0" width="500" height="500" fill="#383a3c" stroke="#fff" stroke-width="35px"></rect>
 
   <text class="fillLight" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">AP5</text>
 </svg>
