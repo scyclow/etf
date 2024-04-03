@@ -39,7 +39,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
   }
 
   function mint(string memory firstName, string memory lastName) external payable {
-    require(etf.marketIsOpen(), 'KYC mint unavailable');
+    require(etf.isMarketOpen(), 'KYC mint unavailable');
     require(bytes(firstName).length != 0 && bytes(lastName).length != 0, 'Invalid KYC info');
     require(msg.value >= 0.01 ether, 'Must pay KYC fee');
 
@@ -59,11 +59,18 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
     return uint256(keccak256(abi.encodePacked(firstName, lastName)));
   }
 
+
+  function revoke(uint256 tokenId) external onlyOwner {
+    _burn(tokenId);
+  }
+
   string public externalUrl = "https://steviep.xyz/etf";
   string public description = "Always know your customer";
 
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
     bytes memory encodedSVG = abi.encodePacked(
       'data:image/svg+xml;base64,',
       Base64.encode(rawSVG(tokenId))
@@ -119,7 +126,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
 
 
 
-contract APProxy  {
+contract BrokerDealer  {
   KYC public kyc;
   ETF public etf;
   AuthorizedParticipants public ap;

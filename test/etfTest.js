@@ -10,7 +10,7 @@ const num = n => Number(n)
 const getBalance = async a => ethVal(await ethers.provider.getBalance(a.address))
 
 const ARBITRARY_MARKET_OPEN_TIME = 1894118400
-const FUTURE_MONDAY_AM = 2020428000
+const FUTURE_MONDAY_AM = 2020429800
 
 
 function times(t, fn) {
@@ -102,9 +102,20 @@ describe('ETF', () => {
     expect(await AuthorizedParticipants.connect(minter).exists(7)).to.equal(false)
 
 
-    for (let i = 0; i < 7; i++) {
-      console.log(getSVG(await AuthorizedParticipants.tokenURI(i)))
+    const json = getJsonURI(await AuthorizedParticipants.tokenURI(0))
+    expect(json.name).to.equal(`Time Lord`)
+    expect(json.description).to.equal('ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. The Time Lord has the sole ability to set Market Holidays and declare Daylight Savings Time.')
+
+    for (let i = 1; i < 7; i++) {
+      const json = getJsonURI(await AuthorizedParticipants.tokenURI(i))
+      expect(json.name).to.equal(`Authorized Participant ${i}`)
+      expect(json.description).to.equal(`ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. Authorized Participants have the right (but not the obligation) to create and redeem shares of ETF.`)
     }
+
+    await expectRevert(
+      AuthorizedParticipants.connect(rando).setURIContract(rando.address),
+      'Ownable: caller is not the owner'
+    )
   })
 
   it('only APs should be able to create tokens', async () => {
@@ -134,7 +145,7 @@ describe('ETF', () => {
     await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
 
     const endingEthBalance = await getBalance(ap1)
-    expect(startingEthBalance -  endingEthBalance).to.be.closeTo(1, 0.005)
+    expect(startingEthBalance - endingEthBalance).to.be.closeTo(1, 0.005)
 
 
     expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(10000)
@@ -153,6 +164,10 @@ describe('ETF', () => {
     expect(ethVal(await ETF.balanceOf(ap1.address))).to.equal(20000)
 
     expect(ethVal(await ETF.connect(ap1).created(1))).to.equal(25000)
+
+    const json = getJsonURI(await AuthorizedParticipants.tokenURI(1))
+    expect(json.attributes[0].value).to.equal('25000')
+    expect(json.attributes[0].trait_type).to.equal('Shares Created')
   })
 
   it('only APs should be able to redeem tokens', async () => {
@@ -191,11 +206,18 @@ describe('ETF', () => {
 
     expect(ethVal(await ETF.connect(ap1).created(1))).to.equal(10000)
     expect(ethVal(await ETF.connect(ap1).redeemed(1))).to.equal(9000)
+    expect(ethVal(await ETF.connect(ap1).totalSupply())).to.equal(1000)
+    expect(ethVal(await ETF.connect(ap1).nav())).to.equal(0.0001)
 
+    const json = getJsonURI(await AuthorizedParticipants.tokenURI(1))
+    expect(json.attributes[0].value).to.equal('10000')
+    expect(json.attributes[0].trait_type).to.equal('Shares Created')
+    expect(json.attributes[1].value).to.equal('9000')
+    expect(json.attributes[1].trait_type).to.equal('Shares Redeemed')
   })
 
   it('should not trade outside market hours', async () => {
-    const errorMsg = 'Can only transfer during market trading hours (9:30am-4:00pm EST, M-F)'
+    const errorMsg = 'Can only transfer during market trading hours'
 
     await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
     await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
@@ -207,8 +229,7 @@ describe('ETF', () => {
     for (let d = 0; d < 7; d++) {
       const marketDay = d < 5
 
-
-      expect(await ETF.marketIsOpen()).to.equal(false)
+      expect(await ETF.isMarketOpen()).to.equal(false)
       await expectRevert(
         ETF.connect(ap1).transfer(rando.address, toETH(1)),
         errorMsg
@@ -216,10 +237,10 @@ describe('ETF', () => {
       await time.increase(time.duration.minutes(2))
 
       if (marketDay) {
-        expect(await ETF.marketIsOpen()).to.equal(true)
+        expect(await ETF.isMarketOpen()).to.equal(true)
         await ETF.connect(ap1).transfer(rando.address, toETH(1))
       } else {
-        expect(await ETF.marketIsOpen()).to.equal(false)
+        expect(await ETF.isMarketOpen()).to.equal(false)
         await expectRevert(
           ETF.connect(ap1).transfer(rando.address, toETH(1)),
           errorMsg
@@ -230,10 +251,10 @@ describe('ETF', () => {
       await time.increase(time.duration.minutes(28))
 
       if (marketDay) {
-        expect(await ETF.marketIsOpen()).to.equal(true)
+        expect(await ETF.isMarketOpen()).to.equal(true)
         await ETF.connect(ap1).transfer(rando.address, toETH(1))
       } else {
-        expect(await ETF.marketIsOpen()).to.equal(false)
+        expect(await ETF.isMarketOpen()).to.equal(false)
         await expectRevert(
           ETF.connect(ap1).transfer(rando.address, toETH(1)),
           errorMsg
@@ -242,7 +263,7 @@ describe('ETF', () => {
 
       await time.increase(time.duration.minutes(2))
 
-      expect(await ETF.marketIsOpen()).to.equal(false)
+      expect(await ETF.isMarketOpen()).to.equal(false)
       await expectRevert(
         ETF.connect(ap1).transfer(rando.address, toETH(1)),
         errorMsg
@@ -253,13 +274,256 @@ describe('ETF', () => {
     }
   })
 
+  it('5 APs can revoke the 6th, but not the Time Lord', async () => {
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap2.address, 2)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap3.address, 3)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap4.address, 4)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap5.address, 5)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap6.address, 6)
 
-  it('should only let TLs set market holidays')
-  it('market holidays should work')
-  it('should only let TLs set DST')
-  it('DST should work')
+    expect(await AuthorizedParticipants.connect(minter).ownerOf(6)).to.equal(ap6.address)
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).revoke(0, rando.address),
+      'Not enough votes to revoke AP token'
+    )
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).revoke(6, rando.address),
+      'Not enough votes to revoke AP token'
+    )
+
+
+    await expectRevert(
+      AuthorizedParticipants.connect(rando).proposeRevoke(1, 6, rando.address),
+      'Not authorized to make revoke proposal'
+    )
+
+    await expectRevert(
+      AuthorizedParticipants.connect(timeLord).proposeRevoke(0, 6, rando.address),
+      'Time Lord cannot revoke'
+    )
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).proposeRevoke(1, 0, rando.address),
+      'Cannot revoke the Time Lord'
+    )
+
+    await AuthorizedParticipants.connect(ap1).proposeRevoke(1, 6, rando.address)
+    await AuthorizedParticipants.connect(ap2).proposeRevoke(2, 6, rando.address)
+    await AuthorizedParticipants.connect(ap3).proposeRevoke(3, 6, rando.address)
+    await AuthorizedParticipants.connect(ap4).proposeRevoke(4, 6, rando.address)
+    await AuthorizedParticipants.connect(ap5).proposeRevoke(5, 2, rando.address)
+
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).revoke(6, rando.address),
+      'Not enough votes to revoke AP token'
+    )
+
+    await AuthorizedParticipants.connect(ap5).proposeRevoke(5, 6, ap1.address)
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).revoke(6, rando.address),
+      'Not enough votes to revoke AP token'
+    )
+
+    await AuthorizedParticipants.connect(ap5).proposeRevoke(5, 6, rando.address)
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).revoke(6, minter.address),
+      'Not enough votes to revoke AP token'
+    )
+
+    await AuthorizedParticipants.connect(ap1).revoke(6, rando.address)
+
+    expect(await AuthorizedParticipants.connect(minter).ownerOf(6)).to.equal(rando.address)
+
+    await expectRevert(
+      AuthorizedParticipants.connect(ap1).revoke(6, rando.address),
+      'Not enough votes to revoke AP token'
+    )
+
+    await AuthorizedParticipants.connect(ap1).proposeRevoke(1, 6, ap6.address)
+    await AuthorizedParticipants.connect(ap2).proposeRevoke(2, 6, ap6.address)
+    await AuthorizedParticipants.connect(ap3).proposeRevoke(3, 6, ap6.address)
+    await AuthorizedParticipants.connect(ap4).proposeRevoke(4, 6, ap6.address)
+    await AuthorizedParticipants.connect(ap5).proposeRevoke(5, 6, ap6.address)
+    await AuthorizedParticipants.connect(rando).proposeRevoke(6, 6, rando.address)
+    await AuthorizedParticipants.connect(ap1).revoke(6, ap6.address)
+
+    expect(await AuthorizedParticipants.connect(minter).ownerOf(6)).to.equal(ap6.address)
+  })
+
+
+  it('should only let TLs set market holidays, DST', async () => {
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+
+    await expectRevert(
+      ETF.connect(ap1).declareDST(true),
+      'Only the Time Lord can declare DST'
+    )
+    await expectRevert(
+      ETF.connect(minter).declareDST(true),
+      'Only the Time Lord can declare DST'
+    )
+
+    const marketHolidayDay = Number((await ETF.daysElapsed()).toString()) + 1
+
+
+    await expectRevert(
+      ETF.connect(ap1).declareMarketHoliday(marketHolidayDay),
+      'Only the Time Lord can declare Market Holidays'
+    )
+
+    await expectRevert(
+      ETF.connect(minter).declareMarketHoliday(marketHolidayDay),
+      'Only the Time Lord can declare Market Holidays'
+    )
+
+
+    expect(await ETF.connect(ap1).isDST()).to.equal(false)
+    expect(await ETF.connect(ap1).isMarketHoliday(marketHolidayDay)).to.equal(false)
+
+    await ETF.connect(timeLord).declareDST(true)
+    expect(await ETF.connect(ap1).isDST()).to.equal(true)
+    await ETF.connect(timeLord).declareDST(false)
+    expect(await ETF.connect(ap1).isDST()).to.equal(false)
+
+    await ETF.connect(timeLord).declareMarketHoliday(marketHolidayDay)
+    expect(await ETF.connect(ap1).isMarketHoliday(marketHolidayDay)).to.equal(true)
+
+
+
+  })
+  it('market holidays should work', async () => {
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+
+    expect(await ETF.isMarketOpen()).to.equal(true)
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
+
+    const daysElapsed = Number((await ETF.daysElapsed()).toString())
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed)
+    expect(await ETF.isMarketOpen()).to.equal(false)
+    await expectRevert(
+      ETF.connect(ap1).create(1, ap1.address, txValue('1')),
+      'Can only transfer during market trading hours'
+    )
+
+    await expectRevert(
+      ETF.connect(timeLord).declareMarketHoliday(daysElapsed-1),
+      'The Time Lord can only declare Market Holidays within the fiscal year'
+    )
+
+    await expectRevert(
+      ETF.connect(timeLord).declareMarketHoliday(daysElapsed+400),
+      'The Time Lord can only declare Market Holidays within the fiscal year'
+    )
+
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+1)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+2)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+3)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+4)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+5)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+6)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+7)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+8)
+    await ETF.connect(timeLord).declareMarketHoliday(daysElapsed+9)
+
+    await expectRevert(
+      ETF.connect(timeLord).declareMarketHoliday(daysElapsed+10),
+      'The Time Lord can only declare 10 Market Holidays per fiscal year'
+    )
+
+  })
+
+  it('DST should work', async () => {
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, timeLord.address, 0)
+    await AuthorizedParticipants.connect(minter)[safeTransferFrom](minter.address, ap1.address, 1)
+
+    await time.increaseTo(FUTURE_MONDAY_AM - 3600) // 8:30am
+    expect(await ETF.isMarketOpen()).to.equal(false)
+    expect(await ETF.isDST()).to.equal(false)
+
+    await expectRevert(
+      ETF.connect(ap1).create(1, ap1.address, txValue('1')),
+      'Can only transfer during market trading hours'
+    )
+
+    await ETF.connect(timeLord).declareDST(true) // 9:30am
+    expect(await ETF.isDST()).to.equal(true)
+    expect(await ETF.isMarketOpen()).to.equal(true)
+
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
+
+
+    await time.increase(time.duration.hours(6))
+    await time.increase(time.duration.minutes(31)) // 4:01pm
+
+
+    expect(await ETF.isMarketOpen()).to.equal(false)
+    await expectRevert(
+      ETF.connect(ap1).create(1, ap1.address, txValue('1')),
+      'Can only transfer during market trading hours'
+    )
+
+    await ETF.connect(timeLord).declareDST(false) // 3:01pm
+    expect(await ETF.isDST()).to.equal(false)
+    expect(await ETF.isMarketOpen()).to.equal(true)
+    await ETF.connect(ap1).create(1, ap1.address, txValue('1'))
+
+    await time.increase(time.duration.hours(1)) // 4:01
+    expect(await ETF.isMarketOpen()).to.equal(false)
+  })
 
   it('KYC should work', async () => {
+    const KYCFactory = await ethers.getContractFactory('KYC', minter)
+    KYC = await KYCFactory.deploy(ETF.address, AuthorizedParticipants.address)
+    await KYC.deployed()
+
+    await expectRevert(
+      KYC.connect(ap1).mint('joe', 'schmoe'),
+      'Must pay KYC fee'
+    )
+
+    await expectRevert(
+      KYC.connect(ap1).mint('joe', '', txValue('0.01')),
+      'Invalid KYC info'
+    )
+
+    await expectRevert(
+      KYC.connect(ap1).mint('', 'schmoe', txValue('0.01')),
+      'Invalid KYC info'
+    )
+
+    await KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01'))
+    await expectRevert(
+      KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01')),
+      'KYC already registered'
+    )
+
+    const kycId = await KYC.connect(ap1).getId('joe', 'schmoe')
+
+
+    expect(await KYC.connect(ap1).totalSupply()).to.equal(1)
+    expect(await KYC.connect(ap1).exists(kycId)).to.equal(true)
+    expect(await KYC.connect(ap1).ownerOf(kycId)).to.equal(ap1.address)
+
+    const json = getJsonURI(await KYC.connect(ap1).tokenURI(kycId))
+    expect(json.attributes[0].trait_type).to.equal('First Name')
+    expect(json.attributes[1].trait_type).to.equal('Last Name')
+    expect(json.attributes[2].trait_type).to.equal('Address')
+
+    expect(json.attributes[0].value).to.equal('joe')
+    expect(json.attributes[1].value).to.equal('schmoe')
+    expect(json.attributes[2].value).to.equal(ap1.address.toLowerCase())
+  })
+
+  it('KYC should be revoked by contract owner (and only contract owner), and burnable by owner', async () => {
     const KYCFactory = await ethers.getContractFactory('KYC', minter)
     KYC = await KYCFactory.deploy(ETF.address, AuthorizedParticipants.address)
     await KYC.deployed()
@@ -267,7 +531,28 @@ describe('ETF', () => {
     await KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01'))
 
     const kycId = await KYC.connect(ap1).getId('joe', 'schmoe')
-    console.log(kycId, getSVG(await KYC.connect(ap1).tokenURI(kycId)))
+
+
+    await expectRevert(
+      KYC.connect(ap1).revoke(kycId),
+      'Ownable: caller is not the owner'
+    )
+
+    await KYC.connect(minter).revoke(kycId)
+
+    expect(await KYC.connect(ap1).exists(kycId)).to.equal(false)
+
+    await KYC.connect(ap2).mint('Al', 'Sharpton', txValue('0.01'))
+    const kycId2 = await KYC.connect(ap1).getId('Al', 'Sharpton')
+
+    await expectRevert(
+      KYC.connect(ap1).burn(kycId2),
+      'ERC721: caller is not token owner or approved'
+    )
+
+    await KYC.connect(ap2).burn(kycId2)
+    expect(await KYC.connect(ap1).exists(kycId2)).to.equal(false)
+
   })
 
 })

@@ -43,6 +43,45 @@ contract AuthorizedParticipants is ERC721, Ownable {
     tokenURIContract = TokenURI(_uriContract);
     emit BatchMetadataUpdate(0, totalSupply);
   }
+
+
+  struct RevokeProposal {
+    uint256 tokenId;
+    address destination;
+  }
+
+  mapping(uint256 => RevokeProposal) public revokeProposals;
+
+
+  function proposeRevoke(uint256 votingTokenId, uint256 revokedTokenId, address revokeDestination) external {
+    require(votingTokenId != 0, 'Time Lord cannot revoke');
+    require(revokedTokenId != 0, 'Cannot revoke the Time Lord');
+    require(ownerOf(votingTokenId) == msg.sender, 'Not authorized to make revoke proposal');
+
+    revokeProposals[votingTokenId].tokenId = revokedTokenId;
+    revokeProposals[votingTokenId].destination = revokeDestination;
+  }
+
+
+  function revoke(uint256 revokedTokenId, address revokeDestination) external {
+    uint revokeCount;
+
+    for (uint i = 1; i < totalSupply; i++) {
+      RevokeProposal storage rp = revokeProposals[i];
+      if (
+        rp.tokenId != 0
+        && rp.tokenId == revokedTokenId
+        && rp.destination == revokeDestination
+      ) {
+        revokeCount++;
+        rp.tokenId = 0;
+        rp.destination = address(0);
+      }
+    }
+
+    require(revokeCount >= totalSupply - 2, 'Not enough votes to revoke AP token');
+    _transfer(ownerOf(revokedTokenId), revokeDestination, revokedTokenId);
+  }
 }
 
 
@@ -95,7 +134,7 @@ contract TokenURI {
 
   function getDescription(uint256 tokenId) public view returns (string memory) {
     string memory roleText = tokenId > 0
-      ? 'Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF.'
+      ? 'Authorized Participants have the right (but not the obligation) to create and redeem shares of ETF.'
       : 'The Time Lord has the sole ability to set Market Holidays and declare Daylight Savings Time.';
     return string.concat(
       'ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. ',
@@ -109,16 +148,15 @@ contract TokenURI {
       uint256 tokensRedeemed = (etf.redeemed(tokenId) / 1 ether);
       return string.concat(
         '[',
-          '{"trait_type": "Tokens Created", "value": "', tokensCreated.toString(), '"},',
-          '{"trait_type": "Tokens Redeemed", "value": "', tokensRedeemed.toString(), '"}',
+          '{"trait_type": "Shares Created", "value": "', tokensCreated.toString(), '"},',
+          '{"trait_type": "Shares Redeemed", "value": "', tokensRedeemed.toString(), '"}',
         ']'
       );
 
     } else {
-      uint256 yearsElapsed = (block.timestamp - etf.inception()) / 365 days;
       return string.concat(
         '[',
-          '{"trait_type": "Market Holidays Set For Year", "value": "', etf.yearToMarketHolidaysSet(yearsElapsed).toString(), '"},',
+          '{"trait_type": "Market Holidays Set For Year", "value": "', etf.yearToMarketHolidaysSet(etf.yearsElapsed()).toString(), '"},',
           '{"trait_type": "Is Daylight Savings Time", "value": "', etf.isDST() ? 'True' : 'False', '"}',
         ']'
       );

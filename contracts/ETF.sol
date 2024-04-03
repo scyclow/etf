@@ -56,9 +56,9 @@ TODO
 
 contract ETF is ERC20 {
   uint256 public constant TOKENS_PER_ETH = 10000;
-  uint256 public constant MONDAY_AM_TIMESTAMP = 1704724200; // Mon Jan 08 2024 09:30:00
+  uint256 public constant INCEPTION = 1704724200; // TODO - change this [Mon Jan 08 2024 09:30:00]
   uint256 public constant MARKET_OPEN_DURATION = 6 hours + 30 minutes;
-  uint256 public inception;
+
   bool public isDST;
 
   AuthorizedParticipants public authorizedParticipants;
@@ -73,26 +73,33 @@ contract ETF is ERC20 {
 
   constructor() ERC20('ETF', 'ETF') {
     authorizedParticipants = new AuthorizedParticipants(msg.sender);
-    inception = block.timestamp;
   }
 
   function nav() public view returns (uint256) {
     return (address(this).balance) / (totalSupply() / 1 ether);
   }
 
-  function marketIsOpen() public view returns (bool) {
+  function yearsElapsed() public view returns (uint256) {
+    return (block.timestamp - INCEPTION) / 365 days;
+  }
+
+  function daysElapsed() public view returns (uint256) {
     uint256 dstAdjustment = isDST ? 1 hours : 0;
+    uint256 timeElapsed = (block.timestamp - INCEPTION) + dstAdjustment;
+    return timeElapsed / 1 days;
+  }
 
-    uint256 timeElapsed = (block.timestamp - MONDAY_AM_TIMESTAMP) + dstAdjustment;
-    uint256 daysElapsed = timeElapsed / 1 days;
+  function isMarketOpen() public view returns (bool) {
+    uint256 dstAdjustment = isDST ? 1 hours : 0;
+    uint256 timeElapsed = (block.timestamp - INCEPTION) + dstAdjustment;
     uint256 marketTime = timeElapsed % 1 days;
+    uint256 _daysElapsed = timeElapsed / 1 days;
+    uint8 dayOfWeek = uint8(_daysElapsed % 7);
 
-    uint8 dayOfWeek = uint8(daysElapsed % 7);
-    bool validMarketDay = dayOfWeek < 5 && !isMarketHoliday[daysElapsed]; // monday - friday & not a market holiday
-
-    bool validMarketTime = marketTime < MARKET_OPEN_DURATION;
-
-    return validMarketDay && validMarketTime;
+    return (
+      dayOfWeek < 5 && !isMarketHoliday[_daysElapsed] // Monday - Friday & not a market holiday
+      && marketTime < MARKET_OPEN_DURATION // 9:30am - 4:00pm (EST or EDT, depending on DST)
+    );
   }
 
 
@@ -120,25 +127,24 @@ contract ETF is ERC20 {
   }
 
   function _beforeTokenTransfer(address, address, uint256) internal virtual override {
-    require(marketIsOpen(), 'Can only transfer during market trading hours (9:30am-4:00pm EST, M-F)');
+    require(isMarketOpen(), 'Can only transfer during market trading hours');
   }
 
 
-  function setMarketHoliday(uint256 day) external {
-    require(msg.sender == authorizedParticipants.ownerOf(0), 'Only the Time Lord can set market holidays');
-
-    uint256 yearsElapsed = (block.timestamp - inception) / 365 days;
-    require(yearToMarketHolidaysSet[yearsElapsed] < 10, 'Time Lord can only set 10 market holidays per year');
+  function declareMarketHoliday(uint256 day) external {
+    require(msg.sender == authorizedParticipants.ownerOf(0), 'Only the Time Lord can declare Market Holidays');
+    require(yearToMarketHolidaysSet[yearsElapsed()] < 10, 'The Time Lord can only declare 10 Market Holidays per fiscal year');
+    require(day >= daysElapsed() && day <= (daysElapsed() + 365), 'The Time Lord can only declare Market Holidays within the fiscal year');
 
     if (!isMarketHoliday[day]) {
       isMarketHoliday[day] = true;
-      yearToMarketHolidaysSet[yearsElapsed]++;
-    authorizedParticipants.metadataUpdate(0);
+      yearToMarketHolidaysSet[yearsElapsed()]++;
+      authorizedParticipants.metadataUpdate(0);
     }
   }
 
-  function setDST(bool dst) external {
-    require(msg.sender == authorizedParticipants.ownerOf(0), 'Only the Time Lord can set DST');
+  function declareDST(bool dst) external {
+    require(msg.sender == authorizedParticipants.ownerOf(0), 'Only the Time Lord can declare DST');
     isDST = dst;
     authorizedParticipants.metadataUpdate(0);
   }
