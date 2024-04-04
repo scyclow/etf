@@ -11,6 +11,13 @@ contract AuthorizedParticipants is ERC721, Ownable {
   ETF public etf;
   TokenURI public tokenURIContract;
 
+  struct RevokeProposal {
+    uint256 tokenId;
+    address destination;
+  }
+
+  mapping(uint256 => RevokeProposal) public revokeProposals;
+
   event MetadataUpdate(uint256 _tokenId);
   event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId);
 
@@ -45,12 +52,6 @@ contract AuthorizedParticipants is ERC721, Ownable {
   }
 
 
-  struct RevokeProposal {
-    uint256 tokenId;
-    address destination;
-  }
-
-  mapping(uint256 => RevokeProposal) public revokeProposals;
 
 
   function proposeRevoke(uint256 votingTokenId, uint256 revokedTokenId, address revokeDestination) external {

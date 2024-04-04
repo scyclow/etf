@@ -56,10 +56,10 @@ TODO
 
 contract ETF is ERC20 {
   uint256 public constant TOKENS_PER_ETH = 10000;
-  uint256 public constant INCEPTION = 1704724200; // TODO - change this [Mon Jan 08 2024 09:30:00]
+  uint256 public constant INCEPTION = 1704724200; // TODO - change this to 4/8 9:30am EDT/ 8:30am EST
   uint256 public constant MARKET_OPEN_DURATION = 6 hours + 30 minutes;
 
-  bool public isDST;
+  bool public isDST; // TODO change this to true
 
   AuthorizedParticipants public authorizedParticipants;
 
@@ -114,7 +114,7 @@ contract ETF is ERC20 {
     emit Creation(tokenId, amountToCreate);
   }
 
-  function redeem(uint256 tokenId,  address recipient, uint256 redeemAmount) external {
+  function redeem(uint256 tokenId, address recipient, uint256 redeemAmount) external {
     require(msg.sender == authorizedParticipants.ownerOf(tokenId), 'Only Authorized Participants can redeem tokens');
     require(tokenId > 0, 'Time Lord cannot redeem tokens');
     _burn(msg.sender, redeemAmount);

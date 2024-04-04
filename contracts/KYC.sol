@@ -1,8 +1,9 @@
-
-// // SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 
 import "./Dependencies.sol";
 import "./ETF.sol";
+import "./AuthorizedParticipants.sol";
+
 import "hardhat/console.sol";
 
 pragma solidity ^0.8.23;
@@ -57,6 +58,14 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
 
   function getId(string memory firstName, string memory lastName) public view returns (uint256) {
     return uint256(keccak256(abi.encodePacked(firstName, lastName)));
+  }
+
+  function getAddr(uint256 tokenId) external view returns (address) {
+    return kycInfo[tokenId].addr;
+  }
+
+  function getAddr(string memory firstName, string memory lastName) external view returns (address) {
+    return kycInfo[getId(firstName, lastName)].addr;
   }
 
 
@@ -131,7 +140,8 @@ contract BrokerDealer  {
   ETF public etf;
   AuthorizedParticipants public ap;
 
-  mapping(uint256 => uint256) public kycMinted;
+  mapping(uint256 => uint256) public kycCreated;
+  mapping(uint256 => uint256) public kycRedeemed;
 
   uint256 public stakedTokenId;
   address public stakedAddr;
@@ -144,14 +154,39 @@ contract BrokerDealer  {
   }
 
 
-  receive() external payable {
-    uint256 tokenId = uint256(uint160(msg.sender));
-    require(kyc.ownerOf(tokenId) == msg.sender, 'Invalid KYC Token');
-    require(kycMinted[tokenId] + msg.value <= 1 ether, 'Cannot provide > 1ETH in liquidity');
+  function create(string memory firstName, string memory lastName) external payable {
+    uint256 kycTokenId = kyc.getId(firstName, lastName);
 
-    kycMinted[tokenId] += msg.value;
+    require(
+      kyc.ownerOf(kycTokenId) == msg.sender
+      && kyc.getAddr(kycTokenId) == msg.sender,
+      'Invalid KYC Token'
+    );
 
-    etf.create{value: msg.value}(0, msg.sender);
+    uint256 tokensToCreate = msg.value * 10000;
+    require(kycCreated[kycTokenId] + tokensToCreate <= 10000 ether, 'Cannot provide > 1ETH in liquidity');
+
+    kycCreated[kycTokenId] += tokensToCreate;
+
+    etf.create{value: msg.value}(stakedTokenId, msg.sender);
+  }
+
+  function redeem(string memory firstName, string memory lastName, uint256 etfAmount) external payable {
+    uint256 kycTokenId = kyc.getId(firstName, lastName);
+
+    require(
+      kyc.ownerOf(kycTokenId) == msg.sender
+      && kyc.getAddr(kycTokenId) == msg.sender,
+      'Invalid KYC Token'
+    );
+
+    require(kycRedeemed[kycTokenId] + etfAmount <= 10000 ether, 'Cannot remove > 1ETH in liquidity');
+
+    kycRedeemed[kycTokenId] += etfAmount;
+
+
+    etf.transferFrom(msg.sender, address(this), etfAmount);
+    etf.redeem(stakedTokenId, msg.sender, etfAmount);
   }
 
 
@@ -164,6 +199,7 @@ contract BrokerDealer  {
   ) external returns (bytes4) {
     require(msg.sender == address(ap), 'Not an AP token');
     require(stakedTokenId == 0, 'Cannot stake multiple AP tokens');
+    require(tokenId != 0, 'Cannot stake the Time Lord');
 
     stakedAddr = from;
     stakedTokenId = tokenId;
@@ -171,17 +207,12 @@ contract BrokerDealer  {
     return this.onERC721Received.selector;
   }
 
-  function withdraw(uint256 tokenId) external {
-    require(stakedAddr == msg.sender);
+  function withdraw() external {
+    require(stakedAddr == msg.sender, 'Not owner of AP token');
     stakedAddr = address(0);
 
-    ap.safeTransferFrom(address(this), msg.sender, tokenId);
+    ap.safeTransferFrom(address(this), msg.sender, stakedTokenId);
     stakedTokenId = 0;
   }
 }
 
-
-contract KYCTokenURI {
-
-
-}
