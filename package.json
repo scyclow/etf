@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx hardhat test",
     "deploy:local": "hardhat run --network localhost scripts/deploy.local.js",
-    "deploy:goerli": "npx hardhat run scripts/deploy.goerli.js --network goerli",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.sepolia.js --network sepolia",
     "network": "npx hardhat node",
     "hardhat": "hardhat",
     "serve": "serve docs"

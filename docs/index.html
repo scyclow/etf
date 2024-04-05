@@ -83,6 +83,14 @@ TODO
     font-size: 1.25em;
   }
 
+  #kycPreview {
+    display: flex;
+    justify-content: center;
+  }
+  #kycPreview svg {
+    max-width: 500px;
+  }
+
 
 
 
@@ -284,7 +292,7 @@ TODO
 
     <section id="ap">
       <h2>Authorized Participants (AP)</h2>
-      <p>Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF. APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
+      <p>Authorized Participants have the right (but not the obligation) to create and redeem shares of ETF. APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
 
       <p>In the event that the Authorized Participants fail to arbitrage the price differential between the ETF market price and NAV, shares of ETF may experience a non-trivial level of tacking error.</p>
 
@@ -338,9 +346,40 @@ TODO
             </div>
           </connect-wallet>
         </div>
-        <a href="./ap/5"><img src="./assets/tl.svg"></a>
+        <a href="./timeLord"><img src="./assets/tl.svg"></a>
       </div>
     </section>
+
+    <connect-wallet>
+      <section slot="connected">
+        <h2>Broker Dealer</h2>
+        <!-- TODO Broker Dealer explanation -->
+        <div style="margin-bottom: 2em;">
+          <h3 class="label">Shares Owned</h3>
+          <div style="font-family: monospace" id="sharesOwned">--</div>
+        </div>
+
+
+        <div id="brokerDealerCreationRedemption"></div>
+
+      </section>
+    </connect-wallet>
+
+    <connect-wallet>
+      <section slot="connected">
+        <h2>Register KYC Information</h2>
+        <!-- TODO KYC explanation -->
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 1em;">
+          <input id="firstNameInput" class="textInput" placeholder="First Name">
+          <input id="lastNameInput" class="textInput" placeholder="Last Name">
+          <button id="submitKYC" style="font-size:1em">Submit</button>
+        </div>
+        <div id="kycLoading" style="padding: 0.5em 1em; text-align: center;"></div>
+
+        <h3 style="text-align: center;text-transform: uppercase; font-size: 0.75em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em">Preview</h3>
+        <div id="kycPreview"></div>
+      </section>
+    </connect-wallet>
 
     <section>
       <h3><a href="https://etherscan" style="color:var(--accent-color); text-decoration: underline;">ETF Contract</a></h3>
@@ -368,7 +407,7 @@ TODO
 <script type="module">
 
   import {$} from './$.js'
-  import {provider, bnToN, ZERO_ADDR} from './eth.js'
+  import {provider, bnToN, txValue, ethVal, ZERO_ADDR} from './eth.js'
 
 
   provider.setContractInfo(CONTRACTS)
@@ -383,13 +422,12 @@ TODO
     5: 5,
   }
 
-  let ETF, AP, AUCTION
+  let ETF, AP, AUCTION, KYC, BROKER_DEALER
   provider.onConnect(async (addr) => {
 
     try {
 
-      ({ ETF, AP, AUCTION } = await provider.getContracts())
-      console.log(AUCTION)
+      ({ ETF, AP, AUCTION, KYC, BROKER_DEALER } = await provider.getContracts())
 
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
       $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
@@ -452,6 +490,188 @@ TODO
           `
         }
       })
+
+
+      const $firstNameInput = $.id('firstNameInput')
+      const $lastNameInput = $.id('lastNameInput')
+      const $kycLoading = $.id('kycLoading')
+
+      function updateKYCPreview(firstName='', lastName='', address=ZERO_ADDR) {
+        $.id('kycPreview').innerHTML = `
+          <svg viewBox="0 0 380 250" xmlns="http://www.w3.org/2000/svg">
+            <style>.k{dominant-baseline:middle;text-anchor:middle;font-size:40px;font-family:serif}.n{fill:#e74d61;font-family:monospace;font-size:30px}.a{fill:#e74d61;font-family:monospace;font-size:11px}</style>
+            <rect x="0" y="0" width="380" height="250" fill="#f1f1d1"></rect>
+            <rect x="10" y="10" width="360" height="230" stroke="#002150" fill="none" rx="15"></rect>
+            <rect x="15" y="15" width="350" height="220" stroke="#002150" fill="none" rx="15"></rect>
+            <rect x="15" y="15" width="350" height="50" fill="#4368a2" rx="15" stroke="#002150"></rect>
+            <rect x="15.5" y="50" width="349" height="15" fill="#4368a2" ></rect>
+            <line x1="15" y1="65" x2="365" y2="65" stroke="#002150"></line>
+            <text x="192" y="47" class="k" fill="#082262">KYC</text>
+            <text x="191" y="46" class="k" fill="#082262">KYC</text>
+            <text x="190" y="45" class="k" fill="#fbf7ed" stroke="#002150">KYC</text>
+            <text class="n k" x="50%" y="119">${firstName}</text>
+            <text class="n k" x="50%" y="156">${lastName}</text>
+            <text class="a k" x="50%" y="210">${address}</text>
+          </svg>
+        `
+      }
+
+
+      // TODO make it so it shows your KYC card
+      updateKYCPreview('', '', addr)
+      $firstNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+      $lastNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+
+      $.id('submitKYC').onclick = async () => {
+        if (!$firstNameInput.value || !$lastNameInput.value) {
+          $kycLoading.innerHTML = 'Please enter your first and last name.'
+        }
+        $kycLoading.innerHTML = ''
+
+        try {
+          // TODO take out 0.01
+          const tx = await KYC.register($firstNameInput.value, $lastNameInput.value, txValue('0.01'))
+          $kycLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+          const txReciept1 = await tx.wait(1)
+          $kycLoading.innerHTML = 'Success!'
+          $firstNameInput.value = ''
+          $lastNameInput.value = ''
+        } catch (e) {
+          $kycLoading.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+          console.error(e)
+        }
+      }
+
+      const stakedAPTokenId = bnToN(await BROKER_DEALER.stakedTokenId())
+      if (stakedAPTokenId !== 0) {
+        console.log(stakedAPTokenId)
+
+        $.id('brokerDealerCreationRedemption').innerHTML = `
+          <div style="border: 3px solid; padding: 1em">
+            <div>
+              <div style="margin-bottom: 1em">
+                <input id="bdFirstName" class="textInput" placeholder="First Name" style="margin-bottom:0.5em">
+                <input id="bdLastName" class="textInput" placeholder="Last Name" style="margin-bottom:0.5em">
+              </div>
+
+              <h3>Create ETF</h3>
+              <input id="createETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
+              <button id="createETFSubmit" style="font-size:1em">Submit</button>
+              <div id="creationPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
+            </div>
+
+            <div>
+              <h3>Redeem ETF</h3>
+
+              <input id="redeemETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
+              <button id="redeemETFSubmit" style="font-size:1em">Submit</button>
+              <div id="redemptionPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
+            </div>
+            <div>
+              <h3>Approve Shares for Broker Dealer Redemption</h3>
+              <input id="approveBD" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
+              <button id="approveBDSubmit" style="font-size:1em">Approve Broker Dealer</button>
+              <div id="bdApprovePreview" style="padding:0.5em; margin-bottom:0.5em"></div>
+            </div>
+          </div>
+        `
+
+
+        const $sharesOwned = $.id('sharesOwned')
+        const $creationPreview = $.id('creationPreview')
+        const $redemptionPreview = $.id('redemptionPreview')
+        const $createETF = $.id('createETF')
+        const $redeemETF = $.id('redeemETF')
+        const $createETFSubmit = $.id('createETFSubmit')
+        const $redeemETFSubmit = $.id('redeemETFSubmit')
+        const $approveBDSubmit = $.id('approveBDSubmit')
+        const $bdApprovePreview = $.id('bdApprovePreview')
+
+
+        $sharesOwned.innerHTML = ethVal(await ETF.balanceOf(addr)).toFixed(2)
+
+        $createETF.onkeyup = (e) => {
+          $creationPreview.innerHTML = `(${e.target.value / 10000} ETH)`
+        }
+        $redeemETF.onkeyup = (e) => {
+          if (e.target.value > sharesOwned) {
+            $redemptionPreview.innerHTML = `<span style="color: red">You do not own this many shares</span>`
+          } else {
+            $redemptionPreview.innerHTML = ``
+          }
+
+        }
+
+
+        $createETFSubmit.onclick = async () => {
+          if (!$.id('bdFirstName').value || !$.id('bdLastName').value) {
+            $creationPreview.innerHTML = 'Please enter your first and last name'
+            return
+          }
+          try {
+            const tx = await BROKER_DEALER.create($.id('bdFirstName').value, $.id('bdLastName').value, txValue($createETF.value/10000))
+
+            $creationPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+
+            const txReciept1 = await tx.wait(1)
+
+            $creationPreview.innerHTML = 'Success!'
+            sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
+            $sharesOwned.innerHTML = sharesOwned.toFixed(2)
+            $createETF.value = ''
+
+          } catch (e) {
+            $creationPreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+
+            console.error(e)
+          }
+        }
+
+        $redeemETFSubmit.onclick = async () => {
+          if (!$.id('bdFirstName').value || !$.id('bdLastName').value) {
+            $creationPreview.innerHTML = 'Please enter your first and last name'
+            return
+          }
+
+          try {
+            const tx = await BROKER_DEALER.redeem($.id('bdFirstName').value, $.id('bdLastName').value, toETH($redeemETF.value))
+
+            $redemptionPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+
+            const txReciept1 = await tx.wait(1)
+
+            $redemptionPreview.innerHTML = 'Success!'
+            sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
+            $sharesOwned.innerHTML = sharesOwned.toFixed(2)
+            $redeemETF.value = ''
+
+          } catch (e) {
+            $redemptionPreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+            console.error(e)
+          }
+        }
+
+
+        $approveBDSubmit.onclick = async () => {
+          try {
+            const tx = await ETF.approve(BROKER_DEALER.address, toETH($.id('approveBD').value))
+
+            $bdApprovePreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+
+            const txReciept1 = await tx.wait(1)
+
+            $bdApprovePreview.innerHTML = 'Success!'
+
+            $.id('approveBD').value = ''
+
+          } catch (e) {
+            $bdApprovePreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+            console.error(e)
+          }
+        }
+      }
+
+
     } catch (e) {
       console.error(e)
     }

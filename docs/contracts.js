@@ -16,22 +16,31 @@ const AUCTION_STRUCT = `(
 CONTRACTS = {
   ETF: {
     addr: {
-      local: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+      local: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      sepolia: '0xcced8d66694ffcbab3bbab982c302e08851022c4'
     },
     abi: [
+      'function isDST() external view returns (bool)',
+      'function daysElapsed() external view returns (uint256)',
+      'function yearsElapsed() external view returns (uint256)',
       'function balanceOf(address owner) external view returns (uint256 balance)',
-      'function created(uint256 tokenId) external view returns (uint256)',
-      'function redeemed(uint256 tokenId) external view returns (uint256)',
-      'function totalSupply() external view returns (uint256)',
-      'function transfer(address, uint256) external',
-      'function create(uint256, address) external payable',
-      'function redeem(uint256,  address, uint256) external',
-      'event Transfer(address indexed from, address indexed to, uint256 value)'
+      'function created(uint256 tokenId) external view returns (uint256 amount)',
+      'function redeemed(uint256 tokenId) external view returns (uint256 amount)',
+      'function totalSupply() external view returns (uint256 supply)',
+      'function transfer(address to, uint256 amount) external',
+      'function approve(address spender, uint256 amount) external returns (bool)',
+      'function create(uint256 tokenId, address recipient) external payable',
+      'function redeem(uint256 tokenId,  address recipient, uint256 redeemAmount) external',
+      'function declareDST(bool dst) external',
+      'function declareMarketHoliday(uint256 day) external',
+      'event Transfer(address indexed from, address indexed to, uint256 value)',
+      'event DeclareMarketHoliday(uint256 indexed year, uint256 day)',
     ],
   },
   AP: {
     addr: {
-      local: '0xa16E02E87b7454126E5E10d957A927A7F5B5d2be'
+      local: '0xa16E02E87b7454126E5E10d957A927A7F5B5d2be',
+      sepolia: '0xc953EA56eA69C63bEEfd1C07Db632AbB9e95f421',
     },
     abi: [
       'function ownerOf(uint256 tokenId) external view returns (address)',
@@ -39,15 +48,30 @@ CONTRACTS = {
   },
   KYC: {
     addr: {
-      local: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+      local: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+      sepolia: '0x1bb955222a7ca49552b8387a040cffc9b12eb77c',
+    },
+    // TODO make non payable
+    abi: [
+      'function balanceOf(address) external view returns (uint256)',
+      'function register(string memory firstName, string memory lastName) external payable'
+    ]
+  },
+  BROKER_DEALER: {
+    addr: {
+      local: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      sepolia: '0x79d4ef385c10c6396642e1642d64613b3c2c5210'
     },
     abi: [
-      'function balanceOf(address) external view returns (uint256)'
+      'function create(string, string) external payable',
+      'function redeem(string, string, uint256) external',
+      'function stakedTokenId() external view returns (uint256)'
     ]
   },
   AUCTION: {
     addr: {
-      local: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      local: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
+      sepolia: '0x39098638ccbb39152f1b1a33d8c2e0c64ef9f469',
       mainnet: '0xd577B12732DA7557Db7eeA82e53d605f42C618d8'
     },
     abi: [
@@ -61,5 +85,17 @@ CONTRACTS = {
       'function bid(uint256 auctionId, bool wantsReward) external payable',
       'function settle(uint256 auctionId) external payable',
     ]
-  }
+  },
+  // UNISWAP_V2: {
+  //   addr: {},
+  //   abi: [
+  //     'function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast)'
+  //   ]
+  // }
 }
+
+  // async function getEthUsd(uniswapV2) {
+  //   const decimals = 2
+  //   const { _reserve0, _reserve1 } = await uniswapV2.getReserves()
+  //   return _reserve0.mul(1000000000000).mul(10**decimals).div(_reserve1).toNumber() / 10**decimals
+  // }

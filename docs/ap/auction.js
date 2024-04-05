@@ -4,7 +4,7 @@ import {provider, bnToN, isENS, ethVal, ethValue, ZERO_ADDR} from '../eth.js'
 
 
 
-const etherscanPrefix = async () => (await provider.getNetwork()) === 'goerli' ? 'goerli.' : ''
+const etherscanPrefix = async () => (await provider.getNetwork()) === 'sepolia' ? 'sepolia.' : ''
 
 
 provider.setContractInfo(CONTRACTS)
@@ -62,11 +62,6 @@ const $biddingHelp = $.id('biddingHelp')
 // const $wantsNotifications = $.id('wantsNotifications')
 
 
-$.cls('imgContainer')[0].innerHTML = `
-  <a href="../assets/ap${AP_ID}.svg">
-    <img src="../assets/ap${AP_ID}.svg">
-  </a>
-`
 
 
 let notificationPermission, lastBid
@@ -81,7 +76,7 @@ let notificationPermission, lastBid
 
 let stopActiveCountdownInterval = () => {}
 let setMinBid = false
-async function updateBidInfo(signer, steviepAuction) {
+async function updateBidInfo(signer, steviepAuction, ap) {
   const signerAddr = await signer.getAddress()
 
   const [
@@ -116,6 +111,7 @@ async function updateBidInfo(signer, steviepAuction) {
     auctionEndTime,
     isActive,
     isSettled,
+    tokenOwner,
     blockNumber,
   ] = await Promise.all([
     steviepAuction.auctionIdToHighestBid(AUCTION_ID),
@@ -123,9 +119,11 @@ async function updateBidInfo(signer, steviepAuction) {
     steviepAuction.auctionEndTime(AUCTION_ID),
     steviepAuction.isActive(AUCTION_ID),
     steviepAuction.isSettled(AUCTION_ID),
+    ap.ownerOf(AP_ID),
     provider.provider.getBlockNumber(),
   ])
 
+  const isOwnedByContract = tokenOwner === steviepAuction.address
 
 
 
@@ -139,12 +137,11 @@ async function updateBidInfo(signer, steviepAuction) {
 
   if (!hasBid) {
     hide($bidHistory)
-    unhide($makeBidSection)
-
+    if (isOwnedByContract) unhide($makeBidSection)
     if (!setMinBid) $newBidAmount.value = formatMinBid(ethVal(auction.minBid))
 
   } else if (isActive) {
-    unhide($makeBidSection)
+    if (isOwnedByContract) unhide($makeBidSection)
     unhide($timeLeftSection)
     unhide($highestBidSection)
     unhide($activeBidSection)
@@ -368,24 +365,22 @@ async function displayAPActions(etf) {
 
   $createETFSubmit.onclick = async () => {
     try {
+
       const tx = await ETF.create(AP_ID, await provider.signer.getAddress(), ethValue($createETF.value/10000))
 
       $creationPreview.innerHTML = `TX Pending. <a href="https://${await etherscanPrefix()}etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
 
       const txReciept1 = await tx.wait(1)
 
-      creationPreview.innerHTML = 'Success!'
+      $creationPreview.innerHTML = 'Success!'
       $.id('sharesCreated').innerHTML = fromWei(await etf.created(AP_ID)).toFixed(4)
       sharesOwned = fromWei(await etf.balanceOf(await provider.signer.getAddress()))
       $.id('sharesOwned').innerHTML = sharesOwned.toFixed(4)
       $createETF.value = ''
 
     } catch (e) {
-      if (e.data) {
-        $creationPreview.innerHTML = e.data.message
-      } else {
-        $creationPreview.innerHTML = e.message
-      }
+      $creationPreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+
       console.error(e)
     }
   }
@@ -398,29 +393,139 @@ async function displayAPActions(etf) {
 
       const txReciept1 = await tx.wait(1)
 
-      redemptionPreview.innerHTML = 'Success!'
+      $redemptionPreview.innerHTML = 'Success!'
       $.id('sharesRedeemed').innerHTML = fromWei(await etf.redeemed(AP_ID)).toFixed(4)
       sharesOwned = fromWei(await etf.balanceOf(await provider.signer.getAddress()))
       $.id('sharesOwned').innerHTML = sharesOwned.toFixed(4)
       $redeemETF.value = ''
 
     } catch (e) {
-      if (e.data) {
-        $redemptionPreview.innerHTML = e.data.message
-      } else {
-        $redemptionPreview.innerHTML = e.message
-      }
+      $redemptionPreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+      console.error(e)
+    }
+  }
+}
+
+
+
+async function displayTLStats(etf) {
+
+  let holidays = []
+
+  try {
+    const holidayFilter = etf.filters.DeclareMarketHoliday(await etf.yearsElapsed())
+    holidays = await etf.queryFilter(holidayFilter)
+    console.log(holidays)
+
+
+  } catch (e) {
+    console.log(e)
+  }
+
+
+  $.id('apStats').innerHTML = `
+    <section style=" display: flex; justify-content: space-between; flex-direction: column">
+      <div style="margin-bottom: 0.5em">
+        <h3 class="label">Is DST?</h3>
+        <div id="isDST" style="font-family: monospace">${await etf.isDST()}</div>
+      </div>
+      <div style="margin-bottom: 0.5em">
+        <h3 class="label">Market Holidays Declared For Current Year</h3>
+        <div style="font-family: monospace" id="sharesRedeemed">${fromWei(await etf.redeemed(AP_ID)).toFixed(4)}</div>
+      </div>
+      <div style="margin-bottom: 0.5em">
+        <h3 class="label">Days Elapsed</h3>
+        <div style="font-family: monospace">${bnToN(await etf.daysElapsed())}</div>
+      </div>
+      <div style="margin-bottom: 0.5em">
+        <h3 class="label">Upcoming Holidays</h3>
+        <div style="font-family: monospace">${holidays}</div>
+      </div>
+    </section>
+  `
+}
+
+async function displayTLActions(etf) {
+  $.id('activeBidSection').style.marginBottom = 0
+  $.id('highestBidSection').style.marginBottom = 0
+
+  $.id('apActions').innerHTML = `
+    <section style="border: 3px solid; padding: 1em">
+      <div>
+        <h3>Declare DST</h3>
+        <input id="declareDST" class="shareCreationRedemption" type="checkbox" style="cursor: pointer"><button id="declareDSTSubmit" style="font-size:1em">Submit</button>
+        <div id="dstLoading" style="height: 1em; padding:0.5em; margin-bottom:0.5em"></div>
+      </div>
+
+      <div>
+        <h3>Declare Market Holiday</h3>
+        <input id="declareMarketHoliday" class="shareCreationRedemption" placeholder="Day" type="number"><button id="declareMarketHolidaySubmit" style="font-size:1em">Submit</button>
+        <div id="marketHolidayLoading" style="height: 1em; padding:0.5em; margin-bottom:0.5em"></div>
+      </div>
+
+      <a href="https://etherscan.io/address/${ETF.address}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View ETF contract on etherscan</a>
+    </section>
+  `
+
+  $.id('declareDST').checked = await etf.isDST()
+
+  $.id('declareDSTSubmit').onclick = async () => {
+    try {
+      const tx = await etf.declareDST($.id('declareDST').checked)
+
+      $.id('dstLoading').innerHTML = `TX Pending. <a href="https://${await etherscanPrefix()}etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+
+      const txReciept1 = await tx.wait(1)
+
+      $.id('dstLoading').innerHTML = 'Success!'
+      $.id('isDST').innerHTML = $.id('declareDST').checked
+
+    } catch (e) {
+      $.id('dstLoading').innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
       console.error(e)
     }
   }
 
+  $.id('declareMarketHolidaySubmit').onclick = async () => {
+    // TODO
 
+
+    // try {
+    //   const tx = await etf.declareDST($.id('declareDST').checked)
+
+    //   $creationPreview.innerHTML = `TX Pending. <a href="https://${await etherscanPrefix()}etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+
+    //   const txReciept1 = await tx.wait(1)
+
+    //   creationPreview.innerHTML = 'Success!'
+    //   $.id('sharesCreated').innerHTML = fromWei(await etf.created(AP_ID)).toFixed(4)
+    //   sharesOwned = fromWei(await etf.balanceOf(await provider.signer.getAddress()))
+    //   $.id('sharesOwned').innerHTML = sharesOwned.toFixed(4)
+    //   $createETF.value = ''
+
+    // } catch (e) {
+    //   if (e.data) {
+    //     $creationPreview.innerHTML = e.data.message
+    //   } else {
+    //     $creationPreview.innerHTML = e.message
+    //   }
+    //   console.error(e)
+    // }
+  }
+  // declare DST
+  // declare market holiday
 }
+
+
+
+
+
+
 
 provider.onConnect(async (signer) => {
   const { ETF, AP, AUCTION } = await provider.getContracts()
 
-  setRunInterval(() => updateBidInfo(provider.signer, AUCTION), 3000)
+  setRunInterval(() => updateBidInfo(provider.signer, AUCTION, AP), 3000)
 
 
   $submitBid.onclick = async () => {
@@ -453,7 +558,7 @@ provider.onConnect(async (signer) => {
       const txReciept1 = await tx.wait(1)
 
       setMinBid = false
-      updateBidInfo(provider.signer, AUCTION)
+      updateBidInfo(provider.signer, AUCTION, AP)
 
       const auctionsBidOn = ls.get('__AUCTIONS_BID_ON__') || {}
       auctionsBidOn[AUCTION_ID] = true
@@ -489,7 +594,7 @@ provider.onConnect(async (signer) => {
 
       const txReciept1 = await tx.wait(1)
 
-      updateBidInfo(provider.signer, AUCTION)
+      updateBidInfo(provider.signer, AUCTION, AP)
 
       unhide($settlementSectionContent)
       hide($settlementSectionLoading)
@@ -509,12 +614,18 @@ provider.onConnect(async (signer) => {
 
 
 
-  if (await AUCTION.isSettled(AUCTION_ID)) {
+  if ((await AP.ownerOf(AP_ID)) !== AUCTION.address) {
 
-    $.id('dataLastUpdated').style.display = 'none'
-    displayAPStats(ETF)
+    hide($makeBidSection)
+    hide(($.id('dataLastUpdated')))
+
+    console.log('TODO: display market holidays')
+    if (AP_ID === 0) displayTLStats(ETF)
+    else displayAPStats(ETF)
+
     if (await AP.ownerOf(AP_ID) === signer) {
-      displayAPActions(ETF)
+      if (AP_ID === 0) displayTLActions(ETF)
+      else displayAPActions(ETF)
     }
   }
 })

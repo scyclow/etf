@@ -38,6 +38,11 @@ module.exports = {
       accounts: [`0x${STUFF.DEV1}`]
     },
 
+    sepolia: {
+      url: STUFF.ETH_SEPOLIA_URL,
+      accounts: [`0x${STUFF.DEV1}`]
+    },
+
   },
 
   gasReporter: {

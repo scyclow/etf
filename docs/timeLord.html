@@ -3,35 +3,38 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Authorized Participant 0</title>
-  <link rel="shortcut icon" type="image/x-icon" href="../assets/ap0.svg" id="favicon">
+  <title>Time Lord</title>
+  <link rel="shortcut icon" type="image/x-icon" href="../assets/tl.svg" id="favicon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="description" content="Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF.">
+  <meta name="description" content="The Time Lord has the sole ability to declare Market Holidays and DST.">
   <meta name="keywords" content="steviep, steve pikelny, pikelny, crypto, ethereum, etf, bitcoin, erc20, memecoin, shitcoin, exchange-traded fund, authorized, participant, authorized participant, authorized participants, participants">
 
-  <meta name="twitter:image" content="https://steviep.xyz/etf/assets/ap0.svg">
-  <meta name="twitter:image:alt" content="Authorized Partitipant 0">
+  <meta name="twitter:image" content="https://steviep.xyz/etf/assets/tl.svg">
+  <meta name="twitter:image:alt" content="Time Lord">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@steviepxyz">
   <meta name="twitter:site" content="@steviepxyz">
-  <meta property="twitter:description" content="Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF.">
+  <meta property="twitter:description" content="The Time Lord has the sole ability to declare Market Holidays and DST.">
 
-  <meta name="og:image" property="og:image" content="https://steviep.xyz/etf/assets/ap0.svg">
-  <meta name="og:image:alt" content="Authorized Partitipant 0">
+  <meta name="og:image" property="og:image" content="https://steviep.xyz/etf/assets/tl.svg">
+  <meta name="og:image:alt" content="Time Lord">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://steviep.xyz/etf">
-  <meta property="og:title" content="Authorized Partitipant 0">
-  <meta property="og:site_name" content="Authorized Partitipant 0">
-  <meta property="og:description" content="Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF.">
+  <meta property="og:url" content="https://steviep.xyz/etf/timeLord">
+  <meta property="og:title" content="Time Lord">
+  <meta property="og:site_name" content="Time Lord">
+  <meta property="og:description" content="The Time Lord has the sole ability to declare Market Holidays and DST.">
 
-  <link rel="stylesheet" type="text/css" href="../styles.css">
-  <link rel="stylesheet" type="text/css" href="./auction.css">
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+  <link rel="stylesheet" type="text/css" href="./ap/auction.css">
 
 <script type="text/javascript">
   AP_ID = 0
   AUCTION_ID = 0
 </script>
+
+
+
 </head>
 
 <body>
@@ -50,8 +53,12 @@
   <main>
 
     <section>
-      <h2>Authorized Participant 0</h2>
-      <div class="imgContainer"></div>
+      <h2>Time Lord</h2>
+      <div class="imgContainer">
+        <a href="./assets/tl.svg">
+          <img src="./assets/tl.svg">
+        </a>
+      </div>
     </section>
 
     <section>
@@ -139,7 +146,7 @@
     <div id="apActions"></div>
 
     <section>
-      <p>Authorized Participants have the sole right (but not the obligation) to create and redeem shares of ETF. APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
+      <p>The Time Lord has the sole ability to declare Market Holidays and DST.</p>
     </section>
 
 
@@ -177,12 +184,11 @@
 </body>
 
 
-<script src="../contracts.js"></script>
-<script src="../utils.js"></script>
-<script type="module" src="../connectWallet.js"></script>
+<script src="./contracts.js"></script>
+<script src="./utils.js"></script>
+<script type="module" src="./connectWallet.js"></script>
+<script type="module" src="./ap/auction.js"></script>
 
-
-<script type="module" src="./auction.js"></script>
 
 
 

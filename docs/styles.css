@@ -137,6 +137,14 @@ section {
   margin-bottom: 2em;
 }
 
+.textInput {
+  max-width: 130px;
+  border:  1px solid var(--font-color);
+  margin-right: 1em;
+  font-size: 1em;
+  padding: 0.5em;
+}
+
 img {
   width: 240px;
   display: inline-block;

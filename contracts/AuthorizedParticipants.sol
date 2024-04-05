@@ -21,7 +21,7 @@ contract AuthorizedParticipants is ERC721, Ownable {
   event MetadataUpdate(uint256 _tokenId);
   event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId);
 
-  constructor(address _owner) ERC721('AuthorizedParticipants', 'AP') {
+  constructor(address _owner) ERC721('ETF Authorized Participants', 'AP') {
     etf = ETF(msg.sender);
     transferOwnership(_owner);
     tokenURIContract = new TokenURI(msg.sender);
@@ -133,10 +133,10 @@ contract TokenURI {
     externalUrl = url;
   }
 
-  function getDescription(uint256 tokenId) public view returns (string memory) {
+  function getDescription(uint256 tokenId) public pure returns (string memory) {
     string memory roleText = tokenId > 0
       ? 'Authorized Participants have the right (but not the obligation) to create and redeem shares of ETF.'
-      : 'The Time Lord has the sole ability to set Market Holidays and declare Daylight Savings Time.';
+      : 'The Time Lord has the sole ability to declare Market Holidays and DST.';
     return string.concat(
       'ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. ',
       roleText
@@ -158,7 +158,7 @@ contract TokenURI {
       return string.concat(
         '[',
           '{"trait_type": "Market Holidays Set For Year", "value": "', etf.yearToMarketHolidaysSet(etf.yearsElapsed()).toString(), '"},',
-          '{"trait_type": "Is Daylight Savings Time", "value": "', etf.isDST() ? 'True' : 'False', '"}',
+          '{"trait_type": "Is DST", "value": "', etf.isDST() ? 'True' : 'False', '"}',
         ']'
       );
     }

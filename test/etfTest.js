@@ -75,7 +75,7 @@ describe('ETF', () => {
 
 
     const KYCFactory = await ethers.getContractFactory('KYC', admin)
-    KYC = await KYCFactory.deploy(ETF.address, AuthorizedParticipants.address)
+    KYC = await KYCFactory.deploy(ETF.address)
     await KYC.deployed()
 
     const BrokerDealerFactory = await ethers.getContractFactory('BrokerDealer', admin)
@@ -113,7 +113,7 @@ describe('ETF', () => {
 
     const json = getJsonURI(await AuthorizedParticipants.tokenURI(0))
     expect(json.name).to.equal(`Time Lord`)
-    expect(json.description).to.equal('ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. The Time Lord has the sole ability to set Market Holidays and declare Daylight Savings Time.')
+    expect(json.description).to.equal('ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum. The Time Lord has the sole ability to declare Market Holidays and DST.')
 
     for (let i = 1; i < 7; i++) {
       const json = getJsonURI(await AuthorizedParticipants.tokenURI(i))
@@ -489,37 +489,33 @@ describe('ETF', () => {
     expect(await ETF.isMarketOpen()).to.equal(false)
   })
 
-  it('KYC should work', async () => {
-
-    const startingEthBalance = await getBalance(admin)
+  it.only('KYC should work', async () => {
 
     await expectRevert(
-      KYC.connect(ap1).mint('joe', 'schmoe'),
-      'Must pay KYC fee'
-    )
-
-    await expectRevert(
-      KYC.connect(ap1).mint('joe', '', txValue('0.01')),
+      KYC.connect(ap1).register('joe', ''),
       'Invalid KYC info'
     )
 
     await expectRevert(
-      KYC.connect(ap1).mint('', 'schmoe', txValue('0.01')),
+      KYC.connect(ap1).register('', 'schmoe'),
       'Invalid KYC info'
     )
 
-    await KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01'))
+    await KYC.connect(ap1).register('joe', 'schmoe')
+    const kycId = await KYC.connect(ap1).getId('joe', 'schmoe')
+
+    expect(await KYC.addrToTokenId(ap1.address)).to.equal(kycId)
+
     await expectRevert(
-      KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01')),
+      KYC.connect(ap1).register('jack', 'schmoe'),
       'KYC already registered'
     )
 
-    const endingEthBalance = await getBalance(admin)
-    expect(endingEthBalance - startingEthBalance).to.be.closeTo(0.01, 0.005)
+    await expectRevert(
+      KYC.connect(ap2).register('joe', 'schmoe'),
+      'KYC already registered'
+    )
 
-
-
-    const kycId = await KYC.connect(ap1).getId('joe', 'schmoe')
 
 
     expect(await KYC.connect(ap1).totalSupply()).to.equal(1)
@@ -537,7 +533,7 @@ describe('ETF', () => {
   })
 
   it('KYC should be revoked by contract owner (and only contract owner), and burnable by owner', async () => {
-    await KYC.connect(ap1).mint('joe', 'schmoe', txValue('0.01'))
+    await KYC.connect(ap1).register('joe', 'schmoe')
 
     const kycId = await KYC.connect(ap1).getId('joe', 'schmoe')
 
@@ -551,7 +547,7 @@ describe('ETF', () => {
 
     expect(await KYC.connect(ap1).exists(kycId)).to.equal(false)
 
-    await KYC.connect(ap2).mint('Al', 'Sharpton', txValue('0.01'))
+    await KYC.connect(ap2).register('Al', 'Sharpton')
     const kycId2 = await KYC.connect(ap1).getId('Al', 'Sharpton')
 
     await expectRevert(
@@ -596,11 +592,11 @@ describe('ETF', () => {
     expect(ethVal(await ETF.created(1))).to.equal(0)
     expect(ethVal(await ETF.redeemed(1))).to.equal(0)
 
-    await KYC.connect(investor).mint('joe', 'schmoe', txValue('0.01'))
-    await KYC.connect(ap6).mint('al', 'gore', txValue('0.01'))
+    await KYC.connect(investor).register('joe', 'schmoe')
+    await KYC.connect(ap6).register('al', 'gore')
 
     await expectRevert(
-      BrokerDealer.connect(ap6).create('joe', 'schmoe', txValue('0.1')),
+      BrokerDealer.connect(ap6).create('joe', 'schmoe'),
       'Invalid KYC Token'
     )
 

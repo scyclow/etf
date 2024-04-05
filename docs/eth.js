@@ -9,6 +9,7 @@ export const truncateAddr = (addr, len=13) => {
 export const toETH = amt => ethers.utils.parseEther(String(amt))
 export const fromWei = amt => bnToN(amt)/1e18
 export const ethValue = amt => ({ value: toETH(amt) })
+export const txValue = amt => ({ value: toETH(amt) })
 export const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
 
 
@@ -141,6 +142,8 @@ export class Web3Provider {
       name = 'mainnet'
     } else if (network.chainId === 31337) {
       name = 'local'
+    } else if (network.chainId === 11155111) {
+      name = 'sepolia'
     } else if (hasName) {
       name = network.name
     } else {
@@ -167,6 +170,7 @@ export class Web3Provider {
     this.contractInfo = contractInfo
   }
   async getContracts() {
+    const n = await this.getNetwork()
     const networkName = (await this.getNetwork()).name
     const contractInfo = this.contractInfo
 
