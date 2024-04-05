@@ -305,11 +305,11 @@ async function displayAPStats(etf) {
     <section style=" display: flex; justify-content: space-between; width: 280px">
       <div>
         <h3 class="label">Shares Created</h3>
-        <div style="font-family: monospace" id="sharesCreated">${fromWei(await etf.created(AP_ID)).toFixed(4)}</div>
+        <div style="font-family: monospace" id="sharesCreated">${fromWei(await etf.created(AP_ID)).toFixed(2)}</div>
       </div>
       <div>
         <h3 class="label">Shares Redeemed</h3>
-        <div style="font-family: monospace" id="sharesRedeemed">${fromWei(await etf.redeemed(AP_ID)).toFixed(4)}</div>
+        <div style="font-family: monospace" id="sharesRedeemed">${fromWei(await etf.redeemed(AP_ID)).toFixed(2)}</div>
       </div>
     </section>
   `
@@ -373,9 +373,9 @@ async function displayAPActions(etf) {
       const txReciept1 = await tx.wait(1)
 
       $creationPreview.innerHTML = 'Success!'
-      $.id('sharesCreated').innerHTML = fromWei(await etf.created(AP_ID)).toFixed(4)
+      $.id('sharesCreated').innerHTML = fromWei(await etf.created(AP_ID)).toFixed(2)
       sharesOwned = fromWei(await etf.balanceOf(await provider.signer.getAddress()))
-      $.id('sharesOwned').innerHTML = sharesOwned.toFixed(4)
+      $.id('sharesOwned').innerHTML = sharesOwned.toFixed(2)
       $createETF.value = ''
 
     } catch (e) {
@@ -394,9 +394,9 @@ async function displayAPActions(etf) {
       const txReciept1 = await tx.wait(1)
 
       $redemptionPreview.innerHTML = 'Success!'
-      $.id('sharesRedeemed').innerHTML = fromWei(await etf.redeemed(AP_ID)).toFixed(4)
+      $.id('sharesRedeemed').innerHTML = fromWei(await etf.redeemed(AP_ID)).toFixed(2)
       sharesOwned = fromWei(await etf.balanceOf(await provider.signer.getAddress()))
-      $.id('sharesOwned').innerHTML = sharesOwned.toFixed(4)
+      $.id('sharesOwned').innerHTML = sharesOwned.toFixed(2)
       $redeemETF.value = ''
 
     } catch (e) {
@@ -422,6 +422,7 @@ async function displayTLStats(etf) {
     console.log(e)
   }
 
+// TODO display market holidays declared
 
   $.id('apStats').innerHTML = `
     <section style=" display: flex; justify-content: space-between; flex-direction: column">
@@ -431,7 +432,7 @@ async function displayTLStats(etf) {
       </div>
       <div style="margin-bottom: 0.5em">
         <h3 class="label">Market Holidays Declared For Current Year</h3>
-        <div style="font-family: monospace" id="sharesRedeemed">${fromWei(await etf.redeemed(AP_ID)).toFixed(4)}</div>
+        <div style="font-family: monospace" id="sharesRedeemed"></div>
       </div>
       <div style="margin-bottom: 0.5em">
         <h3 class="label">Days Elapsed</h3>
@@ -553,7 +554,7 @@ provider.onConnect(async (signer) => {
       const wantsReward = $wantsReward && $wantsReward.checked
       const tx = await AUCTION.bid(AUCTION_ID, wantsReward, ethValue($newBidAmount.value))
 
-      $bidSectionLoadingMessage.innerHTML = `TX Pending. <a href="https://${await etherscanPrefix()}etherscan.io/tx/${tx.hash}" target="_blank">View on etherscan</a>`
+      $bidSectionLoadingMessage.innerHTML = `TX Pending. <a href="https://${await etherscanPrefix()}etherscan.io/tx/${tx.hash}" target="_blank" style="color:var(--accent-color)">View on etherscan</a>`
 
       const txReciept1 = await tx.wait(1)
 

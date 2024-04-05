@@ -13,11 +13,13 @@ const AUCTION_STRUCT = `(
   address allowListContract
 )`
 
+
+
 CONTRACTS = {
   ETF: {
     addr: {
       local: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-      sepolia: '0xcced8d66694ffcbab3bbab982c302e08851022c4'
+      sepolia: '0xcCeD8D66694FFCbAB3bBab982c302e08851022c4'
     },
     abi: [
       'function isDST() external view returns (bool)',
@@ -49,18 +51,21 @@ CONTRACTS = {
   KYC: {
     addr: {
       local: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-      sepolia: '0x1bb955222a7ca49552b8387a040cffc9b12eb77c',
+      sepolia: '0x6be4ceD7E2c3b0c68dD2860E0250d6F1EbB8d069',
     },
-    // TODO make non payable
+
     abi: [
+      'function getId(string, string) external view returns (uint256)',
+      'function tokenURI(uint256) external view returns (string)',
+      `function addrToTokenId(address) external view returns (uint256)`,
       'function balanceOf(address) external view returns (uint256)',
-      'function register(string memory firstName, string memory lastName) external payable'
+      'function register(string memory firstName, string memory lastName) external'
     ]
   },
   BROKER_DEALER: {
     addr: {
       local: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
-      sepolia: '0x79d4ef385c10c6396642e1642d64613b3c2c5210'
+      sepolia: '0xd73dE3E4daBD65Fd91d7D09B69A730f726bd349C'
     },
     abi: [
       'function create(string, string) external payable',
@@ -71,7 +76,7 @@ CONTRACTS = {
   AUCTION: {
     addr: {
       local: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-      sepolia: '0x39098638ccbb39152f1b1a33d8c2e0c64ef9f469',
+      sepolia: '0x39098638ccBB39152F1B1a33D8c2E0c64ef9F469',
       mainnet: '0xd577B12732DA7557Db7eeA82e53d605f42C618d8'
     },
     abi: [

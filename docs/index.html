@@ -83,11 +83,14 @@ TODO
     font-size: 1.25em;
   }
 
-  #kycPreview {
+  #kycCard {
+    margin-top: 1em;
+  }
+  #kycPreview, #kycCard {
     display: flex;
     justify-content: center;
   }
-  #kycPreview svg {
+  #kycPreview svg, #kycCard svg {
     max-width: 500px;
   }
 
@@ -351,33 +354,26 @@ TODO
     </section>
 
     <connect-wallet>
-      <section slot="connected">
-        <h2>Broker Dealer</h2>
-        <!-- TODO Broker Dealer explanation -->
-        <div style="margin-bottom: 2em;">
-          <h3 class="label">Shares Owned</h3>
-          <div style="font-family: monospace" id="sharesOwned">--</div>
-        </div>
-
-
-        <div id="brokerDealerCreationRedemption"></div>
-
+      <section slot="connected" id="brokerDealerSection">
       </section>
     </connect-wallet>
 
     <connect-wallet>
-      <section slot="connected">
+      <section slot="connected" id="registerKYC">
         <h2>Register KYC Information</h2>
         <!-- TODO KYC explanation -->
-        <div style="display: flex; justify-content: center; align-items: center; margin-top: 1em;">
-          <input id="firstNameInput" class="textInput" placeholder="First Name">
-          <input id="lastNameInput" class="textInput" placeholder="Last Name">
-          <button id="submitKYC" style="font-size:1em">Submit</button>
-        </div>
-        <div id="kycLoading" style="padding: 0.5em 1em; text-align: center;"></div>
 
-        <h3 style="text-align: center;text-transform: uppercase; font-size: 0.75em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em">Preview</h3>
-        <div id="kycPreview"></div>
+        <div id="kycCard">
+          <div style="display: flex; justify-content: center; align-items: center; margin-top: 1em;">
+            <input id="firstNameInput" class="textInput" placeholder="First Name">
+            <input id="lastNameInput" class="textInput" placeholder="Last Name">
+            <button id="submitKYC" style="font-size:1em">Submit</button>
+          </div>
+          <div id="kycLoading" style="padding: 0.5em 1em; text-align: center;"></div>
+
+          <h3 style="text-align: center;text-transform: uppercase; font-size: 0.75em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em">Preview</h3>
+          <div id="kycPreview"></div>
+        </div>
       </section>
     </connect-wallet>
 
@@ -414,12 +410,13 @@ TODO
 
 
   const apToAuctionId = {
-    0: 0,
-    1: 1,
-    2: 2,
+    0: 6,
+    1: 5,
+    2: 4,
     3: 3,
-    4: 4,
-    5: 5,
+    4: 2,
+    5: 1,
+    6: 0,
   }
 
   let ETF, AP, AUCTION, KYC, BROKER_DEALER
@@ -429,65 +426,72 @@ TODO
 
       ({ ETF, AP, AUCTION, KYC, BROKER_DEALER } = await provider.getContracts())
 
-      $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(4) + ' ETH'
-      $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(4)
+      $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
+      $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)
 
       times(6, async _i => {
         const i = _i + 1
-        const ownerAddr = await AP.ownerOf(i)
+        try {
+          const ownerAddr = await AP.ownerOf(i)
 
-        if (ownerAddr === AUCTION.address) {
-          const [
-            highestBid,
-            auction,
-            auctionEndTime,
-            isActive
-          ] = await Promise.all([
-            AUCTION.auctionIdToHighestBid(apToAuctionId[i]),
-            AUCTION.auctionIdToAuction(apToAuctionId[i]),
-            AUCTION.auctionEndTime(apToAuctionId[i]),
-            AUCTION.isActive(apToAuctionId[i]),
-          ])
+          if (ownerAddr === AUCTION.address) {
 
-          const bidderDisplay = highestBid.bidder === ZERO_ADDR
-            ? '-'
-            : `<a href="https://etherscan.io/address/${highestBid.bidder}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(highestBid.bidder)}</a></dd>`
+            const auctionId = apToAuctionId[i]
+            console.log(auctionId, i)
+            const [
+              highestBid,
+              auction,
+              auctionEndTime,
+              isActive
+            ] = await Promise.all([
+              AUCTION.auctionIdToHighestBid(auctionId),
+              AUCTION.auctionIdToAuction(auctionId),
+              AUCTION.auctionEndTime(auctionId),
+              AUCTION.isActive(auctionId),
+            ])
 
-          $.id(`ap${i}-display`).innerHTML = `
-            <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">Make Bid →</a></div>
-            <div>
-              <dt>Highest Bidder</dt>
-              <dd>${bidderDisplay}</dd>
-            </div>
-            <div>
-              <dt>Highest Bid</dt>
-              <dd>${fromWei(highestBid.amount)} ETH</dd>
-            </div>
-            <div>
-              <dt>Time Left</dt>
-              <dd id="ap${i}-timer">-</dd>
-            </div>
-          `
+            const bidderDisplay = highestBid.bidder === ZERO_ADDR
+              ? '-'
+              : `<a href="https://etherscan.io/address/${highestBid.bidder}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(highestBid.bidder)}</a></dd>`
 
-          if (isActive && bnToN(highestBid.timestamp)) triggerTimer(bnToN(auctionEndTime) * 1000 - Date.now(), $.id(`ap${i}-timer`))
+            $.id(`ap${i}-display`).innerHTML = `
+              <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">Make Bid →</a></div>
+              <div>
+                <dt>Highest Bidder</dt>
+                <dd>${bidderDisplay}</dd>
+              </div>
+              <div>
+                <dt>Highest Bid</dt>
+                <dd>${fromWei(highestBid.amount)} ETH</dd>
+              </div>
+              <div>
+                <dt>Time Left</dt>
+                <dd id="ap${i}-timer">-</dd>
+              </div>
+            `
 
-        } else {
-          $.id(`ap${i}-display`).innerHTML = `
+            if (isActive && bnToN(highestBid.timestamp)) triggerTimer(bnToN(auctionEndTime) * 1000 - Date.now(), $.id(`ap${i}-timer`))
 
-            <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">More Info →</a></div>
-            <div>
-              <dt>Owned By</dt>
-              <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
-            </div>
-            <div>
-              <dt>Shares Created</dt>
-              <dd>${fromWei(await ETF.created(i)).toFixed(4)}</dd>
-            </div>
-            <div>
-              <dt>Shares Redeemed</dt>
-              <dd>${fromWei(await ETF.redeemed(i)).toFixed(4)}</dd>
-            </div>
-          `
+          } else {
+            $.id(`ap${i}-display`).innerHTML = `
+
+              <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">More Info →</a></div>
+              <div>
+                <dt>Owned By</dt>
+                <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
+              </div>
+              <div>
+                <dt>Shares Created</dt>
+                <dd>${fromWei(await ETF.created(i)).toFixed(2)}</dd>
+              </div>
+              <div>
+                <dt>Shares Redeemed</dt>
+                <dd>${fromWei(await ETF.redeemed(i)).toFixed(2)}</dd>
+              </div>
+            `
+          }
+        } catch (e) {
+          console.error(e)
         }
       })
 
@@ -495,6 +499,9 @@ TODO
       const $firstNameInput = $.id('firstNameInput')
       const $lastNameInput = $.id('lastNameInput')
       const $kycLoading = $.id('kycLoading')
+
+      const existingKYCTokenId = await KYC.addrToTokenId(addr)
+
 
       function updateKYCPreview(firstName='', lastName='', address=ZERO_ADDR) {
         $.id('kycPreview').innerHTML = `
@@ -517,38 +524,49 @@ TODO
       }
 
 
-      // TODO make it so it shows your KYC card
-      updateKYCPreview('', '', addr)
-      $firstNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
-      $lastNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+      if (bnToN(existingKYCTokenId) === 0) {
+        updateKYCPreview('', '', addr)
+        $firstNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+        $lastNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
 
-      $.id('submitKYC').onclick = async () => {
-        if (!$firstNameInput.value || !$lastNameInput.value) {
-          $kycLoading.innerHTML = 'Please enter your first and last name.'
-        }
-        $kycLoading.innerHTML = ''
+        $.id('submitKYC').onclick = async () => {
+          if (!$firstNameInput.value || !$lastNameInput.value) {
+            $kycLoading.innerHTML = 'Please enter your first and last name.'
+          }
+          $kycLoading.innerHTML = ''
 
-        try {
-          // TODO take out 0.01
-          const tx = await KYC.register($firstNameInput.value, $lastNameInput.value, txValue('0.01'))
-          $kycLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
-          const txReciept1 = await tx.wait(1)
-          $kycLoading.innerHTML = 'Success!'
-          $firstNameInput.value = ''
-          $lastNameInput.value = ''
-        } catch (e) {
-          $kycLoading.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
-          console.error(e)
+          try {
+            const tx = await KYC.register($firstNameInput.value, $lastNameInput.value,)
+            $kycLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+            const txReciept1 = await tx.wait(1)
+            $kycLoading.innerHTML = 'Success!'
+            $firstNameInput.value = ''
+            $lastNameInput.value = ''
+          } catch (e) {
+            $kycLoading.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+            console.error(e)
+          }
         }
+      } else {
+        const utf8Clean = raw => raw.replace(/data.*utf8,/, '')
+        const b64Clean = raw => raw.replace(/data.*,/, '')
+        const b64Decode = raw => atob(b64Clean(raw))
+        const getSVG = rawURI => b64Decode(JSON.parse(utf8Clean(rawURI)).image)
+        $.id('kycCard').innerHTML = getSVG(await KYC.tokenURI(existingKYCTokenId))
       }
 
       const stakedAPTokenId = bnToN(await BROKER_DEALER.stakedTokenId())
       if (stakedAPTokenId !== 0) {
-        console.log(stakedAPTokenId)
+        $.id('brokerDealerSection').innerHTML = `
+          <h2>Broker Dealer</h2>
+          <!-- TODO Broker Dealer explanation -->
+          <div style="margin-bottom: 2em;">
+            <h3 class="label">Current ETF Balance: <span style="font-family: monospace; margin-left:0.25em" id="sharesOwned">--</span></h3>
+          </div>
 
-        $.id('brokerDealerCreationRedemption').innerHTML = `
           <div style="border: 3px solid; padding: 1em">
             <div>
+              <h3>KYC Info</h3>
               <div style="margin-bottom: 1em">
                 <input id="bdFirstName" class="textInput" placeholder="First Name" style="margin-bottom:0.5em">
                 <input id="bdLastName" class="textInput" placeholder="Last Name" style="margin-bottom:0.5em">
@@ -609,6 +627,12 @@ TODO
             return
           }
           try {
+            const kycId = bnToN(await KYC.addrToTokenId(addr))
+            if (kycId === 0) {
+              $creationPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information below</a>`
+              return
+            }
+
             const tx = await BROKER_DEALER.create($.id('bdFirstName').value, $.id('bdLastName').value, txValue($createETF.value/10000))
 
             $creationPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
@@ -616,7 +640,7 @@ TODO
             const txReciept1 = await tx.wait(1)
 
             $creationPreview.innerHTML = 'Success!'
-            sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
+            const sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
             $sharesOwned.innerHTML = sharesOwned.toFixed(2)
             $createETF.value = ''
 
@@ -629,11 +653,16 @@ TODO
 
         $redeemETFSubmit.onclick = async () => {
           if (!$.id('bdFirstName').value || !$.id('bdLastName').value) {
-            $creationPreview.innerHTML = 'Please enter your first and last name'
+            $redemptionPreview.innerHTML = 'Please enter your first and last name'
             return
           }
 
           try {
+            const kycId = bnToN(await KYC.addrToTokenId(addr))
+            if (kycId === 0) {
+              $redemptionPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information below</a>`
+              return
+            }
             const tx = await BROKER_DEALER.redeem($.id('bdFirstName').value, $.id('bdLastName').value, toETH($redeemETF.value))
 
             $redemptionPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
@@ -641,7 +670,7 @@ TODO
             const txReciept1 = await tx.wait(1)
 
             $redemptionPreview.innerHTML = 'Success!'
-            sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
+            const sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
             $sharesOwned.innerHTML = sharesOwned.toFixed(2)
             $redeemETF.value = ''
 
