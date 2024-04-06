@@ -113,9 +113,7 @@ dd {
   margin-bottom: 1em;
 }
 
-table {
-  width: 100%;
-}
+
 
 button {
   background: var(--accent-color);
@@ -208,6 +206,12 @@ img {
 @media(max-width: 500px) {
   h1 {
     font-size: 20vw;
+  }
+
+  .headerPattern {
+    width: 80%;
+    min-height: 3em;
+    margin-top: 0.2em;
   }
   header > * {
     flex-direction: column;

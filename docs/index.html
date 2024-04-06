@@ -95,6 +95,35 @@ TODO
   }
 
 
+  .chartHolder {
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #portfolioTable {
+    margin-bottom: 2em;
+  }
+
+
+  #portfolioTable td {
+    font-family: monospace;
+    padding-left: 1em;
+  }
+
+  #portfolioTable td:first-child {
+    padding-left: 0em;
+  }
+
+  @media(max-width: 600px) {
+    .chartHolder h2 {
+      text-align: center;
+      margin-top: 0.5em;
+    }
+    .chartHolder {
+      flex-direction: column;
+    }
+  }
 
 
   @media(max-width: 820px) {
@@ -136,9 +165,10 @@ TODO
       <div class="cta">
         <a href="#facts">Fund Facts →</a>
         <a href="#ap">Liquidity →</a>
+        <a href="#portfolio">How To Buy →</a>
         <!-- <a href="#facts">Terms →</a> -->
         <connect-wallet>
-          <div slot="notConnected" class="connectItem">
+          <div slot="notConnected">
             <connect-button>
               <button id="connectButton" slot="button">Connect</button>
               <div slot="loading">Loading...</div>
@@ -147,42 +177,46 @@ TODO
         </connect-wallet>
       </div>
     </div>
-    <div style="display: block; text-align: center; margin-top: 1em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:30AM-4:00PM [EST]</div>
+
+    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:30AM-4:00PM</div>
 
 
-    <div style="display: flex; justify-content: center; margin-top: 0.5em;">
-      <div id="marketChange"></div><div id="timeLeft"></div>
-    </div>
+    <connect-wallet style="display: flex; justify-content: center; align-items: center;">
+      <div class="marketTimer" slot="connected" style="display: flex; justify-content: center; margin-top: 1em;">
+        <div id="marketChange"></div><div id="timeLeft"></div>
+      </div>
+    </connect-wallet>
   </header>
 
   <main>
-    <section id=facts>
+    <section id="facts" style="padding-top: 1em;">
+
 
       <section>
-        <dl>
-          <div>
-            <dt>Ticker</dt>
-            <dd>$ETF</dd>
-          </div>
-
-          <div>
-            <dt>Net Asset Value</dt>
-            <dd>0.0001 ETH</dd>
-          </div>
-
-          <div>
-            <dt>Authorized Participants</dt>
-            <dd>6</dd>
-          </div>
-
-          <div>
-            <dt>Inception Date</dt>
-            <dd>TBD</dd>
-          </div>
-        </dl>
-
         <connect-wallet>
-          <div slot="notConnected" class="connectItem">
+          <div slot="notConnected">
+            <dl>
+              <div>
+                <dt>Ticker</dt>
+                <dd>$ETF</dd>
+              </div>
+
+              <div>
+                <dt>Net Asset Value</dt>
+                <dd>0.0001 ETH</dd>
+              </div>
+
+              <div>
+                <dt>Authorized Participants</dt>
+                <dd>6</dd>
+              </div>
+
+              <div>
+                <dt>Inception Date</dt>
+                <dd>04/08/2024</dd>
+              </div>
+            </dl>
+
             <dl>
               <div>
                 <dt>Benchmark</dt>
@@ -209,6 +243,28 @@ TODO
           </div>
 
           <div slot="connected">
+            <dl>
+              <div>
+                <dt>Ticker</dt>
+                <dd>$ETF</dd>
+              </div>
+
+              <div>
+                <dt>Net Asset Value</dt>
+                <dd>0.0001 ETH</dd>
+              </div>
+
+              <div>
+                <dt>Authorized Participants</dt>
+                <dd>6</dd>
+              </div>
+
+              <div>
+                <dt>Inception Date</dt>
+                <dd>04/08/2024</dd>
+              </div>
+            </dl>
+
             <dl>
               <div>
                 <dt>Premium/Discount (bps)</dt>
@@ -257,7 +313,7 @@ TODO
       </section>
 
       <section>
-        <div style="margin-top: 1em; display: flex; justify-content: space-around;">
+        <div class="chartHolder">
           <div style="display: inline-block;">
             <h2>Sector Breakdown</h2>
             <div style="width: 200px; margin: 0.75em auto; ">
@@ -280,13 +336,32 @@ TODO
             </div>
           </div>
         </div>
+
+        <div style="margin-top: 2em">
+          <h2 style="text-align: center;">Projected NAV Growth of 10,000 ETF</h2>
+          <div style="width: 400px; margin: 0.75em auto; max-width: 100%;">
+            <svg viewBox="0 0 840 420" xmlns="http://www.w3.org/2000/svg">
+
+              <text font-size="30px" x="800" y="210" dominant-baseline="middle" text-anchor="middle" fill="var(--font-color)">1 ETH</text>
+              <text font-size="30px" x="800" y="390" dominant-baseline="middle" text-anchor="middle" fill="var(--font-color)">Time</text>
+
+              <line x1="30" x2="30" y1="10" y2="410" stroke="var(--font-color)" stroke-width="4"></line>
+              <line x1="10" x2="750" y1="390" y2="390" stroke="var(--font-color)" stroke-width="4"></line>
+              <rect x="32" y="210" width="718" height="178" fill="var(--accent-color)"></rect>
+
+              <line x1="32" x2="750" y1="210" y2="210" stroke="var(--font-color)" stroke-width="2"></line>
+
+
+            </svg>
+          </div>
+        </div>
       </section>
 
       <div style="margin-top: 1em">
         <h3>Overview</h3>
         <p>ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.</p>
 
-        <p>All shares are standard ERC-20 tokens that may only be traded during market trading hours of Monday through Friday, 9:30am to 4:00pm Eastern Standard Time. Market holidays are not recognized. Shares of ETF may only be created and redeemed by the owners of Authorized Participants (APs) Non Fungible Tokens (NFTs).</p>
+        <p>All shares are standard ERC-20 tokens that may only be traded during market trading hours of Monday through Friday, 9:30am to 4:00pm. Market Holidays and DST can be declared by the Time Lord. Shares of ETF may only be created and redeemed by six Authorized Participants (APs). </p>
 
         <p>ETF is not an investment company registered under the Investment Company Act of 1940, and therefore is not subject to the same regulatory requirements as mutual funds or ETFs registered under the Investment Company Act of 1940. ETF is not a commodity pool for purposes of the Commodity Exchange Act. Before making an investment decision, you should carefully consider the risk factors associated with owning cryptocurrency, and consult your financial advisor. Past performance does not guarantee future results.</p>
       </div>
@@ -294,13 +369,16 @@ TODO
     </section>
 
     <section id="ap">
-      <h2>Authorized Participants (AP)</h2>
-      <p>Authorized Participants have the right (but not the obligation) to create and redeem shares of ETF. APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
+      <h2>Authorized Participants (APs)</h2>
+      <p>Authorized Participants are determined by ownership of six "ETF Authorized Participant NFTs" (henceforth referred to as "APs"). APs have the right (but not the obligation) to create and redeem shares of ETF. At any point, five of the six outstanding APs may vote to revoke the ownership of the remaining AP, which can only be done in the event of a unanimous decision.</p>
+
+      <p>APs may only create shares by delivering a "creation basket" of Ether in the ratio of 1ETH:10000ETF (or 0.0001ETH:1ETF) to the AP smart contract. Similarly, they may only redeem shares by delivering a "redemption basket" of ETF to the AP smart contract in the same ratio. This functions to provide crucial liquidity to the market for ETF. Whenever shares of ETF begin trading at a premium on the secondary market (i.e. above the NAV of 0.0001 ETH per share), APs can provide liquidity by creating and selling new shares. In doing so, they take advantage of an arbitrage opportunity. Alternatively, whenever shares of ETF trade at a discount (i.e. below the NAV of 0.0001 ETH per share), APs can purchase shares on the secondary market and redeem them to take advantage of the same arbitrage opportunity.</p>
 
       <p>In the event that the Authorized Participants fail to arbitrage the price differential between the ETF market price and NAV, shares of ETF may experience a non-trivial level of tacking error.</p>
 
 
-      <div class="apGrid">
+
+      <div class="apGrid" style="margin-top:3em">
         <div id="ap1" class="apItem">
           <a href="./ap/1"><img src="./assets/ap1.svg"></a>
           <connect-wallet>
@@ -349,14 +427,55 @@ TODO
             </div>
           </connect-wallet>
         </div>
-        <a href="./timeLord"><img src="./assets/tl.svg"></a>
       </div>
     </section>
 
-    <connect-wallet>
-      <section slot="connected" id="brokerDealerSection">
-      </section>
-    </connect-wallet>
+    <section>
+      <h2>Time Lord</h2>
+      <p>The Time Lord has the sole ability to declare DST and Market Holidays. DST may be declared at any time without restriction, and may be reversed at any time without restriction. The declaration of DST will move the market open and market close earlier by one hour. Up to 10 Market Holidays may be declared in the 366 day period following the fund's inception. After 365 days, the balance of Market Holidays that may be declared is reset to 10.</p>
+      <p>The Time Lord does not have the ability to create or redeem shares. Authorized Participants can not revoke the Time Lord NFT.</p>
+
+      <div id="timeLord" class="apItem" style="display: flex; justify-content: center;">
+        <a href="./timeLord"><img src="./assets/tl.svg" style="width: 300px; max-width: 100%"></a>
+
+        <connect-wallet>
+          <div slot="connected" style="margin-top: 0.5em">
+            <div id="ap6-display"></div>
+          </div>
+        </connect-wallet>
+      </div>
+    </section>
+
+    <section id="portfolio" style="padding-top: 1em;">
+      <h2>Your Portfolio</h2>
+
+      <connect-wallet>
+        <div slot="connected">
+          <table id="portfolioTable">
+            <tbody style="">
+              <tr>
+                <td>Current ETF Balance:</td> <td id="sharesOwned">--</td>
+              </tr>
+              <tr>
+                <td>Portfolio Value:</td> <td id="portfolioValue">--</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <div id="brokerDealerSection"></div>
+        </div>
+
+        <div slot="notConnected">
+          <connect-button>
+            <button id="connectButton" slot="button" style="font-size: 1em">Connect to view portfolio</button>
+            <div slot="loading">Loading...</div>
+          </connect-button>
+        </div>
+      </connect-wallet>
+    </section>
+
+
 
     <connect-wallet>
       <section slot="connected" id="registerKYC">
@@ -426,6 +545,8 @@ TODO
 
       ({ ETF, AP, AUCTION, KYC, BROKER_DEALER } = await provider.getContracts())
 
+
+      console.log(fromWei(await provider.provider.getBalance(ETF.address)).toFixed(2))
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
       $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)
 
@@ -435,9 +556,7 @@ TODO
           const ownerAddr = await AP.ownerOf(i)
 
           if (ownerAddr === AUCTION.address) {
-
             const auctionId = apToAuctionId[i]
-            console.log(auctionId, i)
             const [
               highestBid,
               auction,
@@ -557,12 +676,12 @@ TODO
 
       const stakedAPTokenId = bnToN(await BROKER_DEALER.stakedTokenId())
       if (stakedAPTokenId !== 0) {
+        const sharesOwned = ethVal(await ETF.balanceOf(addr))
+
         $.id('brokerDealerSection').innerHTML = `
-          <h2>Broker Dealer</h2>
+
           <!-- TODO Broker Dealer explanation -->
-          <div style="margin-bottom: 2em;">
-            <h3 class="label">Current ETF Balance: <span style="font-family: monospace; margin-left:0.25em" id="sharesOwned">--</span></h3>
-          </div>
+
 
           <div style="border: 3px solid; padding: 1em">
             <div>
@@ -572,14 +691,14 @@ TODO
                 <input id="bdLastName" class="textInput" placeholder="Last Name" style="margin-bottom:0.5em">
               </div>
 
-              <h3>Create ETF</h3>
+              <h3>Buy Shares</h3>
               <input id="createETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
               <button id="createETFSubmit" style="font-size:1em">Submit</button>
               <div id="creationPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
             </div>
 
             <div>
-              <h3>Redeem ETF</h3>
+              <h3>Sell Shares (disabled)</h3>
 
               <input id="redeemETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
               <button id="redeemETFSubmit" style="font-size:1em">Submit</button>
@@ -596,6 +715,7 @@ TODO
 
 
         const $sharesOwned = $.id('sharesOwned')
+        const $portfolioValue = $.id('portfolioValue')
         const $creationPreview = $.id('creationPreview')
         const $redemptionPreview = $.id('redemptionPreview')
         const $createETF = $.id('createETF')
@@ -604,9 +724,18 @@ TODO
         const $redeemETFSubmit = $.id('redeemETFSubmit')
         const $approveBDSubmit = $.id('approveBDSubmit')
         const $bdApprovePreview = $.id('bdApprovePreview')
+        const $bdFirstName = $.id('bdFirstName')
+        const $bdLastName = $.id('bdLastName')
 
+        const kycInfo = await KYC.kycInfo(await KYC.addrToTokenId(addr))
 
-        $sharesOwned.innerHTML = ethVal(await ETF.balanceOf(addr)).toFixed(2)
+        if (kycInfo.firstName) {
+          $bdFirstName.value = kycInfo.firstName
+          $bdLastName.value = kycInfo.lastName
+        }
+
+        $sharesOwned.innerHTML = sharesOwned.toFixed(2) + ' Shares'
+        $portfolioValue.innerHTML = (sharesOwned/10000).toFixed(2) + ' ETH'
 
         $createETF.onkeyup = (e) => {
           $creationPreview.innerHTML = `(${e.target.value / 10000} ETH)`
@@ -621,8 +750,9 @@ TODO
         }
 
 
+
         $createETFSubmit.onclick = async () => {
-          if (!$.id('bdFirstName').value || !$.id('bdLastName').value) {
+          if (!$bdFirstName.value || !$bdLastName.value) {
             $creationPreview.innerHTML = 'Please enter your first and last name'
             return
           }
@@ -633,7 +763,7 @@ TODO
               return
             }
 
-            const tx = await BROKER_DEALER.create($.id('bdFirstName').value, $.id('bdLastName').value, txValue($createETF.value/10000))
+            const tx = await BROKER_DEALER.create($bdFirstName.value, $bdLastName.value, txValue($createETF.value/10000))
 
             $creationPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
 
@@ -652,7 +782,7 @@ TODO
         }
 
         $redeemETFSubmit.onclick = async () => {
-          if (!$.id('bdFirstName').value || !$.id('bdLastName').value) {
+          if (!$bdFirstName.value || !$bdLastName.value) {
             $redemptionPreview.innerHTML = 'Please enter your first and last name'
             return
           }
@@ -663,7 +793,7 @@ TODO
               $redemptionPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information below</a>`
               return
             }
-            const tx = await BROKER_DEALER.redeem($.id('bdFirstName').value, $.id('bdLastName').value, toETH($redeemETF.value))
+            const tx = await BROKER_DEALER.redeem($bdFirstName.value, $bdLastName.value, toETH($redeemETF.value))
 
             $redemptionPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
 
@@ -718,7 +848,7 @@ TODO
   const $timeLeft = $.id('timeLeft')
   const $marketChange = $.id('marketChange')
 
-  function getNextTimestamp() {
+  function getNextTimestamp(isDST=false, isMarketHoliday=false) {
     const currentTimestamp = Date.now();
     const currentDate = new Date(currentTimestamp);
     const currentDay = currentDate.getUTCDay();
@@ -726,7 +856,7 @@ TODO
     const currentMinutes = currentDate.getUTCMinutes();
 
     // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 9:00 PM UTC
-    if (currentDay >= 0 && currentDay <= 4 && currentHour >= 21) {
+    if (currentDay >= 0 && currentDay <= 4 && (currentHour >= 21 || isMarketHoliday)) {
       // Return UTC timestamp for 2 PM the next day
       const nextDayTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Add 1 day
       const nextDay = new Date(nextDayTimestamp);
@@ -736,7 +866,7 @@ TODO
 
     // Check if it's Friday after 9:00 PM UTC, Saturday, or Sunday
     if (
-      (currentDay === 5 && currentHour > 21)
+      (currentDay === 5 && (currentHour >= 21 || isMarketHoliday))
       || currentDay === 6 || currentDay === 0)
     {
       // Return UTC timestamp for the coming Monday at 1:30 PM
@@ -747,11 +877,13 @@ TODO
     }
 
 
+    // It's M-F before 2:30PM UTC
     if (currentDay > 0 && currentDay < 6 && (currentHour < 14 || (currentHour === 14 && currentMinutes < 30))) {
       currentDate.setUTCHours(14, 30, 0, 0);
       return currentDate.getTime();
     }
 
+    // Market is open
     currentDate.setUTCHours(21, 0, 0, 0);
     return currentDate.getTime();
   }
@@ -818,6 +950,8 @@ TODO
 
     }, 1000)
   }
+
+  console.log(getNextTimestamp(), Date.now(), getNextTimestamp() - Date.now())
 
   triggerTimer(getNextTimestamp() - Date.now(), $timeLeft, () => {
     if (isMarketOpen()) {

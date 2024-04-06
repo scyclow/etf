@@ -33,6 +33,9 @@ contract ETF is ERC20 {
     return (address(this).balance) / (totalSupply() / 1 ether);
   }
 
+
+  //// Market Hours
+
   function yearsElapsed() public view returns (uint256) {
     return (block.timestamp - INCEPTION) / 365 days;
   }
@@ -56,6 +59,12 @@ contract ETF is ERC20 {
     );
   }
 
+  function _beforeTokenTransfer(address, address, uint256) internal virtual override {
+    require(isMarketOpen(), 'Can only transfer during market trading hours');
+  }
+
+
+  //// Authorized Participant actions
 
   function create(uint256 tokenId, address recipient) external payable {
     require(msg.sender == authorizedParticipants.ownerOf(tokenId), 'Only Authorized Participants can create tokens');
@@ -80,15 +89,13 @@ contract ETF is ERC20 {
     emit Redemption(tokenId, redeemAmount);
   }
 
-  function _beforeTokenTransfer(address, address, uint256) internal virtual override {
-    require(isMarketOpen(), 'Can only transfer during market trading hours');
-  }
 
+  //// Time Lord actions
 
   function declareMarketHoliday(uint256 day) external {
     require(msg.sender == authorizedParticipants.ownerOf(0), 'Only the Time Lord can declare Market Holidays');
     require(yearToMarketHolidaysSet[yearsElapsed()] < 10, 'The Time Lord can only declare 10 Market Holidays per fiscal year');
-    require(day >= daysElapsed() && day <= (daysElapsed() + 365), 'The Time Lord can only declare Market Holidays within the fiscal year');
+    require(day >= daysElapsed() && day <= (daysElapsed() + 366), 'The Time Lord can only declare Market Holidays within the fiscal year');
 
     if (!isMarketHoliday[day]) {
       isMarketHoliday[day] = true;

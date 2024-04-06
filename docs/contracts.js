@@ -14,6 +14,12 @@ const AUCTION_STRUCT = `(
 )`
 
 
+const KYC_STRUCT = `(
+    string firstName,
+    string lastName,
+    address addr
+)`
+
 
 CONTRACTS = {
   ETF: {
@@ -23,6 +29,7 @@ CONTRACTS = {
     },
     abi: [
       'function isDST() external view returns (bool)',
+      'function isMarketOpen() public view returns (bool)',
       'function daysElapsed() external view returns (uint256)',
       'function yearsElapsed() external view returns (uint256)',
       'function balanceOf(address owner) external view returns (uint256 balance)',
@@ -56,6 +63,7 @@ CONTRACTS = {
 
     abi: [
       'function getId(string, string) external view returns (uint256)',
+      `function kycInfo(uint256) external view returns (string firstName, string lastName, address addr)`,
       'function tokenURI(uint256) external view returns (string)',
       `function addrToTokenId(address) external view returns (uint256)`,
       'function balanceOf(address) external view returns (uint256)',
