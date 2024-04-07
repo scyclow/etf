@@ -233,10 +233,10 @@ async function updateBidInfo(signer, steviepAuction, ap) {
 
   if (auction.allowListContract !== ZERO_ADDR) {
 
-    if (bnToN(await KYC.balanceOf(signerAddr)) === 0) {
-      $bidderSecondaryInfo.innerHTML = 'You must submit to ETF KYC requirements to bid'
-      $submitBid.disabled = true
-    } else {
+    // if (bnToN(await KYC.balanceOf(signerAddr)) === 0) {
+    //   $bidderSecondaryInfo.innerHTML = 'You must submit to ETF KYC requirements to bid'
+    //   $submitBid.disabled = true
+    // } else {
       $submitBid.disabled = false
       if (auction.rewardContract !== ZERO_ADDR) {
         const $wantsReward = $.id('wantsReward')
@@ -251,7 +251,7 @@ async function updateBidInfo(signer, steviepAuction, ap) {
         $bidderSecondaryInfo.innerHTML = ''
       }
 
-    }
+    // }
   } else {
     $bidderSecondaryInfo.innerHTML = ''
     $submitBid.disabled = false
@@ -413,16 +413,18 @@ async function displayTLStats(etf) {
   let holidays = []
 
   try {
+    const daysElapsed = bnToN(await etf.daysElapsed())
     const holidayFilter = etf.filters.DeclareMarketHoliday(await etf.yearsElapsed())
-    holidays = await etf.queryFilter(holidayFilter)
-    console.log(holidays)
+    holidays = await etf.queryFilter(holidayFilter).then(h => h.map(h => bnToN(h.args.day)).filter(d => d >= daysElapsed).sort())
+
 
 
   } catch (e) {
     console.log(e)
   }
 
-// TODO display market holidays declared
+  const yearsElapsed = bnToN(await etf.yearsElapsed())
+  const marketHolidaysDeclared = bnToN(await etf.yearToMarketHolidaysDeclared(yearsElapsed))
 
   $.id('apStats').innerHTML = `
     <section style=" display: flex; justify-content: space-between; flex-direction: column">
@@ -431,16 +433,20 @@ async function displayTLStats(etf) {
         <div id="isDST" style="font-family: monospace">${await etf.isDST()}</div>
       </div>
       <div style="margin-bottom: 0.5em">
-        <h3 class="label">Market Holidays Declared For Current Year</h3>
-        <div style="font-family: monospace" id="sharesRedeemed"></div>
+        <h3 class="label">Market Holidays Declared (Year ${yearsElapsed})</h3>
+        <div style="font-family: monospace" id="sharesRedeemed">${marketHolidaysDeclared}</div>
       </div>
       <div style="margin-bottom: 0.5em">
         <h3 class="label">Days Elapsed</h3>
-        <div style="font-family: monospace">${bnToN(await etf.daysElapsed())}</div>
+        <div style="font-family: monospace">${daysElapsed}</div>
       </div>
       <div style="margin-bottom: 0.5em">
         <h3 class="label">Upcoming Holidays</h3>
-        <div style="font-family: monospace">${holidays}</div>
+        <div style="font-family: monospace">${
+          holidays.length
+            ? holidays.map(day => `<div style="font-family: monospace">Day ${day}</div>`).join('')
+            : 'None'
+        }</div>
       </div>
     </section>
   `
@@ -488,33 +494,54 @@ async function displayTLActions(etf) {
   }
 
   $.id('declareMarketHolidaySubmit').onclick = async () => {
-    // TODO
+    const proposedHoliday = Number($.id('declareMarketHoliday').value)
+
+    const daysElapsed = bnToN(await etf.daysElapsed())
+    const yearsElapsed = bnToN(await etf.yearsElapsed())
+    const marketHolidaysDeclared = bnToN(await etf.yearToMarketHolidaysDeclared(yearsElapsed))
+
+    const daysLeftInYear = 365 - (daysElapsed % 365)
 
 
-    // try {
-    //   const tx = await etf.declareDST($.id('declareDST').checked)
+    if (marketHolidaysDeclared == 10) {
+      $.id('marketHolidayLoading').innerHTML = '10 Market Holidays have already been declared for the year'
+      return
+    }
 
-    //   $creationPreview.innerHTML = `TX Pending. <a href="https://${await etherscanPrefix()}etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+    if (proposedHoliday < daysElapsed) {
+      $.id('marketHolidayLoading').innerHTML = 'Can only declare Market Holidays in the future'
+      return
+    }
 
-    //   const txReciept1 = await tx.wait(1)
+    if (proposedHoliday > daysElapsed + daysLeftInYear) {
+      $.id('marketHolidayLoading').innerHTML = 'Can only declare Market Holidays within the fiscal year'
+      return
+    }
 
-    //   creationPreview.innerHTML = 'Success!'
-    //   $.id('sharesCreated').innerHTML = fromWei(await etf.created(AP_ID)).toFixed(4)
-    //   sharesOwned = fromWei(await etf.balanceOf(await provider.signer.getAddress()))
-    //   $.id('sharesOwned').innerHTML = sharesOwned.toFixed(4)
-    //   $createETF.value = ''
+    $.id('marketHolidayLoading').innerHTML = ''
 
-    // } catch (e) {
-    //   if (e.data) {
-    //     $creationPreview.innerHTML = e.data.message
-    //   } else {
-    //     $creationPreview.innerHTML = e.message
-    //   }
-    //   console.error(e)
-    // }
+
+    const $marketHolidayLoading = $.id('marketHolidayLoading')
+    try {
+      const tx = await etf.declareMarketHoliday(proposedHoliday)
+
+      $marketHolidayLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+
+      const txReciept1 = await tx.wait(1)
+
+      $marketHolidayLoading.innerHTML = 'Success!'
+      await displayTLStats(etf)
+      $.id('declareMarketHoliday').value = ''
+
+    } catch (e) {
+      if (e.data) {
+        $marketHolidayLoading.innerHTML = e.data.message
+      } else {
+        $marketHolidayLoading.innerHTML = e.message
+      }
+      console.error(e)
+    }
   }
-  // declare DST
-  // declare market holiday
 }
 
 
@@ -620,7 +647,6 @@ provider.onConnect(async (signer) => {
     hide($makeBidSection)
     hide(($.id('dataLastUpdated')))
 
-    console.log('TODO: display market holidays')
     if (AP_ID === 0) displayTLStats(ETF)
     else displayAPStats(ETF)
 

@@ -38,7 +38,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
     return _exists(tokenId);
   }
 
-  function register(string memory firstName, string memory lastName) external {
+  function register(string calldata firstName, string calldata lastName) external {
     require(etf.isMarketOpen(), 'KYC mint unavailable');
     require(bytes(firstName).length != 0 && bytes(lastName).length != 0, 'Invalid KYC info');
 
@@ -58,7 +58,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
     totalSupply++;
   }
 
-  function getId(string memory firstName, string memory lastName) public pure returns (uint256) {
+  function getId(string calldata firstName, string calldata lastName) public pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(firstName, lastName)));
   }
 
@@ -66,7 +66,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
     return kycInfo[tokenId].addr;
   }
 
-  function getAddr(string memory firstName, string memory lastName) external view returns (address) {
+  function getAddr(string calldata firstName, string calldata lastName) external view returns (address) {
     return kycInfo[getId(firstName, lastName)].addr;
   }
 
@@ -75,7 +75,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
     _burn(tokenId);
   }
 
-  string public externalUrl = "https://steviep.xyz/etf";
+  string public externalUrl = "https://etf.steviep.xyz";
   string public description = "Always know your customer";
 
 

@@ -28,10 +28,12 @@ CONTRACTS = {
       sepolia: '0xcCeD8D66694FFCbAB3bBab982c302e08851022c4'
     },
     abi: [
+      'function INCEPTION() external view returns (uint256)',
       'function isDST() external view returns (bool)',
       'function isMarketOpen() public view returns (bool)',
       'function daysElapsed() external view returns (uint256)',
       'function yearsElapsed() external view returns (uint256)',
+      'function yearToMarketHolidaysDeclared(uint256) external view returns (uint256)',
       'function balanceOf(address owner) external view returns (uint256 balance)',
       'function created(uint256 tokenId) external view returns (uint256 amount)',
       'function redeemed(uint256 tokenId) external view returns (uint256 amount)',
@@ -41,9 +43,10 @@ CONTRACTS = {
       'function create(uint256 tokenId, address recipient) external payable',
       'function redeem(uint256 tokenId,  address recipient, uint256 redeemAmount) external',
       'function declareDST(bool dst) external',
-      'function declareMarketHoliday(uint256 day) external',
+      'function declareMarketHoliday(uint256) external',
       'event Transfer(address indexed from, address indexed to, uint256 value)',
       'event DeclareMarketHoliday(uint256 indexed year, uint256 day)',
+      'event DeclareDST(bool value)',
     ],
   },
   AP: {

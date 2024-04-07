@@ -8,22 +8,22 @@ pragma solidity ^0.8.23;
 
 contract ETF is ERC20 {
   uint256 public constant TOKENS_PER_ETH = 10000;
-  uint256 public constant INCEPTION = 1704724200; // TODO - change this to 4/8 9:30am EDT/ 8:30am EST
+  uint256 public constant INCEPTION = 1704724200; // TODO - change this to 4/8 10:30am EDT/ 9:30am EST
   uint256 public constant MARKET_OPEN_DURATION = 6 hours + 30 minutes;
 
-  bool public isDST; // TODO change this to true
+  bool public isDST;
 
   AuthorizedParticipants public authorizedParticipants;
 
   mapping(uint256 => uint256) public created;
   mapping(uint256 => uint256) public redeemed;
   mapping(uint256 => bool) public isMarketHoliday;
-  mapping(uint256 => uint256) public yearToMarketHolidaysSet;
+  mapping(uint256 => uint256) public yearToMarketHolidaysDeclared;
 
   event Creation(uint256 _tokenId, uint256 _amount);
   event Redemption(uint256 _tokenId, uint256 _amount);
   event DeclareDST(bool value);
-  event DeclareMarketHoliday(uint256 year, uint256 day);
+  event DeclareMarketHoliday(uint256 indexed year, uint256 day);
 
   constructor() ERC20('ETF', 'ETF') {
     authorizedParticipants = new AuthorizedParticipants(msg.sender);
@@ -94,12 +94,12 @@ contract ETF is ERC20 {
 
   function declareMarketHoliday(uint256 day) external {
     require(msg.sender == authorizedParticipants.ownerOf(0), 'Only the Time Lord can declare Market Holidays');
-    require(yearToMarketHolidaysSet[yearsElapsed()] < 10, 'The Time Lord can only declare 10 Market Holidays per fiscal year');
+    require(yearToMarketHolidaysDeclared[yearsElapsed()] < 10, 'The Time Lord can only declare 10 Market Holidays per fiscal year');
     require(day >= daysElapsed() && day <= (daysElapsed() + 366), 'The Time Lord can only declare Market Holidays within the fiscal year');
 
     if (!isMarketHoliday[day]) {
       isMarketHoliday[day] = true;
-      yearToMarketHolidaysSet[yearsElapsed()]++;
+      yearToMarketHolidaysDeclared[yearsElapsed()]++;
       authorizedParticipants.metadataUpdate(0);
       emit DeclareMarketHoliday(yearsElapsed(), day);
     }

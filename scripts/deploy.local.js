@@ -43,7 +43,7 @@ async function main() {
 
   await AuthorizedParticipants.transferFrom(admin.address, BrokerDealer.address, 1)
 
-  await KYC.connect(admin).register('joe', 'schmoe', txValue('0.01'))
+  await KYC.connect(admin).register('joe', 'schmoe')
 
   const kycId = await KYC.connect(admin).getId('joe', 'schmoe')
 
@@ -69,22 +69,24 @@ async function main() {
 
 
 
-  for (let i = 5; i < 7; i++) {
+  // for (let i = 0; i < 7; i++) {
+  //   if (i !== 1) {
+  //     await SteviepAuction.connect(admin).create(
+  //       true,
+  //       300, // duration -> 5 min
+  //       1000, // price increase -> 10%
+  //       60, // extension -> 1min
+  //       '0', // min bid
+  //       i, // tokenId
+  //       admin.address, // beneficiary
+  //       false, // transfer from admin to winner
+  //       AuthorizedParticipants.address,
+  //       RewardMock.address, // reward
+  //       ZERO_ADDR// KYC.address, // allow list
+  //     )
+  //   }
 
-    await SteviepAuction.connect(admin).create(
-      true,
-      300, // duration -> 5 min
-      1000, // price increase -> 10%
-      60, // extension -> 1min
-      '0', // min bid
-      i, // tokenId
-      admin.address, // beneficiary
-      false, // transfer from admin to winner
-      AuthorizedParticipants.address,
-      RewardMock.address, // reward
-      KYC.address, // allow list
-    )
-  }
+  // }
 
 
 

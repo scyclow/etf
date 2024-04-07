@@ -83,6 +83,10 @@ contract AuthorizedParticipants is ERC721, Ownable {
     require(revokeCount >= totalSupply - 2, 'Not enough votes to revoke AP token');
     _transfer(ownerOf(revokedTokenId), revokeDestination, revokedTokenId);
   }
+
+  function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721) returns (bool) {
+    return interfaceId == bytes4(0x49064906) || super.supportsInterface(interfaceId);
+  }
 }
 
 
@@ -92,7 +96,7 @@ contract TokenURI {
   ETF public etf;
   AuthorizedParticipants public ap;
 
-  string public externalUrl = "https://steviep.xyz/etf";
+  string public externalUrl = "https://etf.steviep.xyz";
 
 
   constructor(address _etf) {
@@ -157,7 +161,7 @@ contract TokenURI {
     } else {
       return string.concat(
         '[',
-          '{"trait_type": "Market Holidays Set For Year", "value": "', etf.yearToMarketHolidaysSet(etf.yearsElapsed()).toString(), '"},',
+          '{"trait_type": "Market Holidays Set For Year", "value": "', etf.yearToMarketHolidaysDeclared(etf.yearsElapsed()).toString(), '"},',
           '{"trait_type": "Is DST", "value": "', etf.isDST() ? 'True' : 'False', '"}',
         ']'
       );

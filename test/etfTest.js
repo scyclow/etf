@@ -83,13 +83,15 @@ describe('ETF', () => {
     await BrokerDealer.deployed()
 
 
+    expect(num(await ETF.yearsElapsed())).to.equal(0)
+
     await time.increaseTo(ARBITRARY_MARKET_OPEN_TIME)
   })
   afterEach(() => _start.restore())
 
 
 
-  it('init', async () => {
+  it('inception', async () => {
 
     await AuthorizedParticipants.connect(admin)[safeTransferFrom](admin.address, timeLord.address, 0)
     await AuthorizedParticipants.connect(admin)[safeTransferFrom](admin.address, ap1.address, 1)
@@ -109,6 +111,8 @@ describe('ETF', () => {
     expect(await AuthorizedParticipants.connect(admin).exists(5)).to.equal(true)
     expect(await AuthorizedParticipants.connect(admin).exists(6)).to.equal(true)
     expect(await AuthorizedParticipants.connect(admin).exists(7)).to.equal(false)
+
+
 
 
     const json = getJsonURI(await AuthorizedParticipants.tokenURI(0))
@@ -455,6 +459,7 @@ describe('ETF', () => {
     await AuthorizedParticipants.connect(admin)[safeTransferFrom](admin.address, ap1.address, 1)
 
     await time.increaseTo(FUTURE_MONDAY_AM - 3600) // 8:30am
+    expect(num(await ETF.yearsElapsed())).to.equal(10)
     expect(await ETF.isMarketOpen()).to.equal(false)
     expect(await ETF.isDST()).to.equal(false)
 
@@ -489,7 +494,7 @@ describe('ETF', () => {
     expect(await ETF.isMarketOpen()).to.equal(false)
   })
 
-  it.only('KYC should work', async () => {
+  it('KYC should work', async () => {
 
     await expectRevert(
       KYC.connect(ap1).register('joe', ''),

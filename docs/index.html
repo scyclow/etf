@@ -25,17 +25,17 @@ TODO
   <meta name="description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
   <meta name="keywords" content="steviep, steve pikelny, pikelny, crypto, ethereum, etf, bitcoin, erc20, memecoin, shitcoin, exchange-traded fund">
 
-  <meta name="twitter:image" content="https://steviep.xyz/etf/assets/etf.png">
+  <meta name="twitter:image" content="https://etf.steviep.xyz/assets/etf.png">
   <meta name="twitter:image:alt" content="ETF">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@steviepxyz">
   <meta name="twitter:site" content="@steviepxyz">
   <meta property="twitter:description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
 
-  <meta name="og:image" property="og:image" content="https://steviep.xyz/etf/assets/etf.png">
+  <meta name="og:image" property="og:image" content="https://etf.steviep.xyz/assets/etf.png">
   <meta name="og:image:alt" content="ETF">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://steviep.xyz/etf">
+  <meta property="og:url" content="https://etf.steviep.xyz">
   <meta property="og:title" content="ETF">
   <meta property="og:site_name" content="ETF">
   <meta property="og:description" content="ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.">
@@ -145,6 +145,7 @@ TODO
 
 
   <script src="./utils.js"></script>
+  <script type="module" src="./modal.js"></script>
   <script type="module" src="./connectWallet.js"></script>
 
 
@@ -202,7 +203,7 @@ TODO
               </div>
 
               <div>
-                <dt>Net Asset Value</dt>
+                <dt>Net Asset Value (NAV)</dt>
                 <dd>0.0001 ETH</dd>
               </div>
 
@@ -250,7 +251,7 @@ TODO
               </div>
 
               <div>
-                <dt>Net Asset Value</dt>
+                <dt>Net Asset Value (NAV)</dt>
                 <dd>0.0001 ETH</dd>
               </div>
 
@@ -433,14 +434,13 @@ TODO
     <section>
       <h2>Time Lord</h2>
       <p>The Time Lord has the sole ability to declare DST and Market Holidays. DST may be declared at any time without restriction, and may be reversed at any time without restriction. The declaration of DST will move the market open and market close earlier by one hour. Up to 10 Market Holidays may be declared in the 366 day period following the fund's inception. After 365 days, the balance of Market Holidays that may be declared is reset to 10.</p>
-      <p>The Time Lord does not have the ability to create or redeem shares. Authorized Participants can not revoke the Time Lord NFT.</p>
+      <p>The Time Lord does not have the ability to create or redeem shares. The Time Lord is determined via ownership over the Time Lord NFT, which Authorized Participants cannot revoke.</p>
 
-      <div id="timeLord" class="apItem" style="display: flex; justify-content: center;">
+      <div id="timeLord" class="apItem" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <a href="./timeLord"><img src="./assets/tl.svg" style="width: 300px; max-width: 100%"></a>
-
         <connect-wallet>
-          <div slot="connected" style="margin-top: 0.5em">
-            <div id="ap6-display"></div>
+          <div slot="connected" style="margin-top: 1em">
+            <div id="tl-display"></div>
           </div>
         </connect-wallet>
       </div>
@@ -507,56 +507,56 @@ TODO
 
     <p>ETF is not an investment company registered under the Investment Company Act of 1940, and therefore is not subject to the same regulatory requirements as mutual funds, ETFs, or other exchange-traded products registered under the Investment Company Act of 1940. Before making a financial decision, you should carefully consider the risk factors associated with owning cryptocurrency, and consult your financial advisor. Past performance does not guarantee future results.</p>
 
-    <p>Furthermore, purchasing shares of ETF does not constitute an investment contract, and shares of ETF do not constitute financial securities. Owners of ETF have no reasonable expectaiton of profit, as Authorized Participants are expected to arbitrage any differences between ETF market price and net asset value. Additionally, Authorized Participant NFTs do not constitute financial securities, as any profits derived from ownership of said tokens would be due soley to the efforts of the token owner, rather than the entrepreneurial efforts of others.</p>
+    <p>Furthermore, purchasing shares of ETF does not constitute an investment contract, and shares of ETF do not constitute financial securities. Owners of ETF have no reasonable expectaiton of profit, as Authorized Participants are expected to arbitrage any differences between ETF market price and net asset value (NAV). Additionally, Authorized Participant NFTs do not constitute financial securities, as any profits derived from ownership of said tokens would be due soley to the efforts of the token owner, rather than the entrepreneurial efforts of others.</p>
 
     <p>All smart contracts developed by Steve Pikelny, including the ETF and Authorized Participant contracts, are provided "as is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. The developer makes no warranty that the Software will be error-free, uninterrupted, or free of defects. The developer shall not be responsible for any financial loss incurred by the user as a result of using the Software. This includes but is not limited to losses resulting from investment decisions, trading activities, software bugs, or any other financial transactions conducted using the Software.</p>
 
     <p>Investing in digital assets, such as Ether and elaborate DeFi-inspired memecoins, involves significant risk due to their extreme price volatility and the potential for loss, theft, or compromised private keys. The value of shares is closely tied to acceptance, industry developments, and governance changes, making them highly susceptible to market sentimant. Digital assets represent a new and rapidly evolving industry, and the value of Shares depends on the acceptance of Ethereum. Changes in the governance of a digital asset network may not receive sufficient support from users or stakers, which may negatively affect that digital asset network's ability to grow and respond to challenges. Investing in ETF comes with risks that could impact ETF's share value, including large-scale sales by major holders, security threats like breaching or hacking, negative sentiment among speculators, and competition from central bank digital currencies and financial initiatives using blockchain technology. A disruption of the internet or a digital asset network, such as the Ethereum network, would affect the ability to transfer digital assets, including Ether and ETF, and would consequently impact their value. There can be no assurance that the smart contracts holding ETF's assets are free of defects, will actually work as designed, or prove to be successful in safeguarding ETFs assets against all possible sources of theft, loss, or damage. Additionally, there is no assurance that the designated Authorized Participants will exercise their right to create and redeem shares of ETF, which may lead to significant tracking error between the secondary market share price and NAV. In some cases, this could lead to significant price volatility.</p>
 
     <div style="text-align:center; font-size: 2em; font-style: normal; margin: 2em;"><a href="https://steviep.xyz" target="_blank" style="color: var(--accent-color); text-decoration: underline;">steviep.xyz</a> (c) 2024</div>
-</footer>
+  </footer>
+
+
+
+  <etf-modal id="modal">\
+    <div slot="content" style="background: var(--bg-color); padding:1em; width: 500px; max-width:80vw">hello!</div>
+  </etf-modal>
 </body>
 
 
 <script src="./contracts.js"></script>
+<script src="./auctionMap.js"></script>
 <script type="module">
 
   import {$} from './$.js'
   import {provider, bnToN, txValue, ethVal, ZERO_ADDR} from './eth.js'
 
 
+
+
+  // setTimeout(() => {
+  //   $.id('modal').open()
+  // }, 3000)
+
   provider.setContractInfo(CONTRACTS)
 
-
-  const apToAuctionId = {
-    0: 6,
-    1: 5,
-    2: 4,
-    3: 3,
-    4: 2,
-    5: 1,
-    6: 0,
-  }
 
   let ETF, AP, AUCTION, KYC, BROKER_DEALER
   provider.onConnect(async (addr) => {
 
     try {
-
       ({ ETF, AP, AUCTION, KYC, BROKER_DEALER } = await provider.getContracts())
 
-
-      console.log(fromWei(await provider.provider.getBalance(ETF.address)).toFixed(2))
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
       $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)
 
-      times(6, async _i => {
-        const i = _i + 1
+      times(7, async _i => {
+        const i = _i
         try {
           const ownerAddr = await AP.ownerOf(i)
 
           if (ownerAddr === AUCTION.address) {
-            const auctionId = apToAuctionId[i]
+            const auctionId = AUCTION_MAP[i]
             const [
               highestBid,
               auction,
@@ -573,41 +573,79 @@ TODO
               ? '-'
               : `<a href="https://etherscan.io/address/${highestBid.bidder}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(highestBid.bidder)}</a></dd>`
 
-            $.id(`ap${i}-display`).innerHTML = `
-              <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">Make Bid →</a></div>
-              <div>
-                <dt>Highest Bidder</dt>
-                <dd>${bidderDisplay}</dd>
-              </div>
-              <div>
-                <dt>Highest Bid</dt>
-                <dd>${fromWei(highestBid.amount)} ETH</dd>
-              </div>
-              <div>
-                <dt>Time Left</dt>
-                <dd id="ap${i}-timer">-</dd>
-              </div>
-            `
+            const bidAdj = isActive ? 'Highest' : 'Winning'
+
+            if (i > 0) {
+              $.id(`ap${i}-display`).innerHTML = `
+                <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">${isActive ? 'Make Bid' : 'View'} →</a></div>
+                <div>
+                  <dt>${bidAdj} Bidder</dt>
+                  <dd>${bidderDisplay}</dd>
+                </div>
+                <div>
+                  <dt>${bidAdj} Bid</dt>
+                  <dd>${fromWei(highestBid.amount)} ETH</dd>
+                </div>
+                <div>
+                  <dt>Time Left</dt>
+                  <dd id="ap${i}-timer">-</dd>
+                </div>
+              `
+            } else {
+
+              $.id(`tl-display`).innerHTML = `
+                <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./timeLord">${isActive ? 'Make Bid' : 'View'} →</a></div>
+                <div>
+                  <dt>${bidAdj} Bidder</dt>
+                  <dd>${bidderDisplay}</dd>
+                </div>
+                <div>
+                  <dt>${bidAdj} Bid</dt>
+                  <dd>${fromWei(highestBid.amount)} ETH</dd>
+                </div>
+                <div>
+                  <dt>Time Left</dt>
+                  <dd id="ap${i}-timer">-</dd>
+                </div>
+              `
+            }
 
             if (isActive && bnToN(highestBid.timestamp)) triggerTimer(bnToN(auctionEndTime) * 1000 - Date.now(), $.id(`ap${i}-timer`))
 
           } else {
-            $.id(`ap${i}-display`).innerHTML = `
+            if (i > 0) {
+              $.id(`ap${i}-display`).innerHTML = `
+                <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">More Info →</a></div>
+                <div>
+                  <dt>Owned By</dt>
+                  <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
+                </div>
+                <div>
+                  <dt>Shares Created</dt>
+                  <dd>${fromWei(await ETF.created(i)).toFixed(2)}</dd>
+                </div>
+                <div>
+                  <dt>Shares Redeemed</dt>
+                  <dd>${fromWei(await ETF.redeemed(i)).toFixed(2)}</dd>
+                </div>
+              `
+            } else {
+              const isDST = await ETF.isDST()
+              const yearsElapsed = bnToN(await ETF.yearsElapsed())
+              const marketHolidaysDeclared = bnToN(await ETF.yearToMarketHolidaysDeclared(yearsElapsed))
+              $.id(`tl-display`).innerHTML = `
+                <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./timeLord">More Info →</a></div>
+                <div>
+                  <dt>Is DST</dt>
+                  <dd>${isDST}</dd>
+                </div>
+                <div>
+                  <dt>Market Holidays Declared (Year ${yearsElapsed})</dt>
+                  <dd>${marketHolidaysDeclared}</dd>
+                </div>
+              `
+            }
 
-              <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">More Info →</a></div>
-              <div>
-                <dt>Owned By</dt>
-                <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
-              </div>
-              <div>
-                <dt>Shares Created</dt>
-                <dd>${fromWei(await ETF.created(i)).toFixed(2)}</dd>
-              </div>
-              <div>
-                <dt>Shares Redeemed</dt>
-                <dd>${fromWei(await ETF.redeemed(i)).toFixed(2)}</dd>
-              </div>
-            `
           }
         } catch (e) {
           console.error(e)
