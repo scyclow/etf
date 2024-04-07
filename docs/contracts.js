@@ -81,7 +81,10 @@ CONTRACTS = {
     abi: [
       'function create(string, string) external payable',
       'function redeem(string, string, uint256) external',
-      'function stakedTokenId() external view returns (uint256)'
+      'function stakedTokenId() external view returns (uint256)',
+      'function stakedAddr() external view returns (address)',
+      'function redeemEnabled() external view returns (bool)',
+      'function createEnabled() external view returns (bool)',
     ]
   },
   AUCTION: {

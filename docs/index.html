@@ -47,123 +47,157 @@ TODO
 
 
 
-
-  .cta {
-    height: 6em;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: column;
-  }
-
-
-
-  .apGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-items: center;
-  }
-
-  .apItem {
-    margin-bottom: 1em;
-  }
-  .apOwner {
-    font-family: monospace;
-    color: var(--accent-color);
-    text-decoration: underline;
-  }
-  .apOwner:hover {
-    text-decoration: none;
-
-  }
-
-  #timeLeft {
-    margin-left: 0.5em;
-    font-family: monospace;
-    font-size: 1.25em;
-  }
-
-  #kycPreview {
-    display: flex;
-    justify-content: center;
-  }
-  #kycPreview svg {
-    max-width: 500px;
-  }
-
-  #kycCard svg {
-    max-width: 200px;
-  }
-
-  #kycInput {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1em;
-  }
-  #kycInput input {
-    text-align: center;
-  }
-
-  .chartHolder {
-    margin-top: 1em;
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .portfolioTable {
-    margin-bottom: 2em;
-  }
-
-
-  .portfolioTable td {
-    font-family: monospace;
-    padding-left: 1em;
-    padding-bottom: 0.5em;
-    vertical-align: top;
-  }
-
-  .portfolioTable td:first-child {
-    padding-left: 0em;
-  }
-
-  @media(max-width: 600px) {
-    .chartHolder h2 {
-      text-align: center;
-      margin-top: 0.5em;
+    #roleModal {
+      background: var(--bg-color);
+      padding: 2em;
+      width: 500px;
+      max-width: 80vw;
+      border: 3px solid var(--accent-color);
     }
-    .chartHolder {
+
+    #roleModal a {
+      color: var(--accent-color);
+    }
+    #roleModal h3 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+
+
+    .cta {
+      height: 6em;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
       flex-direction: column;
     }
-  }
 
 
-  @media(max-width: 820px) {
+
     .apGrid {
-      grid-template-columns: 1fr 1fr;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      justify-items: center;
     }
-  }
 
+    .apItem {
+      margin-bottom: 1em;
+    }
+    .apOwner {
+      font-family: monospace;
+      color: var(--accent-color);
+      text-decoration: underline;
+    }
+    .apOwner:hover {
+      text-decoration: none;
 
-  @media(max-width: 540px) {
-    .apGrid {
-      grid-template-columns: 1fr;
+    }
+
+    #timeLeft {
+      margin-left: 0.5em;
+      font-family: monospace;
+      font-size: 1.25em;
+    }
+
+    #kycPreview {
+      display: flex;
+      justify-content: center;
+    }
+    #kycPreview svg {
+      max-width: 500px;
+    }
+
+    #kycCard svg {
+      max-width: 200px;
     }
 
     #kycInput {
-      flex-direction: column;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1em;
     }
-    #kycInput * {
-      margin-right: 0;
-      margin-bottom: 0.5em;
+    #kycInput input {
+      text-align: center;
     }
-  }
 
-  @media(max-width: 370px) {
-    .address {
-      font-size: 0.85em;
+    .chartHolder {
+      margin-top: 1em;
+      display: flex;
+      justify-content: space-around;
     }
-  }
+
+    .portfolioTable {
+      margin-bottom: 2em;
+    }
+
+
+    .portfolioTable td {
+      font-family: monospace;
+      padding-left: 1em;
+      padding-bottom: 0.5em;
+      vertical-align: top;
+    }
+
+    .portfolioTable td:first-child {
+      padding-left: 0em;
+    }
+
+    .contractLink {
+      color: var(--accent-color);
+      text-decoration: underline;
+      margin-bottom: 0.5em;
+      display: block;
+    }
+
+    #brokerDealerSection {
+      margin-top: 1em;
+    }
+
+    #bridge {
+      background: var(--accent-color);
+      color: var(--bg-color);
+      padding:  2em;
+    }
+
+    @media(max-width: 600px) {
+      .chartHolder h2 {
+        text-align: center;
+        margin-top: 0.5em;
+      }
+      .chartHolder {
+        flex-direction: column;
+      }
+    }
+
+
+    @media(max-width: 820px) {
+      .apGrid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+
+    @media(max-width: 540px) {
+      .apGrid {
+        grid-template-columns: 1fr;
+      }
+
+      #kycInput {
+        flex-direction: column;
+      }
+      #kycInput * {
+        margin-right: 0;
+        margin-bottom: 0.5em;
+      }
+    }
+
+    @media(max-width: 370px) {
+      .address {
+        font-size: 0.85em;
+      }
+    }
 
 
   </style>
@@ -188,23 +222,34 @@ TODO
         <div style="width: 40%"></div>
         <div style="width: 20%"></div>
       </div>
-      <div class="cta">
-        <a href="#facts">Fund Facts →</a>
-        <a href="#ap">Liquidity →</a>
-        <a href="#portfolio">How To Buy →</a>
+
         <!-- <a href="#facts">Terms →</a> -->
-        <connect-wallet>
-          <div slot="notConnected">
-            <connect-button>
-              <button id="connectButton" slot="button">Connect</button>
-              <div slot="loading">Loading...</div>
-            </connect-button>
-          </div>
-        </connect-wallet>
-      </div>
+      <connect-wallet>
+        <div slot="noWeb3" class="cta">
+          <a href="#facts">Fund Facts →</a>
+          <a href="#ap">Liquidity →</a>
+          <a href="#howToBuy">How To Buy →</a>
+        </div>
+
+        <div slot="notConnected" class="cta">
+          <a href="#facts">Fund Facts →</a>
+          <a href="#howToBuy">How To Buy →</a>
+          <connect-button>
+            <button id="connectButton" slot="button">Connect</button>
+            <div slot="loading">Loading...</div>
+          </connect-button>
+        </div>
+
+        <div slot="connected" class="cta">
+          <a href="#facts">Fund Facts →</a>
+          <a href="#ap">Liquidity →</a>
+          <a href="#howToBuy">How To Buy →</a>
+        </div>
+      </connect-wallet>
+
     </div>
 
-    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:30AM-4:00PM</div>
+    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:30AM-4:00PM (ET) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
 
 
     <connect-wallet style="display: flex; justify-content: center; align-items: center;">
@@ -216,10 +261,56 @@ TODO
 
   <main>
     <section id="facts" style="padding-top: 1em;">
-
-
       <section>
         <connect-wallet>
+          <div slot="noWeb3">
+            <dl>
+              <div>
+                <dt>Ticker</dt>
+                <dd>$ETF</dd>
+              </div>
+
+              <div>
+                <dt>Net Asset Value (NAV)</dt>
+                <dd>0.0001 ETH</dd>
+              </div>
+
+              <div>
+                <dt>Authorized Participants</dt>
+                <dd>6</dd>
+              </div>
+
+              <div>
+                <dt>Inception Date</dt>
+                <dd>04/08/2024</dd>
+              </div>
+            </dl>
+
+            <dl>
+              <div>
+                <dt>Benchmark</dt>
+                <dd>Ethereum</dd>
+              </div>
+
+              <div>
+                <dt>Sector</dt>
+                <dd>Cryptocurrency</dd>
+              </div>
+
+              <div>
+                <dt>Gross Expense Ratio</dt>
+                <dd>0.00%</dd>
+              </div>
+
+              <div>
+                <dt>30-Day SEC Yield</dt>
+                <dd>0.00%</dd>
+              </div>
+            </dl>
+            <em style="text-align:center; display: block; margin-bottom: 0.25em">Visit this website in a web3-connected browser for more information</em>
+
+          </div>
+
           <div slot="notConnected">
             <dl>
               <div>
@@ -265,7 +356,7 @@ TODO
               </div>
             </dl>
 
-            <em style="text-align:center; display: block; margin-bottom: 0.25em">Connect wallet for more info</em>
+            <em style="text-align:center; display: block; margin: 1em auto;">Connect wallet for more facts</em>
           </div>
 
           <div slot="connected">
@@ -313,7 +404,7 @@ TODO
               </div>
             </dl>
 
-            <dl>
+            <dl class="mobile4x4">
               <div>
                 <dt>Benchmark</dt>
                 <dd>Ethereum</dd>
@@ -383,14 +474,14 @@ TODO
         </div>
       </section>
 
-      <div style="margin-top: 1em">
+      <section style="margin-top: 1em">
         <h3>Overview</h3>
         <p>ETF seeks to simulate the experience of owning shares of an exchange-traded fund that seeks to reflect, before fees and expenses, the performance of the price of Ethereum.</p>
 
         <p>All shares are standard ERC-20 tokens that may only be traded during market trading hours of Monday through Friday, 9:30am to 4:00pm. Market Holidays and DST can be declared by the Time Lord. Shares of ETF may only be created and redeemed by six Authorized Participants (APs). </p>
 
         <p>ETF is not an investment company registered under the Investment Company Act of 1940, and therefore is not subject to the same regulatory requirements as mutual funds or ETFs registered under the Investment Company Act of 1940. ETF is not a commodity pool for purposes of the Commodity Exchange Act. Before making an investment decision, you should carefully consider the risk factors associated with owning cryptocurrency, and consult your financial advisor. Past performance does not guarantee future results.</p>
-      </div>
+      </section>
 
     </section>
 
@@ -456,12 +547,12 @@ TODO
       </div>
     </section>
 
-    <section>
+    <section id="timeLord" >
       <h2>Time Lord</h2>
       <p>The Time Lord has the sole ability to declare DST and Market Holidays. DST may be declared at any time without restriction, and may be reversed at any time without restriction. The declaration of DST will move the market open and market close earlier by one hour. Up to 10 Market Holidays may be declared in the 366 day period following the fund's inception. After 365 days, the balance of Market Holidays that may be declared is reset to 10.</p>
       <p>The Time Lord does not have the ability to create or redeem shares. The Time Lord is determined via ownership over the Time Lord NFT, which Authorized Participants cannot revoke.</p>
 
-      <div id="timeLord" class="apItem" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+      <div class="apItem" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <a href="./timeLord"><img src="./assets/tl.svg" style="width: 300px; max-width: 100%"></a>
         <connect-wallet>
           <div slot="connected" style="margin-top: 1em">
@@ -475,13 +566,6 @@ TODO
       <h2>Your Portfolio</h2>
 
       <connect-wallet>
-        <div slot="notConnected">
-          <connect-button>
-            <button id="connectButton" slot="button" style="font-size: 1em">Connect to view portfolio</button>
-            <div slot="loading">Loading...</div>
-          </connect-button>
-        </div>
-
         <div slot="connected">
           <section class="connectedAsSection">
             <h3 class="label">CONNECTED AS:</h3>
@@ -524,7 +608,7 @@ TODO
                 </tr>
 
                 <tr>
-                  <td>Card</td>
+                  <td>NFT</td>
                   <td id="kycCard"></td>
                 </tr>
               </table>
@@ -544,16 +628,37 @@ TODO
               <h3 style="text-align: center;text-transform: uppercase; font-size: 0.75em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em">Preview</h3>
               <div id="kycPreview"></div>
             </div>
-
-
-
-
-
-          <div id="brokerDealerSection"></div>
+          </div>
         </div>
+      </connect-wallet>
+
+      <div id="howToBuy">
+        <!-- uniswap link -->
       </div>
 
 
+      <connect-wallet>
+        <div slot="noWeb3">
+          <div style="font-size: 1em;"><em>Visit this site in a web3-connected browser to view your portfolio</em></div>
+        </div>
+
+        <div slot="notConnected">
+          <em style="display: block; text-align: center; padding: 1em">Connect to view portfolio and buy $ETF</em>
+          <connect-button>
+            <button id="connectButton" slot="button" style="font-size: 1em">Connect</button>
+            <div slot="loading">Loading...</div>
+          </connect-button>
+        </div>
+
+        <div slot="connected">
+           <div id="brokerDealerSection"></div>
+        </div>
+      </connect-wallet>
+    </section>
+
+    <section id="bridge">
+      <h3 style="margin-bottom: 1em"><a href="https://secure-etf-bridge.0ms.co/base" target="_blank" style="text-decoration: underline; color: var(--bg-color)">Bridge ETF to Base →</a></h3>
+      <em style="color: var(--bg-color);">WARNING: This is an external link, and will take you to a third-party website</em>
     </section>
 
 
@@ -565,11 +670,15 @@ TODO
 
 
       </section>
-    </connect-wallet> -->
+     -->
 
     <section>
-      <h3><a href="https://etherscan" style="color:var(--accent-color); text-decoration: underline;">ETF Contract</a></h3>
-      <h3><a href="https://etherscan" style="color:var(--accent-color); text-decoration: underline;">Authorized Participant Contract</a></h3>
+      <h2>View Contracts</h2>
+      <h3><a href="https://etherscan" target="_blank" rel="nofollow" class="contractLink">ETF Contract  →</a></h3>
+      <h3><a href="https://etherscan" target="_blank" rel="nofollow" class="contractLink">ETF.B Contract  →</a></h3>
+      <h3><a href="https://etherscan" target="_blank" rel="nofollow" class="contractLink">Authorized Participant Contract  →</a></h3>
+      <h3><a href="https://etherscan" target="_blank" rel="nofollow" class="contractLink">KYC Contract  →</a></h3>
+      <h3><a href="https://etherscan" target="_blank" rel="nofollow" class="contractLink">Broker Dealer Contract  →</a></h3>
     </section>
   </main>
 
@@ -589,14 +698,27 @@ TODO
 
 
 
-  <etf-modal id="modal">\
-    <div slot="content" style="background: var(--bg-color); padding:1em; width: 500px; max-width:80vw">hello!</div>
+  <etf-modal id="modal">
+    <div slot="content" id="roleModal">
+      <h2 style="margin-bottom: 1em; text-align: center;"><em>Confirm your role to continue</em></h2>
+        <h3><a onclick="closeModal()" href="#portfolio">Individual Trader</a></h3>
+        <h3><a onclick="closeModal()" href="#ap">Liquidity Provider</a></h3>
+        <h3><a onclick="closeModal()" href="#timeLord">NFT Collector</a></h3>
   </etf-modal>
 </body>
 
 
 <script src="./contracts.js"></script>
 <script src="./auctionMap.js"></script>
+
+
+<script>
+  function closeModal() {
+    document.getElementById('modal').close()
+    ls.set('chosenRole', true)
+  }
+
+</script>
 <script type="module">
 
   import {$} from './$.js'
@@ -605,11 +727,24 @@ TODO
 
 
 
-  // setTimeout(() => {
-  //   $.id('modal').open()
-  // }, 3000)
+  setTimeout(() => {
+    if (!ls.get('chosenRole')) $.id('modal').open()
+  }, 8000)
+
+
+  if (window.location.hash) {
+    setTimeout(() => {
+      const h = window.location.hash
+      window.location.hash = ''
+      window.location.hash = h
+    }, 200)
+  }
+
 
   provider.setContractInfo(CONTRACTS)
+
+
+  const etherscanAddr = addr => `<a href="https://etherscan.io/address/${addr}" target="_blank" class="address">${addr}</a>`
 
 
   let ETF, AP, AUCTION, KYC, BROKER_DEALER
@@ -737,7 +872,7 @@ TODO
       if (isENS(formattedAddr)) {
         $.id('connectedAs1').innerHTML = formattedAddr
       }
-      $.id('connectedAs2').innerHTML = `<a href="https://etherscan.io/address/${addr}" target="_blank" class="address">${addr}</a>`
+      $.id('connectedAs2').innerHTML = etherscanAddr(addr)
 
       let networkName, networkDescriptor
       if (connectedNetwork.name && connectedNetwork.name !== 'unknown') {
@@ -839,6 +974,7 @@ TODO
 
 
       const stakedAPTokenId = bnToN(await BROKER_DEALER.stakedTokenId())
+      const stakedAddr = await BROKER_DEALER.stakedAddr()
       const sharesOwned = ethVal(await ETF.balanceOf(addr))
 
       const $sharesOwned = $.id('sharesOwned')
@@ -852,40 +988,55 @@ TODO
 
 
 
-
       if (stakedAPTokenId !== 0) {
+        const createEnabled = await BROKER_DEALER.createEnabled()
+        const redeemEnabled = await BROKER_DEALER.redeemEnabled()
+
+        let bdDescription = `Authorized Participant ${stakedAPTokenId} has staked their AP token in the BrokerDealer contract`
+
+        if (createEnabled) {
+          bdDescription += `, allowing traders with <a href="#kyc" style="color:var(--accent-color)">registered KYC information</a> to purchase up to 10,000 shares at NAV (0.0001 ETH).`
+        }
+
+        if (createEnabled && !redeemEnabled) {
+          bdDescription += ` To purchase more shares from the Broker Dealer, please contact ${etherscanAddr(await provider.formatAddr(stakedAddr, false))}.`
+        }
+        if (createEnabled && redeemEnabled) {
+          bdDescription += ` Additionally, KYC-registered traders may redeem up to 10,000 shares at NAV (0.0001 ETH). To buy or sell more shares with the Broker Dealer, please contact ${etherscanAddr(await provider.formatAddr(stakedAddr, false))}.`
+        }
+        if (!createEnabled && redeemEnabled) {
+          bdDescription += `, allowing traders with <a href="#kyc" style="color:var(--accent-color)">registered KYC information</a> to redeem up to 10,000 shares at NAV (0.0001 ETH). To redeem more shares with the Broker Dealer, please contact ${etherscanAddr(await provider.formatAddr(stakedAddr, false))}.`
+        }
+        if (!createEnabled && !redeemEnabled) {
+          bdDescription += '.'
+        }
 
         $.id('brokerDealerSection').innerHTML = `
+          <div style="border: 3px solid; padding: 1em; margin-top: 3em">
+            <h3>Broker Dealer [Authorized Participant ${stakedAPTokenId}] <img src="./assets/ap${stakedAPTokenId}.svg" style="width:25px; transform:translateY(0.4em); padding-left:0.25em"></h3>
+            <p>${bdDescription}</p>
 
-          <!-- TODO Broker Dealer explanation -->
-
-
-          <div style="border: 3px solid; padding: 1em">
-            <div>
-              <h3>KYC Info</h3>
-              <div style="margin-bottom: 1em">
-                <input id="bdFirstName" class="textInput" placeholder="First Name" style="margin-bottom:0.5em">
-                <input id="bdLastName" class="textInput" placeholder="Last Name" style="margin-bottom:0.5em">
-              </div>
-
-              <h3>Buy Shares</h3>
+            <div id="createSharesBD">
+              <h4 style="margin-bottom:0.25em">Buy Shares (0.0001 ETH per share)</h4>
               <input id="createETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
               <button id="createETFSubmit" style="font-size:1em">Submit</button>
               <div id="creationPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
             </div>
 
-            <div>
-              <h3>Sell Shares (disabled)</h3>
+            <div id="redeemSharesBD">
+              <div>
+                <h4 style="margin-bottom:0.25em">Sell Shares (0.0001 ETH per share)</h4>
 
-              <input id="redeemETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
-              <button id="redeemETFSubmit" style="font-size:1em">Submit</button>
-              <div id="redemptionPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
-            </div>
-            <div>
-              <h3>Approve Shares for Broker Dealer Redemption</h3>
-              <input id="approveBD" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
-              <button id="approveBDSubmit" style="font-size:1em">Approve Broker Dealer</button>
-              <div id="bdApprovePreview" style="padding:0.5em; margin-bottom:0.5em"></div>
+                <input id="redeemETF" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
+                <button id="redeemETFSubmit" style="font-size:1em">Submit</button>
+                <div id="redemptionPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
+              </div>
+              <div>
+                <h4>Approve Shares for Broker Dealer Redemption</h4>
+                <input id="approveBD" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
+                <button id="approveBDSubmit" style="font-size:1em">Approve Broker Dealer</button>
+                <div id="bdApprovePreview" style="padding:0.5em; margin-bottom:0.5em"></div>
+              </div>
             </div>
           </div>
         `
@@ -899,44 +1050,42 @@ TODO
         const $redeemETFSubmit = $.id('redeemETFSubmit')
         const $approveBDSubmit = $.id('approveBDSubmit')
         const $bdApprovePreview = $.id('bdApprovePreview')
-        const $bdFirstName = $.id('bdFirstName')
-        const $bdLastName = $.id('bdLastName')
 
-        const kycInfo = await KYC.kycInfo(await KYC.addrToTokenId(addr))
+        const $createSharesBD = $.id('createSharesBD')
+        const $redeemSharesBD = $.id('redeemSharesBD')
 
-        if (kycInfo.firstName) {
-          $bdFirstName.value = kycInfo.firstName
-          $bdLastName.value = kycInfo.lastName
-        }
+
+        console.log(redeemEnabled, createEnabled)
+
+        if (!redeemEnabled) hide($redeemSharesBD)
+        if (!createEnabled) hide($createSharesBD)
 
 
         $createETF.onkeyup = (e) => {
           $creationPreview.innerHTML = `(${e.target.value / 10000} ETH)`
         }
+
         $redeemETF.onkeyup = (e) => {
           if (e.target.value > sharesOwned) {
             $redemptionPreview.innerHTML = `<span style="color: red">You do not own this many shares</span>`
           } else {
             $redemptionPreview.innerHTML = ``
           }
-
         }
 
 
 
         $createETFSubmit.onclick = async () => {
-          if (!$bdFirstName.value || !$bdLastName.value) {
-            $creationPreview.innerHTML = 'Please enter your first and last name'
-            return
-          }
+          const kycInfo = await KYC.kycInfo(await KYC.addrToTokenId(addr))
+
           try {
             const kycId = bnToN(await KYC.addrToTokenId(addr))
             if (kycId === 0) {
-              $creationPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information below</a>`
+              $creationPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information above</a>`
               return
             }
 
-            const tx = await BROKER_DEALER.create($bdFirstName.value, $bdLastName.value, txValue($createETF.value/10000))
+            const tx = await BROKER_DEALER.create(kycInfo.firstName, kycInfo.lastName, txValue($createETF.value/10000))
 
             $creationPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
 
@@ -955,18 +1104,17 @@ TODO
         }
 
         $redeemETFSubmit.onclick = async () => {
-          if (!$bdFirstName.value || !$bdLastName.value) {
-            $redemptionPreview.innerHTML = 'Please enter your first and last name'
-            return
-          }
+          const kycInfo = await KYC.kycInfo(await KYC.addrToTokenId(addr))
+
+
 
           try {
             const kycId = bnToN(await KYC.addrToTokenId(addr))
             if (kycId === 0) {
-              $redemptionPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information below</a>`
+              $redemptionPreview.innerHTML = `Invalid KYC information. Please <a href="#registerKYC" style="color:var(--accent-color)">register KYC information above</a>`
               return
             }
-            const tx = await BROKER_DEALER.redeem($bdFirstName.value, $bdLastName.value, toETH($redeemETF.value))
+            const tx = await BROKER_DEALER.redeem(kycInfo.firstName, kycInfo.lastName, toETH($redeemETF.value))
 
             $redemptionPreview.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
 
@@ -976,6 +1124,7 @@ TODO
             const sharesOwned = fromWei(await ETF.balanceOf(await provider.signer.getAddress()))
             $sharesOwned.innerHTML = sharesOwned.toFixed(2)
             $redeemETF.value = ''
+            $.id('ethBalance').innerHTML = await provider.getETHBalance(addr)
 
           } catch (e) {
             $redemptionPreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
@@ -995,6 +1144,7 @@ TODO
             $bdApprovePreview.innerHTML = 'Success!'
 
             $.id('approveBD').value = ''
+            $.id('ethBalance').innerHTML = await provider.getETHBalance(addr)
 
           } catch (e) {
             $bdApprovePreview.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'

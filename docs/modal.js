@@ -23,6 +23,7 @@ createComponent(
       }
 
       #modal {
+        position: fixed;
         z-index: 501;
       }
 

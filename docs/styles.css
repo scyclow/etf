@@ -203,6 +203,7 @@ img {
     padding: 0.5em;
     box-sizing: border-box;
     width: 49%;
+    padding-bottom: 0;
   }
 
   dd {
@@ -212,6 +213,15 @@ img {
   dl > * {
     width: 100%;
   }
+
+  .mobile4x4 {
+    padding: 0;
+    padding-top: 0.25em;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
 }
 
 @media(max-width: 500px) {

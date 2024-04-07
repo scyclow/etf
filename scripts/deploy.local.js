@@ -45,6 +45,8 @@ async function main() {
 
   await AuthorizedParticipants[safeTransferFrom](admin.address, BrokerDealer.address, 1)
 
+  await BrokerDealer.connect(admin).setRedeemEnabled(false)
+  console.log(await BrokerDealer.connect(admin).redeemEnabled())
 
   await KYC.connect(admin).register('joe', 'schmoe')
   const kycId = await KYC.connect(admin).getId('joe', 'schmoe')

@@ -656,5 +656,24 @@ describe('ETF', () => {
 
 })
 
+describe('ETF.B', () => {
+  beforeEach(async () => {
+    _start = await snapshot()
 
+    const signers = await ethers.getSigners()
+
+    admin = signers[0]
+    investor = signers[1]
+
+    // const ETFBFactory = await ethers.getContractFactory('ETFB', admin)
+    // ETFB = await ETFBFactory.deploy()
+    // await ETFB.deployed()
+
+    // attach TimeLordB
+  })
+
+  it('should mint TL to correct addr')
+  it('should allow TL to do stuff')
+  it('should only trade during london market hours')
+})
 
