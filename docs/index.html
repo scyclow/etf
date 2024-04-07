@@ -83,17 +83,27 @@ TODO
     font-size: 1.25em;
   }
 
-  #kycCard {
-    margin-top: 1em;
-  }
-  #kycPreview, #kycCard {
+  #kycPreview {
     display: flex;
     justify-content: center;
   }
-  #kycPreview svg, #kycCard svg {
+  #kycPreview svg {
     max-width: 500px;
   }
 
+  #kycCard svg {
+    max-width: 200px;
+  }
+
+  #kycInput {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+  }
+  #kycInput input {
+    text-align: center;
+  }
 
   .chartHolder {
     margin-top: 1em;
@@ -101,17 +111,19 @@ TODO
     justify-content: space-around;
   }
 
-  #portfolioTable {
+  .portfolioTable {
     margin-bottom: 2em;
   }
 
 
-  #portfolioTable td {
+  .portfolioTable td {
     font-family: monospace;
     padding-left: 1em;
+    padding-bottom: 0.5em;
+    vertical-align: top;
   }
 
-  #portfolioTable td:first-child {
+  .portfolioTable td:first-child {
     padding-left: 0em;
   }
 
@@ -137,8 +149,21 @@ TODO
     .apGrid {
       grid-template-columns: 1fr;
     }
+
+    #kycInput {
+      flex-direction: column;
+    }
+    #kycInput * {
+      margin-right: 0;
+      margin-bottom: 0.5em;
+    }
   }
 
+  @media(max-width: 370px) {
+    .address {
+      font-size: 0.85em;
+    }
+  }
 
 
   </style>
@@ -450,51 +475,97 @@ TODO
       <h2>Your Portfolio</h2>
 
       <connect-wallet>
-        <div slot="connected">
-          <table id="portfolioTable">
-            <tbody style="">
-              <tr>
-                <td>Current ETF Balance:</td> <td id="sharesOwned">--</td>
-              </tr>
-              <tr>
-                <td>Portfolio Value:</td> <td id="portfolioValue">--</td>
-              </tr>
-            </tbody>
-          </table>
-
-
-          <div id="brokerDealerSection"></div>
-        </div>
-
         <div slot="notConnected">
           <connect-button>
             <button id="connectButton" slot="button" style="font-size: 1em">Connect to view portfolio</button>
             <div slot="loading">Loading...</div>
           </connect-button>
         </div>
-      </connect-wallet>
+
+        <div slot="connected">
+          <section class="connectedAsSection">
+            <h3 class="label">CONNECTED AS:</h3>
+            <div id="connectedAs1" style="font-family: monospace;"></div>
+            <div id="connectedAs2" style="font-family: monospace;"></div>
+            <div id="connectedBalance" style="font-family: monospace;"></div>
+            <div id="connectedNetwork" style="font-family: monospace;"></div>
+          </section>
+          <table class="portfolioTable">
+            <tbody style="">
+              <tr>
+                <td>Current ETF Balance:</td> <td id="sharesOwned">--</td>
+              </tr>
+              <tr>
+                <td>Current ETH Balance:</td> <td id="ethBalance">--</td>
+              </tr>
+              <tr>
+                <td>Total Portfolio Value:</td> <td id="portfolioValue">--</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div id="kyc">
+            <div id="kycView">
+              <h3 id="kycHeader">KYC Information</h3>
+              <table class="portfolioTable">
+                <tr>
+                  <td>First Name</td>
+                  <td id="kycFirstName">Stevendsfsdf</td>
+                </tr>
+
+                <tr>
+                  <td>Last Name</td>
+                  <td id="kycLastName">Pikelnyrkgldfs</td>
+                </tr>
+
+                <tr>
+                  <td>Address</td>
+                  <td id="kycAddr" style="word-break: break-all;">0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266</td>
+                </tr>
+
+                <tr>
+                  <td>Card</td>
+                  <td id="kycCard"></td>
+                </tr>
+              </table>
+            </div>
+
+            <div id="kycRegister">
+              <h3 id="kycHeader">Register KYC Information</h3>
+
+              <div id="kycInput">
+                <input id="firstNameInput" class="textInput" placeholder="First Name">
+                <input id="lastNameInput" class="textInput" placeholder="Last Name">
+                <button id="submitKYC" style="font-size:1em">Submit</button>
+              </div>
+
+              <div id="kycLoading" style="padding: 0.5em 1em; text-align: center;"></div>
+
+              <h3 style="text-align: center;text-transform: uppercase; font-size: 0.75em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em">Preview</h3>
+              <div id="kycPreview"></div>
+            </div>
+
+
+
+
+
+          <div id="brokerDealerSection"></div>
+        </div>
+      </div>
+
+
     </section>
 
 
 
-    <connect-wallet>
+<!--     <connect-wallet>
       <section slot="connected" id="registerKYC">
         <h2>Register KYC Information</h2>
-        <!-- TODO KYC explanation -->
 
-        <div id="kycCard">
-          <div style="display: flex; justify-content: center; align-items: center; margin-top: 1em;">
-            <input id="firstNameInput" class="textInput" placeholder="First Name">
-            <input id="lastNameInput" class="textInput" placeholder="Last Name">
-            <button id="submitKYC" style="font-size:1em">Submit</button>
-          </div>
-          <div id="kycLoading" style="padding: 0.5em 1em; text-align: center;"></div>
 
-          <h3 style="text-align: center;text-transform: uppercase; font-size: 0.75em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em">Preview</h3>
-          <div id="kycPreview"></div>
-        </div>
+
       </section>
-    </connect-wallet>
+    </connect-wallet> -->
 
     <section>
       <h3><a href="https://etherscan" style="color:var(--accent-color); text-decoration: underline;">ETF Contract</a></h3>
@@ -529,7 +600,7 @@ TODO
 <script type="module">
 
   import {$} from './$.js'
-  import {provider, bnToN, txValue, ethVal, ZERO_ADDR} from './eth.js'
+  import {provider, bnToN, txValue, ethVal, isENS, ZERO_ADDR} from './eth.js'
 
 
 
@@ -653,18 +724,41 @@ TODO
       })
 
 
-      const $firstNameInput = $.id('firstNameInput')
-      const $lastNameInput = $.id('lastNameInput')
-      const $kycLoading = $.id('kycLoading')
+      const [
+        ethBalance,
+        connectedNetwork,
+        formattedAddr,
+      ] = await Promise.all([
+        provider.getETHBalance(addr),
+        provider.getNetwork(),
+        provider.formatAddr(addr, provider),
+      ])
 
-      const existingKYCTokenId = await KYC.addrToTokenId(addr)
+      if (isENS(formattedAddr)) {
+        $.id('connectedAs1').innerHTML = formattedAddr
+      }
+      $.id('connectedAs2').innerHTML = `<a href="https://etherscan.io/address/${addr}" target="_blank" class="address">${addr}</a>`
+
+      let networkName, networkDescriptor
+      if (connectedNetwork.name && connectedNetwork.name !== 'unknown') {
+        networkName = connectedNetwork.chainId === 1 ? 'mainnet' : connectedNetwork.name
+        networkDescriptor = 'Network'
+      } else {
+        networkName = connectedNetwork.chainId
+        networkDescriptor = 'Network ID'
+      }
+
+      $.id('connectedNetwork').innerHTML = `${networkDescriptor}: ${networkName}`
+
+
+
 
 
       function updateKYCPreview(firstName='', lastName='', address=ZERO_ADDR) {
         $.id('kycPreview').innerHTML = `
           <svg viewBox="0 0 380 250" xmlns="http://www.w3.org/2000/svg">
             <style>.k{dominant-baseline:middle;text-anchor:middle;font-size:40px;font-family:serif}.n{fill:#e74d61;font-family:monospace;font-size:30px}.a{fill:#e74d61;font-family:monospace;font-size:11px}</style>
-            <rect x="0" y="0" width="380" height="250" fill="#f1f1d1"></rect>
+            <rect x="0" y="0" width="380" height="250" fill="#f1f1d1" stroke="#002150"></rect>
             <rect x="10" y="10" width="360" height="230" stroke="#002150" fill="none" rx="15"></rect>
             <rect x="15" y="15" width="350" height="220" stroke="#002150" fill="none" rx="15"></rect>
             <rect x="15" y="15" width="350" height="50" fill="#4368a2" rx="15" stroke="#002150"></rect>
@@ -681,40 +775,85 @@ TODO
       }
 
 
-      if (bnToN(existingKYCTokenId) === 0) {
-        updateKYCPreview('', '', addr)
-        $firstNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
-        $lastNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+      async function renderKYCSection() {
+        const $kycView = $.id('kycView')
+        const $kycRegister = $.id('kycRegister')
+        const $firstNameInput = $.id('firstNameInput')
+        const $lastNameInput = $.id('lastNameInput')
+        const $kycLoading = $.id('kycLoading')
 
-        $.id('submitKYC').onclick = async () => {
-          if (!$firstNameInput.value || !$lastNameInput.value) {
-            $kycLoading.innerHTML = 'Please enter your first and last name.'
-          }
-          $kycLoading.innerHTML = ''
+        const existingKYCTokenId = await KYC.addrToTokenId(addr)
 
-          try {
-            const tx = await KYC.register($firstNameInput.value, $lastNameInput.value,)
-            $kycLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
-            const txReciept1 = await tx.wait(1)
-            $kycLoading.innerHTML = 'Success!'
-            $firstNameInput.value = ''
-            $lastNameInput.value = ''
-          } catch (e) {
-            $kycLoading.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
-            console.error(e)
+        if (bnToN(existingKYCTokenId) === 0) {
+          hide($kycView)
+          unhide($kycRegister)
+          updateKYCPreview('', '', addr)
+          $firstNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+          $lastNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
+
+          $.id('submitKYC').onclick = async () => {
+            console.log('111')
+            if (!$firstNameInput.value || !$lastNameInput.value) {
+              $kycLoading.innerHTML = 'Please enter your first and last name.'
+            }
+            $kycLoading.innerHTML = ''
+            console.log('222')
+
+            try {
+              const tx = await KYC.register($firstNameInput.value, $lastNameInput.value,)
+            console.log('333')
+              $kycLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
+              const txReciept1 = await tx.wait(1)
+            console.log('444')
+              renderKYCSection()
+            } catch (e) {
+              $kycLoading.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
+              console.error(e)
+            }
           }
+        } else {
+          unhide($kycView)
+          hide($kycRegister)
+
+          const $kycFirstName = $.id('kycFirstName')
+          const $kycLastName = $.id('kycLastName')
+          const $kycAddr = $.id('kycAddr')
+          const $kycCard = $.id('kycCard')
+
+          const utf8Clean = raw => raw.replace(/data.*utf8,/, '')
+          const b64Clean = raw => raw.replace(/data.*,/, '')
+          const b64Decode = raw => atob(b64Clean(raw))
+          const getSVG = rawURI => b64Decode(JSON.parse(utf8Clean(rawURI)).image)
+
+          const kycInfo = await KYC.kycInfo(await KYC.addrToTokenId(addr))
+
+
+          $kycCard.innerHTML = getSVG(await KYC.tokenURI(existingKYCTokenId))
+          $kycFirstName.innerHTML = kycInfo.firstName
+          $kycLastName.innerHTML = kycInfo.lastName
+          $kycAddr.innerHTML = kycInfo.addr
         }
-      } else {
-        const utf8Clean = raw => raw.replace(/data.*utf8,/, '')
-        const b64Clean = raw => raw.replace(/data.*,/, '')
-        const b64Decode = raw => atob(b64Clean(raw))
-        const getSVG = rawURI => b64Decode(JSON.parse(utf8Clean(rawURI)).image)
-        $.id('kycCard').innerHTML = getSVG(await KYC.tokenURI(existingKYCTokenId))
       }
 
+      await renderKYCSection()
+
+
       const stakedAPTokenId = bnToN(await BROKER_DEALER.stakedTokenId())
+      const sharesOwned = ethVal(await ETF.balanceOf(addr))
+
+      const $sharesOwned = $.id('sharesOwned')
+      const $ethBalance = $.id('ethBalance')
+      const $portfolioValue = $.id('portfolioValue')
+      const $kyc = $.id('kyc')
+
+      $sharesOwned.innerHTML = sharesOwned.toFixed(2) + ' Shares'
+      $ethBalance.innerHTML = fromWei(ethBalance).toFixed(2) + ' ETH'
+      $portfolioValue.innerHTML = (fromWei(ethBalance) + sharesOwned/10000).toFixed(2) + ' ETH'
+
+
+
+
       if (stakedAPTokenId !== 0) {
-        const sharesOwned = ethVal(await ETF.balanceOf(addr))
 
         $.id('brokerDealerSection').innerHTML = `
 
@@ -752,8 +891,6 @@ TODO
         `
 
 
-        const $sharesOwned = $.id('sharesOwned')
-        const $portfolioValue = $.id('portfolioValue')
         const $creationPreview = $.id('creationPreview')
         const $redemptionPreview = $.id('redemptionPreview')
         const $createETF = $.id('createETF')
@@ -772,8 +909,6 @@ TODO
           $bdLastName.value = kycInfo.lastName
         }
 
-        $sharesOwned.innerHTML = sharesOwned.toFixed(2) + ' Shares'
-        $portfolioValue.innerHTML = (sharesOwned/10000).toFixed(2) + ' ETH'
 
         $createETF.onkeyup = (e) => {
           $creationPreview.innerHTML = `(${e.target.value / 10000} ETH)`
@@ -998,6 +1133,15 @@ TODO
        $marketChange.innerHTML = 'Market Opens in:'
     }
   })
+
+  function unhide(element) {
+    $(element, 'display', '')
+  }
+
+  function hide(element) {
+    $(element, 'display', 'none')
+  }
+
 
 </script>
 </html>

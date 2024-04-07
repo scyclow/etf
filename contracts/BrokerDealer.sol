@@ -26,9 +26,13 @@ contract BrokerDealer  {
 
   mapping(uint256 => uint256) public kycCreated;
   mapping(uint256 => uint256) public kycRedeemed;
+  mapping(uint256 => uint256) _kycLimit;
 
   uint256 public stakedTokenId;
   address public stakedAddr;
+
+  bool public redeemEnabled = true;
+  bool public createEnabled = true;
 
 
   constructor(address _etf, address _ap, address _kyc) {
@@ -37,8 +41,13 @@ contract BrokerDealer  {
     kyc = IKYC(_kyc);
   }
 
+  function kycLimit(uint256 tokenId) public view returns (uint256) {
+    return (_kycLimit[tokenId] > 0) ? _kycLimit[tokenId] : 10000 ether;
+  }
+
 
   function create(string memory firstName, string memory lastName) external payable {
+    require(createEnabled, 'Share creation disabled');
     uint256 kycTokenId = kyc.getId(firstName, lastName);
 
     require(
@@ -48,7 +57,7 @@ contract BrokerDealer  {
     );
 
     uint256 tokensToCreate = msg.value * 10000;
-    require(kycCreated[kycTokenId] + tokensToCreate <= 10000 ether, 'Cannot provide > 1ETH in liquidity');
+    require(kycCreated[kycTokenId] + tokensToCreate <= kycLimit(kycTokenId), 'Cannot provide > 1ETH in liquidity');
 
     kycCreated[kycTokenId] += tokensToCreate;
 
@@ -56,6 +65,7 @@ contract BrokerDealer  {
   }
 
   function redeem(string memory firstName, string memory lastName, uint256 etfAmount) external payable {
+    require(redeemEnabled, 'Share redeemption disabled');
     uint256 kycTokenId = kyc.getId(firstName, lastName);
 
     require(
@@ -64,7 +74,7 @@ contract BrokerDealer  {
       'Invalid KYC Token'
     );
 
-    require(kycRedeemed[kycTokenId] + etfAmount <= 10000 ether, 'Cannot remove > 1ETH in liquidity');
+    require(kycRedeemed[kycTokenId] + etfAmount <= kycLimit(kycTokenId), 'Cannot remove > 1ETH in liquidity');
 
     kycRedeemed[kycTokenId] += etfAmount;
 
@@ -97,6 +107,22 @@ contract BrokerDealer  {
 
     ap.safeTransferFrom(address(this), msg.sender, stakedTokenId);
     stakedTokenId = 0;
+  }
+
+
+  function setCreateEnabled(bool value) external {
+    require(stakedAddr == msg.sender, 'Not owner of AP token');
+    createEnabled = value;
+  }
+
+  function setRedeemEnabled(bool value) external {
+    require(stakedAddr == msg.sender, 'Not owner of AP token');
+    redeemEnabled = value;
+  }
+
+  function setKYCLimit(uint256 tokenId, uint256 value) external {
+    require(stakedAddr == msg.sender, 'Not owner of AP token');
+    _kycLimit[tokenId] = value;
   }
 }
 

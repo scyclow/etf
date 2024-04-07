@@ -118,7 +118,7 @@ contract KYC is ERC721, ERC721Burnable, Ownable {
     return abi.encodePacked(
       '<svg viewBox="0 0 380 250" xmlns="http://www.w3.org/2000/svg">'
         '<style>.k{dominant-baseline:middle;text-anchor:middle;font-size:40px;font-family:serif}.n{fill:#e74d61;font-family:monospace;font-size:30px}.a{fill:#e74d61;font-family:monospace;font-size:11px}</style>'
-        '<rect x="0" y="0" width="380" height="250" fill="#f1f1d1"></rect>'
+        '<rect x="0" y="0" width="380" height="250" fill="#f1f1d1" stroke="#002150"></rect>'
         '<rect x="10" y="10" width="360" height="230" stroke="#002150" fill="none" rx="15"></rect>'
         '<rect x="15" y="15" width="350" height="220" stroke="#002150" fill="none" rx="15"></rect>'
         '<rect x="15" y="15" width="350" height="50" fill="#4368a2" rx="15" stroke="#002150"></rect>'

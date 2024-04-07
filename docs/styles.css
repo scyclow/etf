@@ -149,6 +149,17 @@ img {
   /*border: 0.5px solid var(--font-color);*/
 }
 
+.label {
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.address {
+  font-family: monospace;
+  font-weight: bold;
+}
+
   @keyframes IntroGrow {
     0%, 25% {
       max-width: 0%;

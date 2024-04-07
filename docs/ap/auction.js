@@ -417,39 +417,38 @@ async function displayTLStats(etf) {
     const holidayFilter = etf.filters.DeclareMarketHoliday(await etf.yearsElapsed())
     holidays = await etf.queryFilter(holidayFilter).then(h => h.map(h => bnToN(h.args.day)).filter(d => d >= daysElapsed).sort())
 
+    const yearsElapsed = bnToN(await etf.yearsElapsed())
+    const marketHolidaysDeclared = bnToN(await etf.yearToMarketHolidaysDeclared(yearsElapsed))
 
+    $.id('apStats').innerHTML = `
+      <section style=" display: flex; justify-content: space-between; flex-direction: column">
+        <div style="margin-bottom: 0.5em">
+          <h3 class="label">Is DST?</h3>
+          <div id="isDST" style="font-family: monospace">${await etf.isDST()}</div>
+        </div>
+        <div style="margin-bottom: 0.5em">
+          <h3 class="label">Market Holidays Declared (Year ${yearsElapsed})</h3>
+          <div style="font-family: monospace" id="sharesRedeemed">${marketHolidaysDeclared}</div>
+        </div>
+        <div style="margin-bottom: 0.5em">
+          <h3 class="label">Days Elapsed</h3>
+          <div style="font-family: monospace">${daysElapsed}</div>
+        </div>
+        <div style="margin-bottom: 0.5em">
+          <h3 class="label">Upcoming Holidays</h3>
+          <div style="font-family: monospace">${
+            holidays.length
+              ? holidays.map(day => `<div style="font-family: monospace">Day ${day}</div>`).join('')
+              : 'None'
+          }</div>
+        </div>
+      </section>
+    `
 
   } catch (e) {
     console.log(e)
   }
 
-  const yearsElapsed = bnToN(await etf.yearsElapsed())
-  const marketHolidaysDeclared = bnToN(await etf.yearToMarketHolidaysDeclared(yearsElapsed))
-
-  $.id('apStats').innerHTML = `
-    <section style=" display: flex; justify-content: space-between; flex-direction: column">
-      <div style="margin-bottom: 0.5em">
-        <h3 class="label">Is DST?</h3>
-        <div id="isDST" style="font-family: monospace">${await etf.isDST()}</div>
-      </div>
-      <div style="margin-bottom: 0.5em">
-        <h3 class="label">Market Holidays Declared (Year ${yearsElapsed})</h3>
-        <div style="font-family: monospace" id="sharesRedeemed">${marketHolidaysDeclared}</div>
-      </div>
-      <div style="margin-bottom: 0.5em">
-        <h3 class="label">Days Elapsed</h3>
-        <div style="font-family: monospace">${daysElapsed}</div>
-      </div>
-      <div style="margin-bottom: 0.5em">
-        <h3 class="label">Upcoming Holidays</h3>
-        <div style="font-family: monospace">${
-          holidays.length
-            ? holidays.map(day => `<div style="font-family: monospace">Day ${day}</div>`).join('')
-            : 'None'
-        }</div>
-      </div>
-    </section>
-  `
 }
 
 async function displayTLActions(etf) {

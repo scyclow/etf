@@ -3,6 +3,8 @@ const { time } = require('@openzeppelin/test-helpers')
 const ONE_DAY = 60 * 60 * 24
 const TEN_MINUTES = 60 * 10
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
+const safeTransferFrom = 'safeTransferFrom(address,address,uint256)'
+
 const ARBITRARY_MARKET_OPEN_TIME = 2020429800
 
 const toETH = amt => ethers.utils.parseEther(String(amt))
@@ -41,10 +43,10 @@ async function main() {
   BrokerDealer = await BrokerDealerFactory.deploy(ETF.address, AuthorizedParticipants.address, KYC.address)
   await BrokerDealer.deployed()
 
-  await AuthorizedParticipants.transferFrom(admin.address, BrokerDealer.address, 1)
+  await AuthorizedParticipants[safeTransferFrom](admin.address, BrokerDealer.address, 1)
+
 
   await KYC.connect(admin).register('joe', 'schmoe')
-
   const kycId = await KYC.connect(admin).getId('joe', 'schmoe')
 
 
