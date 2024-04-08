@@ -645,6 +645,18 @@ TODO
         <h3>
           <a href="https://app.uniswap.org/swap?inputCurrency=0x7102653225d537e2fe703723ad83edfeb606396e&outputCurrency=ETH" target="_blank" rel="nofollow" class="contractLink">Trade on Uniswap  →</a>
           <a href="https://app.uniswap.org/add/v2/0x7102653225d537e2fe703723ad83edfeb606396e/ETH" target="_blank" rel="nofollow" class="contractLink">LP on Uniswap  →</a>
+
+
+          <table class="portfolioTable" style="margin-bottom: 0; color: var(--bg-color); margin-top: 1.5em;">
+            <tr>
+              <td>ETH in Uniswap Pool:</td>
+              <td id="uniswapETHLP" style="vertical-align: middle;"></td>
+            </tr>
+            <tr>
+              <td>ETF in Uniswap Pool:</td>
+              <td id="uniswapETFLP" style="vertical-align: middle;"></td>
+            </tr>
+          </table>
         </h3>
 
       </section>
@@ -771,8 +783,8 @@ TODO
       setRunInterval(async () => {
         try {
           const { etfReserve, ethReserve } = await UNISWAP_V2.getReserves()
-          const etfVal = etfReserve.div(1000000000000000).toNumber() / 1000000
-          const _ethVal = ethReserve.div(1000000000000000).toNumber() / 100
+          const etfVal = etfReserve.div(1000000000000000).toNumber() / 10000000
+          const _ethVal = ethReserve.div(1000000000000000).toNumber() / 1000
 
 
           const ETH_ETF = _ethVal/etfVal
@@ -784,6 +796,10 @@ TODO
 
           $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
           $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)
+
+
+          $.id('uniswapETHLP').innerHTML = _ethVal
+          $.id('uniswapETFLP').innerHTML = (etfVal * 10000).toFixed(2)
         } catch (e) {
           console.log('uniswap pool data error:', e)
         }
@@ -876,6 +892,10 @@ TODO
               const marketHolidaysDeclared = bnToN(await ETF.yearToMarketHolidaysDeclared(yearsElapsed))
               $.id(`tl-display`).innerHTML = `
                 <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./timeLord">More Info →</a></div>
+                <div>
+                  <dt>Owned By</dt>
+                  <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
+                </div>
                 <div>
                   <dt>Is DST</dt>
                   <dd>${isDST}</dd>
