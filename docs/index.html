@@ -393,22 +393,22 @@ TODO
             <dl>
               <div>
                 <dt>Premium/Discount (%)</dt>
-                <dd id="premDisc">N/A</dd>
+                <dd id="premDisc">--</dd>
               </div>
 
               <div>
                 <dt>Market Price</dt>
-                <dd id="mktPrice">N/A</dd>
+                <dd id="mktPrice">--</dd>
               </div>
 
               <div>
                 <dt>Shares Outstanding</dt>
-                <dd id="sharesOutstanding">0.0000</dd>
+                <dd id="sharesOutstanding">--</dd>
               </div>
 
               <div>
                 <dt>Assets Under Management (AUM)</dt>
-                <dd id="aum">0.0000</dd>
+                <dd id="aum">--</dd>
               </div>
             </dl>
 
@@ -777,14 +777,15 @@ TODO
 
           $.id('premDisc').innerHTML = (etfPremium * 100).toFixed(2) + '%'
           $.id('mktPrice').innerHTML = etfPrice.toFixed(7) + ' ETH'
+
+          $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
+          $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)
         } catch (e) {
           console.log('uniswap pool data error:', e)
         }
       }, 12000)
 
 
-      $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
-      $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)
 
       times(7, async _i => {
         const i = _i
