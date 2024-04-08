@@ -826,7 +826,7 @@ TODO
                 <div style="display:flex;justify-content:center;margin-bottom:1em"><a class="apOwner" href="./ap/${i}">More Info →</a></div>
                 <div>
                   <dt>Owned By</dt>
-                  <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${await provider.formatAddr(ownerAddr)}</a></dd>
+                  <dd><a href="https://etherscan.io/address/${ownerAddr}" class="apOwner" target="_blank" rel="nofollow">${ownerAddr === BROKER_DEALER.address? 'BrokerDealer' : await provider.formatAddr(ownerAddr)}</a></dd>
                 </div>
                 <div>
                   <dt>Shares Created</dt>
@@ -1030,7 +1030,7 @@ TODO
                 <div id="redemptionPreview" style="padding:0.5em; margin-bottom:0.5em"></div>
               </div>
               <div>
-                <h4>Approve Shares for Broker Dealer Redemption</h4>
+                <h4>Approve Shares for Broker Dealer Sale</h4>
                 <input id="approveBD" class="textInput" placeholder="Shares" type="number" style="margin-bottom:0.5em">
                 <button id="approveBDSubmit" style="font-size:1em">Approve Broker Dealer</button>
                 <div id="bdApprovePreview" style="padding:0.5em; margin-bottom:0.5em"></div>
