@@ -161,6 +161,14 @@ TODO
       padding:  2em;
     }
 
+    #howToBuy {
+      background: var(--font-color);
+      padding:  2em;
+    }
+    #howToBuy a {
+      color: var(--bg-color);
+    }
+
     @media(max-width: 600px) {
       .chartHolder h2 {
         text-align: center;
@@ -632,9 +640,10 @@ TODO
         </div>
       </connect-wallet>
 
-      <div id="howToBuy">
-        <!-- uniswap link -->
-      </div>
+      <section id="howToBuy">
+        <h3><a href="https://app.uniswap.org/explore/tokens/ethereum/0x7102653225d537e2fe703723ad83edfeb606396e" target="_blank" rel="nofollow" class="contractLink">Trade on Uniswap  →</a></h3>
+
+      </section>
 
 
       <connect-wallet>
@@ -1052,8 +1061,6 @@ TODO
         const $createSharesBD = $.id('createSharesBD')
         const $redeemSharesBD = $.id('redeemSharesBD')
 
-
-        console.log(redeemEnabled, createEnabled)
 
         if (!redeemEnabled) hide($redeemSharesBD)
         if (!createEnabled) hide($createSharesBD)

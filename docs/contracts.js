@@ -109,12 +109,14 @@ CONTRACTS = {
       'function settle(uint256 auctionId) external payable',
     ]
   },
-  // UNISWAP_V2: {
-  //   addr: {},
-  //   abi: [
-  //     'function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast)'
-  //   ]
-  // }
+  UNISWAP_V2: {
+    addr: {
+      mainnet: 'https://app.uniswap.org/explore/tokens/ethereum/0x7102653225d537e2fe703723ad83edfeb606396e'
+    },
+    abi: [
+      'function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast)'
+    ]
+  }
 }
 
   // async function getEthUsd(uniswapV2) {
