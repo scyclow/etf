@@ -764,30 +764,23 @@ TODO
     try {
       ({ ETF, AP, AUCTION, KYC, BROKER_DEALER, UNISWAP_V2 } = await provider.getContracts())
 
+      setRunInterval(async () => {
+        try {
+          const { etfReserve, ethReserve } = await UNISWAP_V2.getReserves()
+          const etfVal = etfReserve.div(1000000000000000).toNumber() / 1000000
+          const _ethVal = ethReserve.div(1000000000000000).toNumber() / 100
 
 
+          const ETH_ETF = _ethVal/etfVal
+          const etfPremium = ETH_ETF - 1
+          const etfPrice = ETH_ETF * 0.0001
 
-      try {
-        const { etfReserve, ethReserve } = await UNISWAP_V2.getReserves()
-        const etfVal = etfReserve.div(1000000000000000).toNumber() / 1000000
-        const _ethVal = ethReserve.div(1000000000000000).toNumber() / 100
-
-
-        const ETH_ETF = _ethVal/etfVal
-        const etfPremium = ETH_ETF - 1
-        const etfPrice = ETH_ETF * 0.0001
-
-        $.id('premDisc').innerHTML = (etfPremium * 100).toFixed(2) + '%'
-        $.id('mktPrice').innerHTML = etfPrice.toFixed(7) + ' ETH'
-
-
-      } catch (e) {
-        console.log('uniswap pool data error:', e)
-      }
-
-
-
-
+          $.id('premDisc').innerHTML = (etfPremium * 100).toFixed(2) + '%'
+          $.id('mktPrice').innerHTML = etfPrice.toFixed(7) + ' ETH'
+        } catch (e) {
+          console.log('uniswap pool data error:', e)
+        }
+      }, 12000)
 
 
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
