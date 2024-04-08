@@ -15,9 +15,9 @@ const AUCTION_STRUCT = `(
 
 
 const KYC_STRUCT = `(
-    string firstName,
-    string lastName,
-    address addr
+  string firstName,
+  string lastName,
+  address addr
 )`
 
 
@@ -25,7 +25,8 @@ CONTRACTS = {
   ETF: {
     addr: {
       local: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-      sepolia: '0xcCeD8D66694FFCbAB3bBab982c302e08851022c4'
+      sepolia: '0xcCeD8D66694FFCbAB3bBab982c302e08851022c4',
+      mainnet: '0x7102653225D537e2FE703723ad83edFeb606396e'
     },
     abi: [
       'function INCEPTION() external view returns (uint256)',
@@ -53,6 +54,7 @@ CONTRACTS = {
     addr: {
       local: '0xa16E02E87b7454126E5E10d957A927A7F5B5d2be',
       sepolia: '0xc953EA56eA69C63bEEfd1C07Db632AbB9e95f421',
+      mainnet: '0xE58F2758E6cfAe2a74c7177e4F73451e32Cf900e',
     },
     abi: [
       'function ownerOf(uint256 tokenId) external view returns (address)',
@@ -62,6 +64,7 @@ CONTRACTS = {
     addr: {
       local: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
       sepolia: '0x6be4ceD7E2c3b0c68dD2860E0250d6F1EbB8d069',
+      mainnet: '0x0BB72cE0cFE446DD89129B4335e29c0fbbE0c93C'
     },
 
     abi: [
@@ -76,7 +79,8 @@ CONTRACTS = {
   BROKER_DEALER: {
     addr: {
       local: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
-      sepolia: '0xd73dE3E4daBD65Fd91d7D09B69A730f726bd349C'
+      sepolia: '0xd73dE3E4daBD65Fd91d7D09B69A730f726bd349C',
+      mainnet: '0x551F48e0f7224b782C096F1e97893E834a2fB841'
     },
     abi: [
       'function create(string, string) external payable',
