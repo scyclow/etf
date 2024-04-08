@@ -148,7 +148,7 @@ async function updateBidInfo(signer, steviepAuction, ap) {
     unhide($bidHistory)
     if (!setMinBid) $newBidAmount.value = formatMinBid(ethVal(highestBid.amount) * (1 + auction.bidIncreaseBps/10000))
 
-    const bidAmount = ethVal(highestBid.amount)
+    const bidAmount = ethVal(highestBid.amount, true)
     $highestBidAmount.innerHTML = `${bidAmount} ETH</div>`
     $highestBidder.innerHTML = `<a href="https://${await etherscanPrefix()}etherscan.io/address/${highestBid.bidder}" target="_blank" class="address">${await provider.formatAddr(highestBid.bidder, false, 42)}</a>`
 
