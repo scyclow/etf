@@ -657,7 +657,7 @@ TODO
     </section>
 
     <section id="bridge">
-      <h3 style="margin-bottom: 1em"><a href="https://secure-etf-bridge.0ms.co/base" target="_blank" style="text-decoration: underline; color: var(--bg-color)">Bridge ETF to Base →</a></h3>
+      <h3 style="margin-bottom: 1em"><a href="https://secure-etf-bridge.0ms.co/base.html" target="_blank" style="text-decoration: underline; color: var(--bg-color)">Bridge ETF to Base →</a></h3>
       <em style="color: var(--bg-color);">WARNING: This is an external link, and will take you to a third-party website</em>
     </section>
 
@@ -927,19 +927,15 @@ TODO
           $lastNameInput.onkeyup = () => updateKYCPreview($firstNameInput.value, $lastNameInput.value, addr)
 
           $.id('submitKYC').onclick = async () => {
-            console.log('111')
             if (!$firstNameInput.value || !$lastNameInput.value) {
               $kycLoading.innerHTML = 'Please enter your first and last name.'
             }
             $kycLoading.innerHTML = ''
-            console.log('222')
 
             try {
               const tx = await KYC.register($firstNameInput.value, $lastNameInput.value,)
-            console.log('333')
               $kycLoading.innerHTML = `TX Pending. <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" rel="nofollow" style="color: var(--accent-color)">View on etherscan</a>`
               const txReciept1 = await tx.wait(1)
-            console.log('444')
               renderKYCSection()
             } catch (e) {
               $kycLoading.innerHTML = e?.data?.message || e?.error?.message || e?.message || 'Something went wrong'
@@ -1252,11 +1248,11 @@ TODO
 
 
 
-  function triggerTimer(timeLeft, $elem1, cb) {
+  function triggerTimer(endTimestamp, $elem1, cb) {
     const with0 = x => x < 10 ? '0' + Math.floor(x) : Math.floor(x)
-    let timeLeftCounter = timeLeft
+
     return setRunInterval(() => {
-      timeLeftCounter = Math.max(timeLeftCounter - 1000, 0)
+      const timeLeftCounter = Math.max(endTimestamp - Date.now(), 0)
       const days = timeLeftCounter / (24*60*60*1000)
       const hours = 24 * (days%1)
       const minutes = 60 * (hours%1)
@@ -1274,9 +1270,8 @@ TODO
     }, 1000)
   }
 
-  console.log(getNextTimestamp(), Date.now(), getNextTimestamp() - Date.now())
 
-  triggerTimer(getNextTimestamp() - Date.now(), $timeLeft, () => {
+  triggerTimer(getNextTimestamp(), $timeLeft, () => {
     if (isMarketOpen()) {
        $marketChange.innerHTML = 'Market Closes in:'
     } else {

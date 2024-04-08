@@ -207,7 +207,7 @@ contract TokenURIBase {
       Base64.encode(timeLordSVG())
     );
 
-    string memory attrs = getAttrs(tokenId);
+    bytes memory attrs = getAttrs(tokenId);
 
     bytes memory json = abi.encodePacked(
       'data:application/json;utf8,',
@@ -227,10 +227,12 @@ contract TokenURIBase {
   }
 
 
-  function getAttrs(uint256) public view returns (string memory) {
-    return string.concat(
+  function getAttrs(uint256) public view returns (bytes memory) {
+    uint256 yearsElapsed = etfb.yearsElapsed();
+    string memory holidays = etfb.yearToMarketHolidaysDeclared(yearsElapsed).toString();
+    return abi.encodePacked(
       '[',
-        '{"trait_type": "Market Holidays Set For Year", "value": "', etfb.yearToMarketHolidaysDeclared(etfb.yearsElapsed()).toString(), '"},',
+        '{"trait_type": "Market Holidays Set For Year", "value": "', holidays, '"},',
         '{"trait_type": "Is DST", "value": "', etfb.isDST() ? 'True' : 'False', '"}',
       ']'
     );

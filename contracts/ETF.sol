@@ -8,7 +8,7 @@ pragma solidity ^0.8.23;
 
 contract ETF is ERC20 {
   uint256 public constant TOKENS_PER_ETH = 10000;
-  uint256 public constant INCEPTION = 1704724200; // TODO - change this to 4/8 10:30am EDT/ 9:30am EST
+  uint256 public constant INCEPTION = 1712586600; // 4/8 10:30am EDT (9:30am EST, 14:30pm UTC)
   uint256 public constant MARKET_OPEN_DURATION = 6 hours + 30 minutes;
 
   bool public isDST;

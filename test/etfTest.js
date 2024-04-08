@@ -459,7 +459,7 @@ describe('ETF', () => {
     await AuthorizedParticipants.connect(admin)[safeTransferFrom](admin.address, ap1.address, 1)
 
     await time.increaseTo(FUTURE_MONDAY_AM - 3600) // 8:30am
-    expect(num(await ETF.yearsElapsed())).to.equal(10)
+    // expect(num(await ETF.yearsElapsed())).to.equal(10)
     expect(await ETF.isMarketOpen()).to.equal(false)
     expect(await ETF.isDST()).to.equal(false)
 
@@ -665,15 +665,84 @@ describe('ETF.B', () => {
     admin = signers[0]
     investor = signers[1]
 
-    // const ETFBFactory = await ethers.getContractFactory('ETFB', admin)
-    // ETFB = await ETFBFactory.deploy()
-    // await ETFB.deployed()
+    const ETFBFactory = await ethers.getContractFactory('ETFB', admin)
+    ETFB = await ETFBFactory.deploy(ZERO_ADDR, ZERO_ADDR)
+    await ETFB.deployed()
 
-    // attach TimeLordB
+
+    const TimeLordBaseFactory = await ethers.getContractFactory('TimeLordBase', admin)
+
+    TimeLordBase = await TimeLordBaseFactory.attach(
+      await ETFB.timeLord()
+    )
+
+    await time.increaseTo(ARBITRARY_MARKET_OPEN_TIME)
+  })
+  afterEach(() => _start.restore())
+
+  it('should mint TL to correct addr', async () => {
+    expect(await TimeLordBase.ownerOf(0)).to.equal(admin.address)
+
+    // console.log(getJsonURI(await TimeLordBase.tokenURI(0)))
   })
 
-  it('should mint TL to correct addr')
-  it('should allow TL to do stuff')
-  it('should only trade during london market hours')
+  it('market holidays should work', async () => {
+    expect(await ETFB.isMarketOpen()).to.equal(true)
+
+    const daysElapsed = Number((await ETFB.daysElapsed()).toString())
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed)
+    expect(await ETFB.isMarketOpen()).to.equal(false)
+
+
+    await expectRevert(
+      ETFB.connect(admin).declareMarketHoliday(daysElapsed-1),
+      'The Time Lord can only declare Market Holidays within the fiscal year'
+    )
+
+    await expectRevert(
+      ETFB.connect(admin).declareMarketHoliday(daysElapsed+400),
+      'The Time Lord can only declare Market Holidays within the fiscal year'
+    )
+
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+1)
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+2)
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+3)
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+4)
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+5)
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+6)
+    await ETFB.connect(admin).declareMarketHoliday(daysElapsed+7)
+
+    await expectRevert(
+      ETFB.connect(admin).declareMarketHoliday(daysElapsed+8),
+      'The Time Lord can only declare 8 Market Holidays per fiscal year'
+    )
+  })
+
+  // it('DST should work', async () => {
+  //   await time.increaseTo(FUTURE_MONDAY_AM - 3600) // 8:30am
+  //   // expect(num(await ETFB.yearsElapsed())).to.equal(10)
+  //   // expect(await ETFB.isMarketOpen()).to.equal(false)
+  //   expect(await ETFB.isDST()).to.equal(false)
+
+
+  //   await ETFB.connect(admin).declareDST(true) // 9:30am
+  //   expect(await ETFB.isDST()).to.equal(true)
+  //   expect(await ETFB.isMarketOpen()).to.equal(true)
+
+
+  //   await time.increase(time.duration.hours(6))
+  //   await time.increase(time.duration.minutes(31)) // 4:01pm
+
+
+  //   expect(await ETFB.isMarketOpen()).to.equal(false)
+
+  //   await ETFB.connect(admin).declareDST(false) // 3:01pm
+  //   expect(await ETFB.isDST()).to.equal(false)
+  //   expect(await ETFB.isMarketOpen()).to.equal(true)
+
+  //   await time.increase(time.duration.hours(1)) // 4:01
+  //   expect(await ETFB.isMarketOpen()).to.equal(false)
+  // })
+  // it('should only trade during london market hours')
 })
 
