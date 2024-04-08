@@ -392,13 +392,13 @@ TODO
 
             <dl>
               <div>
-                <dt>Premium/Discount (bps)</dt>
-                <dd>N/A</dd>
+                <dt>Premium/Discount (%)</dt>
+                <dd id="premDisc">N/A</dd>
               </div>
 
               <div>
                 <dt>Market Price</dt>
-                <dd>N/A</dd>
+                <dd id="mktPrice">N/A</dd>
               </div>
 
               <div>
@@ -758,11 +758,37 @@ TODO
   const etherscanAddr = addr => `<a href="https://etherscan.io/address/${addr}" target="_blank" class="address">${addr}</a>`
 
 
-  let ETF, AP, AUCTION, KYC, BROKER_DEALER
+  let ETF, AP, AUCTION, KYC, BROKER_DEALER, UNISWAP_V2
   provider.onConnect(async (addr) => {
 
     try {
-      ({ ETF, AP, AUCTION, KYC, BROKER_DEALER } = await provider.getContracts())
+      ({ ETF, AP, AUCTION, KYC, BROKER_DEALER, UNISWAP_V2 } = await provider.getContracts())
+
+
+
+
+      try {
+        const { etfReserve, ethReserve } = await UNISWAP_V2.getReserves()
+        const etfVal = etfReserve.div(1000000000000000).toNumber() / 1000000
+        const _ethVal = ethReserve.div(1000000000000000).toNumber() / 100
+
+
+        const ETH_ETF = _ethVal/etfVal
+        const etfPremium = ETH_ETF - 1
+        const etfPrice = ETH_ETF * 0.0001
+
+        $.id('premDisc').innerHTML = (etfPremium * 100).toFixed(2) + '%'
+        $.id('mktPrice').innerHTML = etfPrice.toFixed(7) + ' ETH'
+
+
+      } catch (e) {
+        console.log('uniswap pool data error:', e)
+      }
+
+
+
+
+
 
       $.id('aum').innerHTML = fromWei(await provider.getETHBalance(ETF.address)).toFixed(2) + ' ETH'
       $.id('sharesOutstanding').innerHTML = fromWei(await ETF.totalSupply()).toFixed(2)

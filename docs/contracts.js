@@ -111,10 +111,10 @@ CONTRACTS = {
   },
   UNISWAP_V2: {
     addr: {
-      mainnet: 'https://app.uniswap.org/explore/tokens/ethereum/0x7102653225d537e2fe703723ad83edfeb606396e'
+      mainnet: '0xFa7c69169ec5fF252be24bF0fF7B356dAe9aDeDA'
     },
     abi: [
-      'function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast)'
+      'function getReserves() external view returns (uint112 etfReserve, uint112 ethReserve, uint32 _blockTimestampLast)'
     ]
   }
 }
