@@ -249,14 +249,14 @@ TODO
 
     </div>
 
-    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | 9:30AM-4:00PM (ET) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
+    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | 10:30AM-5:00PM (EDT) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
 
 
-    <connect-wallet style="display: flex; justify-content: center; align-items: center;">
+    <!-- <connect-wallet style="display: flex; justify-content: center; align-items: center;"> -->
       <div class="marketTimer" slot="connected" style="display: flex; justify-content: center; margin-top: 1em;">
         <div id="marketChange"></div><div id="timeLeft"></div>
       </div>
-    </connect-wallet>
+    <!-- </connect-wallet> -->
   </header>
 
   <main>
@@ -693,6 +693,8 @@ TODO
 
     <p>Investing in digital assets, such as Ether and elaborate DeFi-adjacent memecoins, involves significant risk due to their extreme price volatility and the potential for loss, theft, or compromised private keys. The value of shares is closely tied to acceptance, industry developments, and governance changes, making them highly susceptible to market sentimant. Digital assets represent a new and rapidly evolving industry, and the value of Shares depends on the acceptance of Ethereum. Changes in the governance of a digital asset network may not receive sufficient support from users or stakers, which may negatively affect that digital asset network's ability to grow and respond to challenges. Investing in ETF comes with risks that could impact ETF's share value, including large-scale sales by major holders, security threats like breaching or hacking, negative sentiment among speculators, and competition from central bank digital currencies and financial initiatives using blockchain technology. A disruption of the internet or a digital asset network, such as the Ethereum network, would affect the ability to transfer digital assets, including Ether and ETF, and would consequently impact their value. There can be no assurance that the smart contracts holding ETF's assets are free of defects, will actually work as designed, or prove to be successful in safeguarding ETFs assets against all possible sources of theft, loss, or damage. Additionally, there is no assurance that the designated Authorized Participants will exercise their right to create and redeem shares of ETF, which may lead to significant tracking error between the secondary market share price and NAV. In some cases, this could lead to significant price volatility.</p>
 
+
+    <div style="text-align:center; font-size: 2em; font-style: normal; margin: 2em;"><a href="https://discord.steviep.xyz" target="_blank" style="color: var(--accent-color); text-decoration: underline;">Customer Support</a></div>
     <div style="text-align:center; font-size: 2em; font-style: normal; margin: 2em;"><a href="https://steviep.xyz" target="_blank" style="color: var(--accent-color); text-decoration: underline;">steviep.xyz</a> (c) 2024</div>
   </footer>
 
@@ -816,7 +818,7 @@ TODO
               `
             }
 
-            if (isActive && bnToN(highestBid.timestamp)) triggerTimer(bnToN(auctionEndTime) * 1000 - Date.now(), $.id(`ap${i}-timer`))
+            if (isActive && bnToN(highestBid.timestamp)) triggerTimer(bnToN(auctionEndTime) * 1000, $.id(`ap${i}-timer`))
 
           } else {
             if (i > 0) {
