@@ -32,6 +32,7 @@ CONTRACTS = {
       'function INCEPTION() external view returns (uint256)',
       'function isDST() external view returns (bool)',
       'function isMarketOpen() public view returns (bool)',
+      'function isMarketHoliday(uint256) public view returns (bool)',
       'function daysElapsed() external view returns (uint256)',
       'function yearsElapsed() external view returns (uint256)',
       'function yearToMarketHolidaysDeclared(uint256) external view returns (uint256)',

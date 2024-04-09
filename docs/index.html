@@ -258,7 +258,7 @@ TODO
 
     </div>
 
-    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | 10:30AM-5:00PM (EDT) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
+    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | <span id="mktHours">10:30AM-5:00PM</span> (EDT) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
 
 
     <!-- <connect-wallet style="display: flex; justify-content: center; align-items: center;"> -->
@@ -757,6 +757,7 @@ TODO
 
 
 
+  let isDSTOverride, isMarketHolidayOverride
 
   setTimeout(() => {
     if (!ls.get('chosenRole')) $.id('modal').open()
@@ -809,6 +810,13 @@ TODO
         }
       }, 12000)
 
+
+      isDSTOverride = await ETF.isDST()
+      isMarketHolidayOverride = await ETF.isMarketHoliday(await ETF.daysElapsed())
+
+      if (isDSTOverride) {
+        $.id('mktHours').innerHTML = '9:30AM-4:00PM'
+      }
 
 
       times(7, async _i => {
@@ -1224,15 +1232,19 @@ TODO
   const $timeLeft = $.id('timeLeft')
   const $marketChange = $.id('marketChange')
 
-  function getNextTimestamp(isDST=false, isMarketHoliday=false) {
-    const currentTimestamp = Date.now();
-    const currentDate = new Date(currentTimestamp);
-    const currentDay = currentDate.getUTCDay();
-    const currentHour = currentDate.getUTCHours();
-    const currentMinutes = currentDate.getUTCMinutes();
+  function getNextTimestamp() {
+
+    const dstAdj = isDSTOverride ? 1 : 0
+
+
+    const currentTimestamp = Date.now()
+    const currentDate = new Date(currentTimestamp)
+    const currentDay = currentDate.getUTCDay()
+    const currentHour = currentDate.getUTCHours() + dstAdj
+    const currentMinutes = currentDate.getUTCMinutes()
 
     // Check if it's Sunday, Monday, Tuesday, Wednesday, or Thursday after 9:00 PM UTC
-    if (currentDay >= 0 && currentDay <= 4 && (currentHour >= 21 || isMarketHoliday)) {
+    if (currentDay >= 0 && currentDay <= 4 && (currentHour >= 21 || isMarketHolidayOverride)) {
       // Return UTC timestamp for 2 PM the next day
       const nextDayTimestamp = currentTimestamp + (24 * 60 * 60 * 1000); // Add 1 day
       const nextDay = new Date(nextDayTimestamp);
@@ -1242,7 +1254,7 @@ TODO
 
     // Check if it's Friday after 9:00 PM UTC, Saturday, or Sunday
     if (
-      (currentDay === 5 && (currentHour >= 21 || isMarketHoliday))
+      (currentDay === 5 && (currentHour >= 21 || isMarketHolidayOverride))
       || currentDay === 6 || currentDay === 0)
     {
       // Return UTC timestamp for the coming Monday at 1:30 PM
@@ -1266,11 +1278,15 @@ TODO
 
 
   function isMarketOpen() {
-    const currentTimestamp = Date.now();
-    const currentDate = new Date(currentTimestamp);
-    const currentDay = currentDate.getUTCDay();
-    const currentHour = currentDate.getUTCHours();
-    const currentMinutes = currentDate.getUTCMinutes();
+    if (isMarketHolidayOverride) return false
+    const dstAdj = isDSTOverride ? 1 : 0
+
+    const currentTimestamp = Date.now()
+    const currentDate = new Date(currentTimestamp)
+    const currentDay = currentDate.getUTCDay()
+    const currentHour = currentDate.getUTCHours() + dstAdj
+    const currentMinutes = currentDate.getUTCMinutes()
+
 
     return currentDay > 0 && currentDay < 6 && (currentHour > 14 || currentHour === 14 && currentMinutes >= 30) && currentHour < 21
   }
