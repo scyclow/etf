@@ -1325,7 +1325,7 @@ TODO
     const with0 = x => x < 10 ? '0' + Math.floor(x) : Math.floor(x)
 
     return setRunInterval(() => {
-      const timeLeftCounter = Math.max(endTimestamp - Date.now(), 0)
+      let timeLeftCounter = Math.max(endTimestamp - Date.now(), 0)
       const days = timeLeftCounter / (24*60*60*1000)
       const hours = 24 * (days%1)
       const minutes = 60 * (hours%1)
