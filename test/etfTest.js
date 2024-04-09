@@ -666,7 +666,7 @@ describe('ETF.B', () => {
     investor = signers[1]
 
     const ETFBFactory = await ethers.getContractFactory('ETFB', admin)
-    ETFB = await ETFBFactory.deploy(ZERO_ADDR, ZERO_ADDR)
+    ETFB = await ETFBFactory.deploy(admin.address, ZERO_ADDR)
     await ETFB.deployed()
 
 
@@ -682,6 +682,8 @@ describe('ETF.B', () => {
 
   it('should mint TL to correct addr', async () => {
     expect(await TimeLordBase.ownerOf(0)).to.equal(admin.address)
+
+    await ETFB.connect(admin).mint(admin.address, 100000000)
 
     // console.log(getJsonURI(await TimeLordBase.tokenURI(0)))
   })
