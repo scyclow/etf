@@ -258,7 +258,7 @@ TODO
 
     </div>
 
-    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | <span id="mktHours">10:30AM-5:00PM</span> (EDT) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
+    <div style="display: block; text-align: center; margin-top: 1.5em; letter-spacing: 0.3em;">Trading Hours: M-F | <span id="mktHours">9:30AM-4:00PM</span> (EDT) <a href="#timeLord" style="color: var(--accent-color); text-decoration:underline;">*</a></div>
 
 
     <!-- <connect-wallet style="display: flex; justify-content: center; align-items: center;"> -->
@@ -760,7 +760,7 @@ TODO
   let isDSTOverride, isMarketHolidayOverride
 
   setTimeout(() => {
-    if (!ls.get('chosenRole')) $.id('modal').open()
+    if (!ls.get('chosenRole')) $.id('modal')?.open?.()
   }, 8000)
 
 
@@ -1325,7 +1325,7 @@ TODO
     const with0 = x => x < 10 ? '0' + Math.floor(x) : Math.floor(x)
 
     return setRunInterval(() => {
-      let timeLeftCounter = Math.max(endTimestamp - Date.now(), 0)
+      let timeLeftCounter = Math.max(getNextTimestamp() - Date.now(), 0)
       const days = timeLeftCounter / (24*60*60*1000)
       const hours = 24 * (days%1)
       const minutes = 60 * (hours%1)
